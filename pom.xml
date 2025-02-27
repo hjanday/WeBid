@@ -11,7 +11,7 @@
 	<groupId>com.webid</groupId>
 	<artifactId>webid</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<name>webid</name>
 	<description>WeBid eCommerce Auction App</description>
 	<url/>
