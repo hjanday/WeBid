@@ -7,7 +7,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/example")
-public class Controller {
+public class UserController {
 
     @GetMapping
     public ResponseEntity<Map<String, String>> getAllItems() {
