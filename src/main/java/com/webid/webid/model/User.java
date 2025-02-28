@@ -86,7 +86,7 @@ public class User {
 		return this.lastName;
 	}
 
-	public String getAdress() {
+	public String getAddress() {
 		return this.address;
 	}
 
