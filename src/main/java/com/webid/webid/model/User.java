@@ -21,20 +21,45 @@ public class User {
 
 	@Column(name = "username", unique = true, nullable = false)
 	private String username;
-	
+
 	@Column(unique = true, nullable = false)
 	private String email;
 
 	@Column(nullable = false)
 	private String password;
 
-	
-	public User(){}
+	@Column(nullable = false)
+	private String firstName;
 
-	public User(String username, String email, String password){
+	@Column(nullable = false)
+	private String lastName;
+
+	@Column(nullable = false)
+	private String address;
+
+	@Column(nullable = false)
+	private String postalCode;
+
+	@Column(nullable = false)
+	private String country;
+
+	@Column(nullable = false)
+	private String city;
+
+	public User() {
+	}
+
+	public User(String username, String email, String password, String firstName, String lastName, String address,
+			String postalCode, String country, String city) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.address = address;
+		this.postalCode = postalCode;
+		this.country = country;
+		this.city = city;
 	}
 
 	public Long getId() {
@@ -51,6 +76,30 @@ public class User {
 
 	public String getPassword() {
 		return this.password;
+	}
+
+	public String getFirstName() {
+		return this.firstName;
+	}
+
+	public String getLastName() {
+		return this.lastName;
+	}
+
+	public String getAdress() {
+		return this.address;
+	}
+
+	public String getPostalCode() {
+		return this.postalCode;
+	}
+
+	public String getCountry() {
+		return this.country;
+	}
+
+	public String getCity() {
+		return this.city;
 	}
 
 }

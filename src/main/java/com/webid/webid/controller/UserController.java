@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
-
 @RestController
-// @RequestMapping("/api/example")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final UserRepository userRepository;
@@ -29,10 +27,10 @@ public class UserController {
     public Iterable<User> findAllUsers() {
         return this.userRepository.findAll();
     }
-    
+
     @PostMapping("/users")
     public User addUser(@RequestBody User user) {
         return this.userRepository.save(user);
     }
-    
+
 }
