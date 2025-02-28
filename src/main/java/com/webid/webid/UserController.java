@@ -1,43 +1,41 @@
 package com.webid.webid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpStatus;
-import java.util.Map;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/example")
+@RequestMapping("/users")
 public class UserController {
 
+    @Autowired
+    private UserService userService;
+
+    // Get all users
     @GetMapping
-    public ResponseEntity<Map<String, String>> getAllItems() {
-        // Returning a generic JSON response
-        Map<String, String> response = Map.of("message", "This is a generic JSON response");
-        return ResponseEntity.ok(response);
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
+    // Get user by ID
     @GetMapping("/{id}")
-    public ResponseEntity<String> getItemById(@PathVariable("id") Long id) {
-        // Replace with actual service call
-        String item = "Item " + id;
-        return ResponseEntity.ok(item);
+    public Optional<User> getUserById(@PathVariable Long id) {
+        return userService.getUserById(id);
     }
 
+    // Create a new user
     @PostMapping
-    public ResponseEntity<String> createItem(@RequestBody String newItem) {
-        // Replace with actual service call
-        return new ResponseEntity<>("Created: " + newItem, HttpStatus.CREATED);
+    public User createUser(@RequestBody User user) {
+        return userService.createUser(user.getUsername(), user.getPassword(), user.getFirstName(),
+                user.getLastName(), user.getAddress(), user.getCity(), user.getPostalCode(),
+                user.getCountry(), user.getEmail());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<String> updateItem(@PathVariable("id") Long id, @RequestBody String updatedItem) {
-        // Replace with actual service call
-        return ResponseEntity.ok("Updated item " + id + " to " + updatedItem);
-    }
-
+    // Delete user by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteItem(@PathVariable("id") Long id) {
-        // Replace with actual service call
-        return ResponseEntity.noContent().build();
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
     }
 }
