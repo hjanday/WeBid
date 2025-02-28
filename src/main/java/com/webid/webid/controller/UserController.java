@@ -3,7 +3,7 @@ package com.webid.webid.controller;
 import org.springframework.web.bind.annotation.*;
 
 import com.webid.webid.model.User;
-// import com.webid.webid.repository.UserRepository;
+import com.webid.webid.repository.UserRepository;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -19,20 +19,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 // @RequestMapping("/api/example")
 public class UserController {
 
-    // private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    // public UserController(UserRepository userRepository) {
-    //     this.userRepository = userRepository;
-    // }
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
-    // @GetMapping("/users")
-    // public Iterable<User> findAllUsers() {
-    //     return this.userRepository.findAll();
-    // }
+    @GetMapping("/users")
+    public Iterable<User> findAllUsers() {
+        return this.userRepository.findAll();
+    }
     
-    // @PostMapping("/users")
-    // public User addUser(@RequestBody User user) {
-    //     return this.userRepository.save(user);
-    // }
+    @PostMapping("/users")
+    public User addUser(@RequestBody User user) {
+        return this.userRepository.save(user);
+    }
     
 }
