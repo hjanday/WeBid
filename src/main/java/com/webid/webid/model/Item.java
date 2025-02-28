@@ -15,8 +15,8 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-@Table(name = "auctions")
-public class Auction {
+@Table(name = "items")
+public class Item {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -47,12 +47,4 @@ public class Auction {
 	@Column(nullable = false)
 	private String auctionType;
 
-	public Auction() {
-	}
-
-	
-
-	
-	
-	
 }
