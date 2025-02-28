@@ -19,6 +19,15 @@ public Optional<User> signIn(String user, String pw){
 	return Optional.empty();
 }
 
+public User signUp(User usr) {
+	if (userRepository.findByUsername(usr.getUsername()).isPresent()) {
+		throw new RuntimeException("Username already exists.");
+	}
+	if (userRepository.findByEmail(usr.getEmail()).isPresent()) {
+		throw new RuntimeException("Email already exists.");
+	}
+	return userRepository.save(usr);
+}
 
 	
 }
