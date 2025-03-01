@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
-@Configuration
+@Service
 public class AuthService {
 
 private final UserRepository userRepository;
@@ -37,7 +37,7 @@ public User signUp(User usr) {
 public Optional<User> updatePassword(String userEmail, String newPw) {
 	Optional<User> u = userRepository.findByEmail(userEmail);
 	if(u.isPresent()) {
-		userRepository.updatePassword(userEmail, newPw);
+		userRepository.updatePasswordByEmail(userEmail, newPw);
 		return u;
 	}
 	return Optional.empty();
