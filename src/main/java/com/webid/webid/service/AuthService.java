@@ -1,11 +1,16 @@
 package com.webid.webid.service;
 import com.webid.webid.model.User;
 import com.webid.webid.repository.UserRepository;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+@Configuration
 public class AuthService {
 
 private final UserRepository userRepository;
+
 
 public AuthService(UserRepository userRepository) {
 	this.userRepository = userRepository;
@@ -27,6 +32,15 @@ public User signUp(User usr) {
 		throw new RuntimeException("Email already exists.");
 	}
 	return userRepository.save(usr);
+}
+
+public Optional<User> updatePassword(String userEmail, String newPw) {
+	Optional<User> u = userRepository.findByEmail(userEmail);
+	if(u.isPresent()) {
+		userRepository.updatePassword(userEmail, newPw);
+		return u;
+	}
+	return Optional.empty();
 }
 
 	

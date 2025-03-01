@@ -46,7 +46,20 @@ public class AuthController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
 			
 		}
-		
 	}
+		
+	@PostMapping("/forgotpassword")
+	public ResponseEntity<?> updatePassword(@RequestBody User usr, @RequestBody String newPassword){
+		Optional<User> currentUser = auth.updatePassword(usr.getEmail(), newPassword);
+		if (currentUser.isPresent()) {
+			return ResponseEntity.ok(currentUser.get());
+		}
+		else {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+			
+		}
+	}
+		
+	
 
 }
