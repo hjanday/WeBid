@@ -68,7 +68,10 @@ public class Auction {
 		return new Auction(itemName,desc, ownerID, currentBid,  currentBidderID, bidIncrement,  auctionType);
 	}
 
-	
+	public long getID() {
+		return this.id;
+
+	}
 
 	
 	
