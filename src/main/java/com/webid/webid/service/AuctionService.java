@@ -14,7 +14,7 @@ public class AuctionService {
     public Optional<Auction>search(String itemName) {
         return this.ar.findAuctionByItemName(itemName);
     }
-    public Auction selectItem(Optional<Auction> items, Long id) {
+    public Auction select(Optional<Auction> items, Long id) {
     	return items.filter(auction -> auction.getID() == id).orElse(null);
         
     }

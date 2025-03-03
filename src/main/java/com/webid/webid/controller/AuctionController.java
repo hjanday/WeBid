@@ -24,7 +24,7 @@ public class AuctionController {
     }
     public Auction selectItem(Optional<Auction> items, Long id) {
     	
-        return this.as.selectItem(items,id);
+        return this.as.select(items,id);
 
     
     	
