@@ -1,6 +1,9 @@
 package com.webid.webid.model;
 
 import java.sql.Time;
+import java.time.Instant;
+
+import java.time.temporal.ChronoUnit;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +17,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@NoArgsConstructor
+
 @Table(name = "auctions")
 public class Auction {
 	@Id
@@ -22,12 +25,12 @@ public class Auction {
 	private Long id;
 
 	@Column(unique = true, nullable = false)
-	private String ItemName;
+	private String itemName;
 	@Column(nullable = false)
 	private String description;
 
 	@Column(unique = true, nullable = false)
-	private long OwnerID;
+	private long ownerID;
 	@Column(nullable = false)
 	private Double Price;
 
@@ -41,13 +44,28 @@ public class Auction {
 	private double bidIncrement;
 
 	@Column(nullable = false)
-	private Time startTime;
+	private Instant startTime;
 	@Column(nullable = false)
-	private String endTime;
+	private Instant endTime;
 	@Column(nullable = false)
 	private String auctionType;
 
-	public Auction() {
+	private Auction(String itemName, String desc,long ownerID,Double currentBid, long currentBidderID,double bidIncrement, String auctionType) {
+		this.itemName = itemName;
+		this.description = desc;
+		this.ownerID = ownerID;
+		this.currentBid = currentBid;
+		this.currentBidderID = currentBidderID;
+		this.bidIncrement = bidIncrement;
+		this.startTime = Instant.now();
+		this.endTime = this.startTime.plus(24, ChronoUnit.HOURS);
+		this.auctionType = auctionType;
+
+				
+				
+	}
+	public static Auction create(String itemName, String desc,long ownerID,Double currentBid, long currentBidderID,double bidIncrement, String auctionType) {
+		return new Auction(itemName,desc, ownerID, currentBid,  currentBidderID, bidIncrement,  auctionType);
 	}
 
 	
