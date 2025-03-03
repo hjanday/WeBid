@@ -46,5 +46,5 @@ public class Item {
 	private String endTime;
 	@Column(nullable = false)
 	private String auctionType;
-
+	
 }
