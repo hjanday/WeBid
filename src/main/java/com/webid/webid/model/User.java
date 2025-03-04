@@ -1,5 +1,7 @@
 package com.webid.webid.model;
 
+import java.util.ArrayList;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -45,7 +47,8 @@ public class User {
 
 	@Column(nullable = false)
 	private String city;
-
+	@Column(nullable = true)
+	private ArrayList<String> notif;
 	public User() {
 	}
 
