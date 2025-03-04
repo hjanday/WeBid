@@ -48,9 +48,9 @@ public class AuctionController {
         auctionService.deleteAuction(id);
     }
 
-    // update a forwad auction
+    // update a forward auction
     @PutMapping("update/{id}/{userName}/{bidAmount}")
-    public String putMethodName(@PathVariable Long id, @PathVariable String userName, @PathVariable Double bidAmount,
+    public String updateForward(@PathVariable Long id, @PathVariable String userName, @PathVariable Double bidAmount,
             @RequestBody Auction auction) {
         Optional<Auction> existingAuction = auctionService.getAuctionById(id);
         // check if auction exists
@@ -67,10 +67,33 @@ public class AuctionController {
         User foundUser = existingUser.get();
 
         if (auctionService.setNewBid(foundAuction, bidAmount, foundUser)) {
-            return "New Bid has been set";
+            return "New Bid has been set (Forward)";
         } else {
             return "Error";
         }
+    }
 
+    // update a dutch auction
+    @PutMapping("update/{id}/{userName}/{bidAmount}")
+    public String updateDutch(@PathVariable Long id, @PathVariable String userName, @RequestBody Auction auction) {
+        Optional<Auction> existingAuction = auctionService.getAuctionById(id);
+        // check if auction exists
+        if (!existingAuction.isPresent()) {
+            return "Auction invalid";
+        }
+        Auction foundAuction = existingAuction.get();
+
+        // Check if user exists, should be using userService Not yet implemented
+        Optional<User> existingUser = userRepository.findByUsername(userName);
+        if (!existingUser.isPresent()) {
+            return "User invalid";
+        }
+        User foundUser = existingUser.get();
+
+        if (auctionService.confirmBid(foundAuction, foundUser)) {
+            return "Bid has been confirmed (Dutch)";
+        } else {
+            return "Error";
+        }
     }
 }

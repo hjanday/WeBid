@@ -69,6 +69,8 @@ public class AuctionService {
         } else { // auction is found; server processes purchase
             foundAuction.setCurrentBidderID(user.getId());
             foundAuction.completeAuction();
+
+            auctionRepository.save(foundAuction);
             // dutch auction successful/completed
             return true;
         }
