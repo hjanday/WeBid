@@ -18,34 +18,34 @@ import lombok.Setter;
 @NoArgsConstructor
 @Table(name = "items")
 public class Item {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@Column(unique = true, nullable = false)
-	private String ItemName;
-	@Column(nullable = false)
-	private String description;
+    @Column(unique = true, nullable = false)
+    private String ItemName;
+    @Column(nullable = false)
+    private String description;
 
-	@Column(unique = true, nullable = false)
-	private long OwnerID;
-	@Column(nullable = false)
-	private Double Price;
+    @Column(unique = true, nullable = false)
+    private long OwnerID;
+    @Column(nullable = false)
+    private Double Price;
 
-	@Column(nullable = true)
-	private Double currentBid;
+    @Column(nullable = true)
+    private Double currentBid;
 
-	@Column(nullable = true)
-	private long currentBidderID;
+    @Column(nullable = true)
+    private long currentBidderID;
 
-	@Column(nullable = false)
-	private double bidIncrement;
+    @Column(nullable = false)
+    private double bidIncrement;
 
-	@Column(nullable = false)
-	private Time startTime;
-	@Column(nullable = false)
-	private String endTime;
-	@Column(nullable = false)
-	private String auctionType;
+    @Column(nullable = false)
+    private Time startTime;
+    @Column(nullable = false)
+    private String endTime;
+    @Column(nullable = false)
+    private String auctionType;
 
 }
