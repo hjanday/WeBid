@@ -11,10 +11,10 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Repository
-public interface AuctionRepository extends JpaRepository<Auction, Long>{
+public interface AuctionRepository extends JpaRepository<Auction, Long> {
     @Query("SELECT i FROM Item i WHERE i.name LIKE %:keyword% OR i.description LIKE %:keyword%")
     ArrayList<Auction> findAuctionByItemName(@Param("itemName") String itemName);
+
     Auction select(Long itemId);
-    
-    
-} 
+
+}

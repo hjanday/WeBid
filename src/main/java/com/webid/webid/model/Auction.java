@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Getter
 @Setter
 @Entity
@@ -31,8 +32,6 @@ public class Auction {
 
 	@Column(unique = true, nullable = false)
 	private long ownerID;
-	@Column(nullable = false)
-	private Double Price;
 
 	@Column(nullable = true)
 	private Double currentBid;
@@ -50,7 +49,8 @@ public class Auction {
 	@Column(nullable = false)
 	private String auctionType;
 
-	private Auction(String itemName, String desc,long ownerID,Double currentBid, long currentBidderID,double bidIncrement, String auctionType) {
+	private Auction(String itemName, String desc, long ownerID, Double currentBid, long currentBidderID,
+			double bidIncrement, String auctionType) {
 		this.itemName = itemName;
 		this.description = desc;
 		this.ownerID = ownerID;
@@ -61,19 +61,17 @@ public class Auction {
 		this.endTime = this.startTime.plus(24, ChronoUnit.HOURS);
 		this.auctionType = auctionType;
 
-				
-				
-	}
-	public static Auction create(String itemName, String desc,long ownerID,Double currentBid, long currentBidderID,double bidIncrement, String auctionType) {
-		return new Auction(itemName,desc, ownerID, currentBid,  currentBidderID, bidIncrement,  auctionType);
 	}
 
-	public long getID() {
-		return this.id;
-
+	public static Auction create(String itemName, String desc, long ownerID, Double currentBid, long currentBidderID,
+			double bidIncrement, String auctionType) {
+		return new Auction(itemName, desc, ownerID, currentBid, currentBidderID, bidIncrement, auctionType);
 	}
 
-	
-	
-	
+	public Auction completeAuction() {
+		// set auction to be completed at this time
+		this.endTime = Instant.now();
+		return this;
+	}
+
 }
