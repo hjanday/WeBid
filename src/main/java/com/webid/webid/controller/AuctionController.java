@@ -1,5 +1,6 @@
 package com.webid.webid.controller;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +15,15 @@ public class AuctionController {
         
         this.as = as;
     }
-    public Optional<Auction> findItem(String itemName){
+    public ArrayList<Auction> findItem(String itemName){
     	try {
     		return this.as.search(itemName);
     	}catch(Exception e) {
-    		return Optional.empty();
+    		return null;
     	}
     	
     }
-    public Auction selectItem(Optional<Auction> items, Long id) {
+    public Auction selectItem(ArrayList<Auction> items, Long id) {
     	
         return this.as.select(items,id);
 
