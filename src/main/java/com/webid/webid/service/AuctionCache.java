@@ -20,11 +20,16 @@ public class AuctionCache implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private static final int MAX_ENTRIES = 100; // Adjust as needed
+	private static final int MAX_ENTRIES = 5; // Adjust as needed
 
     // LRU cache: key is the search term, value is a list of Optional<Auction>
     private final Map<String, List<Optional<Auction>>> cache = new LinkedHashMap<String, List<Optional<Auction>>>() {
       
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1210852929468364761L;
 
 		@Override
         protected boolean removeEldestEntry(Map.Entry<String, List<Optional<Auction>>> eldest) {
