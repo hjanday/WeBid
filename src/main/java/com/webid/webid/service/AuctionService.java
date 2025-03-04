@@ -41,6 +41,7 @@ public class AuctionService {
                 return true;
             } else {
                 // return bid too small exception
+                return false; // for now just return false
             }
         }
     }

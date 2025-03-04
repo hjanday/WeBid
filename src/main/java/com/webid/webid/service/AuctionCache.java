@@ -1,4 +1,5 @@
 package com.webid.webid.service;
+
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -13,25 +14,24 @@ import java.util.Optional;
 
 @Component
 @Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
-public class AuctionCache implements Serializable{
+public class AuctionCache implements Serializable {
 
     /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+     * 
+     */
+    private static final long serialVersionUID = 1L;
 
-	private static final int MAX_ENTRIES = 5; // Adjust as needed
+    private static final int MAX_ENTRIES = 5; // Adjust as needed
 
     // LRU cache: key is the search term, value is a list of Optional<Auction>
     private final Map<String, List<Optional<Auction>>> cache = new LinkedHashMap<String, List<Optional<Auction>>>() {
-      
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1210852929468364761L;
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1210852929468364761L;
 
-		@Override
+        @Override
         protected boolean removeEldestEntry(Map.Entry<String, List<Optional<Auction>>> eldest) {
             return size() > MAX_ENTRIES;
         }
@@ -48,7 +48,7 @@ public class AuctionCache implements Serializable{
     public boolean contains(String searchTerm) {
         return cache.containsKey(searchTerm);
     }
-    
+
     public Map<String, List<Optional<Auction>>> getCache() {
         return cache;
     }
