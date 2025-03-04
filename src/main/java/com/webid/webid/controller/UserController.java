@@ -25,8 +25,7 @@ public class UserController {
     public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    
-    
+
     @GetMapping
     public Iterable<User> findAllUsers() {
         return this.userRepository.findAll();
@@ -36,17 +35,19 @@ public class UserController {
     public User addUser(@RequestBody User user) {
         return this.userRepository.save(user);
     }
-    
+
     @PostMapping("/findusername")
     ResponseEntity<User> queryUsername(@RequestBody String username) {
         String cleanUN = username.replaceAll("^\"|\"$", "").trim();
-		return this.userRepository.findByUsername(cleanUN).map(ResponseEntity::ok).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return this.userRepository.findByUsername(cleanUN).map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
-    
+
     @PostMapping("/findemail")
     ResponseEntity<User> queryEmail(@RequestBody String email) {
         String cleanEmail = email.replaceAll("^\"|\"$", "").trim();
-    	return this.userRepository.findByEmail(cleanEmail).map(ResponseEntity::ok).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+        return this.userRepository.findByEmail(cleanEmail).map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
 }

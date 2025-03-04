@@ -102,4 +102,8 @@ public class User {
 		return this.city;
 	}
 
+	public void sendBid(Auction auction, double amount) {
+
+	}
+
 }
