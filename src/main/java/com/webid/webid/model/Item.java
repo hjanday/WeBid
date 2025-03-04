@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 @Getter
 @Setter
 @Entity
@@ -46,5 +47,5 @@ public class Item {
 	private String endTime;
 	@Column(nullable = false)
 	private String auctionType;
-	
+
 }

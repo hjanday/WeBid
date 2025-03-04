@@ -11,24 +11,25 @@ import com.webid.webid.service.AuctionService;
 
 public class AuctionController {
     private final AuctionService as;
+
     public AuctionController(AuctionService as) {
-        
+
         this.as = as;
     }
-    public ArrayList<Auction> findItem(String itemName){
-    	try {
-    		return this.as.search(itemName);
-    	}catch(Exception e) {
-    		return null;
-    	}
-    	
-    }
-    public Auction selectItem(ArrayList<Auction> items, Long id) {
-    	
-        return this.as.select(items,id);
 
-    
-    	
+    public ArrayList<Auction> findItem(String itemName) {
+        try {
+            return this.as.search(itemName);
+        } catch (Exception e) {
+            return null;
+        }
+
     }
-	
+
+    public Auction selectItem(ArrayList<Auction> items, Long id) {
+
+        return this.as.select(items, id);
+
+    }
+
 }
