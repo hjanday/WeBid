@@ -9,7 +9,6 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.jvnet.hk2.annotations.Service;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
@@ -22,7 +21,9 @@ public class JwtService {
     
     @Value("${security.jwt.secret-key}")
     private String secretKey;
-    private long jwtTTL = 3600000;
+
+    @Value("${security.jwt.expiration-time}")
+    private long jwtTTL;
 
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);

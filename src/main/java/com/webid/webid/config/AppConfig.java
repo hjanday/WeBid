@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.webid.webid.repository.UserRepository;
+import com.webid.webid.service.JwtService;
 
 @Configuration
 public class AppConfig {
@@ -18,6 +19,11 @@ public class AppConfig {
 
     public AppConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Bean
+    public JwtService jwtService() {
+        return new JwtService();
     }
 
     @Bean

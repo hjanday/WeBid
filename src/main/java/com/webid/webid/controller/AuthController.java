@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
 	private final AuthService authService;
@@ -32,29 +32,6 @@ public class AuthController {
 		this.authService = auth;
 		this.jwtService = jwtService;
 	}
-
-	// @PostMapping("/register")
-	// public ResponseEntity<?> register(@RequestBody User usr) {
-	// 	try {
-	// 		User newUsr = authService.signUp(usr);
-	// 		return ResponseEntity.ok(newUsr);
-	// 	} catch (RuntimeException e) {
-	// 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-	// 	}
-	// }
-
-	// @PostMapping("/login")
-	// public ResponseEntity<?> login(@RequestBody User usr) {
-	// 	Optional<User> loginUser = auth.signIn(usr.getUsername(), usr.getPassword());
-	// 	if (loginUser.isPresent()) {
-	// 		UserDetails userDetails = loginUser.get();
-	// 		String jwtToken = jwtService.generateToken(userDetails);
-	// 		return ResponseEntity.ok(jwtToken);
-	// 	} else {
-	// 		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-
-	// 	}
-	// }
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> login(@RequestBody LoginUserDTO user) {
