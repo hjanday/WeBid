@@ -47,7 +47,9 @@ public class Auction {
     @Column(nullable = false)
     private String auctionType;
     @Column(nullable = true)
-    private ArrayList<User> prevBidderIds;
+    private ArrayList<User> prevBidder;
+    @Column(nullable = false)
+    private boolean over;
     public Auction() {
     }
 
