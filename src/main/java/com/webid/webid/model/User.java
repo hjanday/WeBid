@@ -17,6 +17,8 @@ import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class User implements UserDetails{
@@ -51,22 +53,6 @@ public class User implements UserDetails{
 
 	@Column(nullable = false)
 	private String city;
-
-	public User() {
-	}
-
-	public User(String username, String email, String password, String firstName, String lastName, String address,
-			String postalCode, String country, String city) {
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.address = address;
-		this.postalCode = postalCode;
-		this.country = country;
-		this.city = city;
-	}
 
 	public Long getId() {
 		return this.id;
