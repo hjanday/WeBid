@@ -6,6 +6,7 @@ import com.webid.webid.repository.AuctionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +15,7 @@ public class AuctionService {
 
     @Autowired
     private AuctionRepository auctionRepository;
-
+    private UserService userService;
     // Get all auctions
     public List<Auction> getAllAuctions() {
         return auctionRepository.findAll();
@@ -49,7 +50,22 @@ public class AuctionService {
             if (bidAmount > foundAuction.getCurrentBid()) {
                 foundAuction.setCurrentBid(bidAmount);
                 foundAuction.setCurrentBidderID(user.getId());
+                if(!foundAuction.getPrevBidderIds().contains(user)){
+                    ArrayList<User> temp = foundAuction.getPrevBidderIds();
+                    temp.add(user);
 
+                    foundAuction.setPrevBidderIds(temp);
+
+                }
+                for (User i:foundAuction.getPrevBidderIds()){
+                    if (!i.getId().equals(user.getId())){
+                        userService.notify(i,String.format("A new bid has been placed on %s the new current bid is %f",foundAuction.getItemName(),foundAuction.getCurrentBid()));
+
+                    }else{
+                        userService.notify(i,"Your bid has been confirmed");
+
+                    }
+                }
                 auctionRepository.save(foundAuction);
 
                 // notifies subscribed users
