@@ -74,7 +74,7 @@ public class AuctionController {
     }
 
     // update a dutch auction
-    @PutMapping("update/{id}/{userName}/{bidAmount}")
+    @PutMapping("complete/{id}/{userName}")
     public String updateDutch(@PathVariable Long id, @PathVariable String userName, @RequestBody Auction auction) {
         Optional<Auction> existingAuction = auctionService.getAuctionById(id);
         // check if auction exists

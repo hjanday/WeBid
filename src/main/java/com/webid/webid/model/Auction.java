@@ -3,6 +3,7 @@ package com.webid.webid.model;
 import java.time.Instant;
 
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,7 +46,8 @@ public class Auction {
     private Instant endTime;
     @Column(nullable = false)
     private String auctionType;
-
+    @Column(nullable = true)
+    private ArrayList<User> prevBidderIds;
     public Auction() {
     }
 
