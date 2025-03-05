@@ -15,7 +15,7 @@ public class AuctionService {
 
     @Autowired
     private AuctionRepository auctionRepository;
-    private UserService userService;
+    private NotificationService notifService;
     // Get all auctions
     public List<Auction> getAllAuctions() {
         return auctionRepository.findAll();
@@ -50,19 +50,19 @@ public class AuctionService {
             if (bidAmount > foundAuction.getCurrentBid()) {
                 foundAuction.setCurrentBid(bidAmount);
                 foundAuction.setCurrentBidderID(user.getId());
-                if(!foundAuction.getPrevBidderIds().contains(user)){
-                    ArrayList<User> temp = foundAuction.getPrevBidderIds();
+                if(!foundAuction.getPrevBidder().contains(user)){
+                    ArrayList<User> temp = foundAuction.getPrevBidder();
                     temp.add(user);
 
-                    foundAuction.setPrevBidderIds(temp);
+                    foundAuction.setPrevBidder(temp);
 
                 }
-                for (User i:foundAuction.getPrevBidderIds()){
+                for (User i:foundAuction.getPrevBidder()){
                     if (!i.getId().equals(user.getId())){
-                        userService.notify(i,String.format("A new bid has been placed on %s the new current bid is %f",foundAuction.getItemName(),foundAuction.getCurrentBid()));
+                        notifService.notify(i,String.format("A new bid has been placed on %s the new current bid is %f",foundAuction.getItemName(),foundAuction.getCurrentBid()));
 
                     }else{
-                        userService.notify(i,"Your bid has been confirmed");
+                        notifService.notify(i,"Your bid has been confirmed");
 
                     }
                 }
@@ -85,7 +85,7 @@ public class AuctionService {
         } else { // auction is found; server processes purchase
             foundAuction.setCurrentBidderID(user.getId());
             foundAuction.completeAuction();
-
+            notifService.notify(user,"Your bid has been confirmed");
             auctionRepository.save(foundAuction);
             // dutch auction successful/completed
             return true;

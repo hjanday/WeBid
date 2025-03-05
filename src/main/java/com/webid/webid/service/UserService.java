@@ -10,7 +10,7 @@ import com.webid.webid.model.Auction;
 import com.webid.webid.model.User;
 import com.webid.webid.repository.UserRepository;
 
-public class UserService implements Observer{
+public class UserService {
     @Autowired
     private UserRepository userRepository;
 
@@ -26,11 +26,6 @@ public class UserService implements Observer{
 
 
 
-    @Override
-    public void notify(User user, String message) {
-        ArrayList<String> temp = user.getNotif();
-        temp.add(message);
-        user.setNotif(temp);
-    }
+    
 
 }
