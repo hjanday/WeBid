@@ -18,12 +18,12 @@ public class AuthService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authManager;
 
-	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager) {
+	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authManager) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
-		this.authenticationManager = authenticationManager;
+		this.authManager = authManager;
 	}
 
 	// public Optional<User> signIn(String user, String pw){
@@ -45,7 +45,7 @@ public class AuthService {
 	// }
 
 	public User signIn(LoginUserDTO input){
-		authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(input.getEmail(),input.getPassword()));
+		authManager.authenticate(new UsernamePasswordAuthenticationToken(input.getEmail(),input.getPassword()));
 
 		return userRepository.findByEmail(input.getEmail()).orElseThrow();
 	}

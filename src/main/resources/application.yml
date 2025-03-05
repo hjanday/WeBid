@@ -13,6 +13,11 @@ spring:
     show-sql: true
     defer-datasource-initialization: true
 
+security:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+    expiration-time: 3600000
+
 server:
   error:
     include-message: always
