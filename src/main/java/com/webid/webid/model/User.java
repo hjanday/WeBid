@@ -54,46 +54,6 @@ public class User implements UserDetails{
 	@Column(nullable = false)
 	private String city;
 
-	public Long getId() {
-		return this.id;
-	}
-
-	public String getEmail() {
-		return this.email;
-	}
-
-	public String getUsername() {
-		return this.username;
-	}
-
-	public String getPassword() {
-		return this.password;
-	}
-
-	public String getFirstName() {
-		return this.firstName;
-	}
-
-	public String getLastName() {
-		return this.lastName;
-	}
-
-	public String getAddress() {
-		return this.address;
-	}
-
-	public String getPostalCode() {
-		return this.postalCode;
-	}
-
-	public String getCountry() {
-		return this.country;
-	}
-
-	public String getCity() {
-		return this.city;
-	}
-
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return List.of();
