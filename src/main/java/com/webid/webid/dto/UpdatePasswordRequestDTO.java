@@ -1,4 +1,4 @@
-package com.webid.webid.model;
+package com.webid.webid.dto;
 
 // Create DTO
 public class UpdatePasswordRequestDTO {
