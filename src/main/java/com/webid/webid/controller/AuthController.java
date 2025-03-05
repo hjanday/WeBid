@@ -7,8 +7,10 @@ import com.webid.webid.dto.UpdatePasswordRequestDTO;
 import com.webid.webid.model.User;
 
 import com.webid.webid.service.AuthService;
+import com.webid.webid.service.JwtService;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
@@ -22,9 +24,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class AuthController {
 
 	private final AuthService auth;
+	private final JwtService jwtService;
 
-	public AuthController(AuthService auth) {
+	public AuthController(AuthService auth, JwtService jwtService) {
 		this.auth = auth;
+		this.jwtService = jwtService;
 	}
 
 	@PostMapping("/register")
@@ -41,7 +45,9 @@ public class AuthController {
 	public ResponseEntity<?> login(@RequestBody User usr) {
 		Optional<User> loginUser = auth.signIn(usr.getUsername(), usr.getPassword());
 		if (loginUser.isPresent()) {
-			return ResponseEntity.ok(loginUser.get());
+			UserDetails userDetails = loginUser.get();
+			String jwtToken = jwtService.generateToken(userDetails);
+			return ResponseEntity.ok(jwtToken);
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
 
