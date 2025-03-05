@@ -44,7 +44,6 @@ public class AuthController {
 			return ResponseEntity.ok(loginUser.get());
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-
 		}
 	}
 
