@@ -14,18 +14,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
- 
-
     // Get auction by ID
     public Optional<User> getUserbyEmail(String email) {
         return userRepository.findByEmail(email);
     }
+
     public Optional<User> getUserbyUsername(String un) {
         return userRepository.findByUsername(un);
     }
-
-
-
-    
 
 }

@@ -8,6 +8,8 @@ import com.webid.webid.model.User;
 
 import com.webid.webid.service.AuthService;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
@@ -41,6 +43,8 @@ public class AuthController {
 	public ResponseEntity<?> login(@RequestBody User usr) {
 		Optional<User> loginUser = auth.signIn(usr.getUsername(), usr.getPassword());
 		if (loginUser.isPresent()) {
+			// bring user to main with login information, sessions stored here
+
 			return ResponseEntity.ok(loginUser.get());
 		} else {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
