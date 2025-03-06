@@ -59,4 +59,8 @@ public class User implements UserDetails{
 		return List.of();
 	}
 
+	public void sendBid(Auction auction, double amount) {
+
+	}
+
 }

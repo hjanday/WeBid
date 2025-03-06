@@ -9,7 +9,7 @@ public class UpdatePasswordRequestDTO {
     public String getEmail() {
         return email;
     }
- 
+
     public String getNewPassword() {
         return newPassword;
     }

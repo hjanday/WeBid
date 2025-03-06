@@ -11,6 +11,8 @@ import com.webid.webid.responses.LoginResponse;
 import com.webid.webid.service.AuthService;
 import com.webid.webid.service.JwtService;
 
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
