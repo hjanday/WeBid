@@ -77,7 +77,16 @@ public class AuctionService {
             }
         }
     }
-
+    public boolean lowerDutchPrice(Auction foundAuction,User user,double amount){
+        if (user.getId().equals(foundAuction.getOwnerID()) && foundAuction.getAuctionType().equals("Dutch")){
+            foundAuction.setCurrentBid(amount);
+            return true;
+        }else if(!user.getId().equals(foundAuction.getOwnerID())){
+            return false;
+        }else{
+            return false;
+        }
+    }
     // Dutch Auction completed
     public boolean confirmBid(Auction foundAuction, User user) {
         if (foundAuction == null) {
