@@ -27,24 +27,24 @@ public class Payment {
     @Column(unique = true, nullable = false)
     private Long userID;
     @Column(unique = true, nullable = false)
-    private Long itemID;
+    private Long auctionID;
     @Column(nullable = false)
     private String auctionType;
 
     @Column(nullable = false)
     private float itemPrice;
     @Column(nullable = false)
-    private float expeditedShipping;
+    private boolean expeditedShipping;
     @Column(nullable = false)
     private float expeditedShippingCost;
     @Column(nullable = false)
     private float totalCost = expeditedShippingCost+itemPrice;
     private int shippingDays;
 
-    private Payment(Long userID, Long itemID, String auctionType, float itemPrice, float expeditedShipping,
+    private Payment(Long userID, Long auctionID, String auctionType, float itemPrice, boolean expeditedShipping,
     float expeditedShippingCost,int shippingDays) {
         this.userID = userID;
-        this.itemID = itemID;
+        this.auctionID = auctionID;
         this.auctionType = auctionType;
         this.itemPrice = itemPrice;
         this.expeditedShipping = expeditedShipping;
@@ -55,9 +55,9 @@ public class Payment {
 
     }
 
-    public static Payment create(Long userID, Long itemID, String auctionType, float itemPrice, float expeditedShipping,
+    public static Payment create(Long userID, Long auctionID, String auctionType, float itemPrice, boolean expeditedShipping,
     float expeditedShippingCost,int shippingDays) {
-        return new Payment(userID, itemID, auctionType, itemPrice, expeditedShipping, expeditedShippingCost, shippingDays);
+        return new Payment(userID, auctionID, auctionType, itemPrice, expeditedShipping, expeditedShippingCost, shippingDays);
     }
 
 }
