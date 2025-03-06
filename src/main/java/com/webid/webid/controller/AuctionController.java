@@ -1,10 +1,12 @@
 package com.webid.webid.controller;
 
-import com.webid.webid.model.*;
-import com.webid.webid.service.AuctionService;
-import com.webid.webid.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.webid.webid.model.Auction;
+import com.webid.webid.service.AuctionService;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +17,13 @@ public class AuctionController {
 
     @Autowired
     private AuctionService auctionService;
-    @Autowired
-    private UserRepository userRepository;
+
+    // Create a new auction
+    @PostMapping
+    public ResponseEntity<Auction> createAuction(@RequestBody Auction auction) {
+        Auction savedAuction = auctionService.createAuction(auction);
+        return new ResponseEntity<>(savedAuction, HttpStatus.CREATED);
+    }
 
     // Get all auctions
     @GetMapping
@@ -24,76 +31,32 @@ public class AuctionController {
         return auctionService.getAllAuctions();
     }
 
-    // Get an auction by ID
+    // Get a specific auction by ID
     @GetMapping("/{id}")
-    public Optional<Auction> getAuctionById(@PathVariable Long id) {
-        return auctionService.getAuctionById(id);
+    public ResponseEntity<Auction> getAuctionById(@PathVariable Long id) {
+        Optional<Auction> auction = auctionService.getAuctionById(id);
+        return auction.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Get auctions by status
-    // @GetMapping("/status/{status}")
-    // public List<Auction> getAuctionsByStatus(@PathVariable String status) {
-    // return auctionService.getAuctionsByStatus(status);
-    // }
-
-    // Create auction
-    @PostMapping
-    public Auction createAuction(@RequestBody Auction auction) {
-        return auctionService.createAuction(auction);
+    // Update an auction
+    @PutMapping("/{id}")
+    public ResponseEntity<Auction> updateAuction(@PathVariable Long id, @RequestBody Auction auctionDetails) {
+        try {
+            Auction updatedAuction = auctionService.updateAuction(id, auctionDetails);
+            return ResponseEntity.ok(updatedAuction);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // Delete an auction
     @DeleteMapping("/{id}")
-    public void deleteAuction(@PathVariable Long id) {
-        auctionService.deleteAuction(id);
-    }
-
-    // update a forward auction
-    @PutMapping("update/{id}/{userName}/{bidAmount}")
-    public String updateForward(@PathVariable Long id, @PathVariable String userName, @PathVariable Double bidAmount,
-            @RequestBody Auction auction) {
-        Optional<Auction> existingAuction = auctionService.getAuctionById(id);
-        // check if auction exists
-        if (!existingAuction.isPresent()) {
-            return "Auction invalid";
-        }
-        Auction foundAuction = existingAuction.get();
-
-        // Check if user exists, should be using userService Not yet implemented
-        Optional<User> existingUser = userRepository.findByUsername(userName);
-        if (!existingUser.isPresent()) {
-            return "User invalid";
-        }
-        User foundUser = existingUser.get();
-
-        if (auctionService.setNewBid(foundAuction, bidAmount, foundUser)) {
-            return "New Bid has been set (Forward)";
-        } else {
-            return "Error";
-        }
-    }
-
-    // update a dutch auction
-    @PutMapping("complete/{id}/{userName}")
-    public String updateDutch(@PathVariable Long id, @PathVariable String userName, @RequestBody Auction auction) {
-        Optional<Auction> existingAuction = auctionService.getAuctionById(id);
-        // check if auction exists
-        if (!existingAuction.isPresent()) {
-            return "Auction invalid";
-        }
-        Auction foundAuction = existingAuction.get();
-
-        // Check if user exists, should be using userService Not yet implemented
-        Optional<User> existingUser = userRepository.findByUsername(userName);
-        if (!existingUser.isPresent()) {
-            return "User invalid";
-        }
-        User foundUser = existingUser.get();
-
-        if (auctionService.confirmBid(foundAuction, foundUser)) {
-            return "Bid has been confirmed (Dutch)";
-        } else {
-            return "Error";
+    public ResponseEntity<Void> deleteAuction(@PathVariable Long id) {
+        try {
+            auctionService.deleteAuction(id);
+            return ResponseEntity.noContent().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }
