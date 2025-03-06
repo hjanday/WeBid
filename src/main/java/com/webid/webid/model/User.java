@@ -1,5 +1,6 @@
 package com.webid.webid.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -53,6 +54,9 @@ public class User implements UserDetails{
 
 	@Column(nullable = true)
 	private String city;
+
+	@Column(nullable = true)
+    private ArrayList<String> notif;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
