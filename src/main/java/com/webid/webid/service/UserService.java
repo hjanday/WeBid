@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.stereotype.Service;
 import com.webid.webid.model.Auction;
 import com.webid.webid.model.User;
 import com.webid.webid.repository.UserRepository;
 
+@Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
@@ -21,6 +22,10 @@ public class UserService {
 
     public Optional<User> getUserbyUsername(String un) {
         return userRepository.findByUsername(un);
+    }
+
+    public Optional<User> getUserById(Long id) {
+        return userRepository.findById(id);
     }
 
 }
