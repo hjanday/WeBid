@@ -91,4 +91,12 @@ public class AuctionService {
             return true;
         }
     }
+    public void selectExpeditedShipping(Auction foundAuction){
+        foundAuction.setExpeditedShipping(true);
+
+    }
+    public void deselectExpeditedShipping(Auction foundAuction){
+        foundAuction.setExpeditedShipping(false);
+
+    }
 }

@@ -30,7 +30,8 @@ public class Auction {
 
     @Column(unique = true, nullable = false)
     private long ownerID;
-
+    @Column(nullable = false)
+    private float startingBid;
     @Column(nullable = true)
     private Double currentBid;
 
@@ -43,13 +44,17 @@ public class Auction {
     @Column(nullable = false)
     private Instant startTime;
     @Column(nullable = false)
-    private Instant endTime;
+    private Instant endTime ;
     @Column(nullable = false)
     private String auctionType;
     @Column(nullable = true)
     private ArrayList<User> prevBidder;
     @Column(nullable = false)
-    private boolean over;
+    private boolean over = false;
+    @Column(nullable = false)
+    private float expeditedShippingCost;
+    @Column(nullable = false)
+    private boolean expeditedShipping = false;
     public Auction() {
     }
 
