@@ -22,7 +22,7 @@ import lombok.*;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
-public class User implements UserDetails{
+public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -56,7 +56,7 @@ public class User implements UserDetails{
 	private String city;
 
 	@Column(nullable = true)
-    private ArrayList<String> notif;
+	private ArrayList<String> notif;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
