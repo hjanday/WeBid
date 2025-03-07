@@ -48,7 +48,8 @@ public class AuthService {
 	public Optional<User> updatePassword(String userEmail, String newPw) {
 		Optional<User> u = userRepository.findByEmail(userEmail);
 		if(u.isPresent()) {
-			userRepository.updatePasswordByEmail(userEmail, newPw);
+			String hashedUpdatedPassword = this.passwordEncoder.encode(newPw);
+			userRepository.updatePasswordByEmail(userEmail, hashedUpdatedPassword);
 			return u;
 		}
 		return Optional.empty();
