@@ -168,6 +168,7 @@ public class AuctionController {
     // }
 
     // Complete a dutch auction
+    // still requires: check that owner is not the bidder
     @PutMapping("complete/{auctionId}/{bidderID}")
     public ResponseEntity<Object> updateDutch(@PathVariable long auctionId, @PathVariable Long bidderID) {
         // Retrieve the auction by its ID
