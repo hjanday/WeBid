@@ -22,29 +22,24 @@ public class Auction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(unique = true, nullable = false)
     private String itemName;
     @Column(nullable = false)
     private String description;
-
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private long ownerID;
     @Column(nullable = false)
     private float startingBid;
     @Column(nullable = true)
     private Double currentBid;
-
     @Column(nullable = true)
     private long currentBidderID;
-
     @Column(nullable = false)
     private double bidIncrement;
-
     @Column(nullable = false)
     private Instant startTime;
     @Column(nullable = false)
-    private Instant endTime ;
+    private Instant endTime;
     @Column(nullable = false)
     private String auctionType;
     @Column(nullable = true)
@@ -55,32 +50,16 @@ public class Auction {
     private float expeditedShippingCost;
     @Column(nullable = false)
     private boolean expeditedShipping = false;
-    public Auction() {
-    }
 
-    private Auction(String itemName, String desc, long ownerID, Double currentBid, long currentBidderID,
-            double bidIncrement, String auctionType) {
-        this.itemName = itemName;
-        this.description = desc;
-        this.ownerID = ownerID;
-        this.currentBid = currentBid;
-        this.currentBidderID = currentBidderID;
-        this.bidIncrement = bidIncrement;
+    public Auction() {
         this.startTime = Instant.now();
         this.endTime = this.startTime.plus(24, ChronoUnit.HOURS);
-        this.auctionType = auctionType;
-
-    }
-
-    public static Auction create(String itemName, String desc, long ownerID, Double currentBid, long currentBidderID,
-            double bidIncrement, String auctionType) {
-        return new Auction(itemName, desc, ownerID, currentBid, currentBidderID, bidIncrement, auctionType);
     }
 
     public Auction completeAuction() {
         // set auction to be completed at this time
         this.endTime = Instant.now();
+        this.over = true;
         return this;
     }
-
 }
