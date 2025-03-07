@@ -37,6 +37,10 @@ public class AuthService {
 		newUser.setEmail(input.getEmail());
 		newUser.setUsername(input.getUsername());
 		newUser.setPassword(passwordEncoder.encode(input.getPassword()));
+		newUser.setAddress(input.getAddress());
+		newUser.setPostalCode(input.getPostalCode());
+		newUser.setCountry(input.getCountry());
+		newUser.setCity(input.getCity());
 
 		return userRepository.save(newUser);
 	}

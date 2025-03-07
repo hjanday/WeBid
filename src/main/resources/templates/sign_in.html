@@ -1,0 +1,81 @@
+<!DOCTYPE html> <!--  THIS IS THE LOGIN.HTML -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f9f9f9;
+    }
+    form {
+      max-width: 300px;
+      margin: 0 auto;
+      padding: 15px;
+      border: 1px solid #ccc;
+      background: #fff;
+    }
+    label, input {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    input {
+      padding: 8px;
+    }
+    button {
+      padding: 10px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align:center;">Login</h1>
+  <form id="login_form">
+    <label>Email:</label>
+    <input type="email" id="email" required>
+    <br>
+    <label>Password:</label>
+    <input type="password" id="password" required>
+    <br>
+    <button type="submit">Login</button>
+  </form>
+  <script>
+    document.getElementById("login_form").addEventListener("submit", function(event) {
+        event.preventDefault(); 
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        fetch("/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email: email, password: password })
+        })
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text); });
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert("Login successful! Token: " + data.token);
+        })
+        .catch(error => {
+            alert("Login failed: " + error.message);
+        });
+    });
+  </script>
+
+  <p style="text-align:center;">Don't have an account? <a href="/register">Sign Up</a></p>
+</body>
+</html>

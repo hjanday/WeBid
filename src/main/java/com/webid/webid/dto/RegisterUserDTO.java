@@ -11,4 +11,8 @@ public class RegisterUserDTO {
     private String email;
     private String username;
     private String password;
+    private String address;
+    private String postalCode;
+    private String country;
+    private String city;
 }
