@@ -48,7 +48,13 @@ public class AuthController {
 
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody RegisterUserDTO newUser) {
-		User registeredUser = authService.signUp(newUser);
+		User registeredUser = null;
+		try {
+			registeredUser = authService.signUp(newUser);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return ResponseEntity.ok(registeredUser);
 	}
 

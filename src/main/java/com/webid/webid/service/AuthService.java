@@ -1,6 +1,7 @@
 package com.webid.webid.service;
 import com.webid.webid.dto.LoginUserDTO;
 import com.webid.webid.dto.RegisterUserDTO;
+import com.webid.webid.exceptions.ResourceAlreadyExistsException;
 import com.webid.webid.exceptions.ResourceNotFoundException;
 import com.webid.webid.model.User;
 import com.webid.webid.repository.UserRepository;
@@ -10,6 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Service;
+
+import java.lang.classfile.ClassFile.Option;
 import java.util.Optional;
 
 @Service
@@ -32,6 +35,17 @@ public class AuthService {
 	}
 
 	public User signUp(RegisterUserDTO input){
+		boolean userExistsByEmail = !userRepository.findByUsername(input.getEmail()).equals(Optional.empty());
+		boolean userExistsByUsername = !userRepository.findByUsername(input.getUsername()).equals(Optional.empty());
+
+		if(userExistsByEmail){
+			throw new ResourceAlreadyExistsException("Username already exists!");
+		}
+		if(userExistsByUsername){
+			throw new ResourceAlreadyExistsException("Email already registered!");
+		}
+
+
 		User newUser = new User();
 		newUser.setFirstName(input.getFirstName());
 		newUser.setLastName(input.getLastName());
