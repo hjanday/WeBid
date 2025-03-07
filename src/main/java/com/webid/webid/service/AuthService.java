@@ -37,6 +37,10 @@ public class AuthService {
 		newUser.setEmail(input.getEmail());
 		newUser.setUsername(input.getUsername());
 		newUser.setPassword(passwordEncoder.encode(input.getPassword()));
+		newUser.setAddress(input.getAddress());
+		newUser.setPostalCode(input.getPostalCode());
+		newUser.setCountry(input.getCountry());
+		newUser.setCity(input.getCity());
 
 		return userRepository.save(newUser);
 	}
@@ -44,7 +48,8 @@ public class AuthService {
 	public Optional<User> updatePassword(String userEmail, String newPw) {
 		Optional<User> u = userRepository.findByEmail(userEmail);
 		if(u.isPresent()) {
-			userRepository.updatePasswordByEmail(userEmail, newPw);
+			String hashedUpdatedPassword = this.passwordEncoder.encode(newPw);
+			userRepository.updatePasswordByEmail(userEmail, hashedUpdatedPassword);
 			return u;
 		}
 		return Optional.empty();
