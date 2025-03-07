@@ -26,7 +26,7 @@ public class Auction {
     private String itemName;
     @Column(nullable = false)
     private String description;
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private long ownerID;
     @Column(nullable = false)
     private float startingBid;
@@ -61,5 +61,4 @@ public class Auction {
         this.endTime = Instant.now();
         return this;
     }
-
 }
