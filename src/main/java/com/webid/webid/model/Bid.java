@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "bids")
 public class Bid {
     @Id
@@ -37,5 +39,4 @@ public class Bid {
         this.timestamp = Instant.now();
     }
 
-    // Getters and Setters
 }

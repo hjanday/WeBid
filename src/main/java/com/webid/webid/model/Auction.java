@@ -59,6 +59,7 @@ public class Auction {
     public Auction completeAuction() {
         // set auction to be completed at this time
         this.endTime = Instant.now();
+        this.over = true;
         return this;
     }
 }
