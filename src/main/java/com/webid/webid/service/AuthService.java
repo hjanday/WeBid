@@ -1,6 +1,7 @@
 package com.webid.webid.service;
 import com.webid.webid.dto.LoginUserDTO;
 import com.webid.webid.dto.RegisterUserDTO;
+import com.webid.webid.exceptions.ResourceNotFoundException;
 import com.webid.webid.model.User;
 import com.webid.webid.repository.UserRepository;
 
@@ -45,14 +46,17 @@ public class AuthService {
 		return userRepository.save(newUser);
 	}
 
-	public Optional<User> updatePassword(String userEmail, String newPw) {
+	public Optional<User> updatePassword(String userEmail, String newPw) throws ResourceNotFoundException {
 		Optional<User> u = userRepository.findByEmail(userEmail);
 		if(u.isPresent()) {
 			String hashedUpdatedPassword = this.passwordEncoder.encode(newPw);
 			userRepository.updatePasswordByEmail(userEmail, hashedUpdatedPassword);
-			return u;
+			return userRepository.findByEmail(userEmail);
 		}
-		return Optional.empty();
+		else{
+			throw new ResourceNotFoundException("The user with the email " + userEmail + " does not exist");
+		}
+		
 	}
 
 	
