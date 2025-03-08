@@ -48,25 +48,14 @@ public class AuthController {
 
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody RegisterUserDTO newUser) {
-		User registeredUser = null;
-		try {
-			registeredUser = authService.signUp(newUser);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		User registeredUser = authService.signUp(newUser);
 		return ResponseEntity.ok(registeredUser);
 	}
-
+	
 	@PostMapping("/forgotpassword")
 	public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordRequestDTO usrReq) {
-		Optional<User> currentUser = authService.updatePassword(usrReq.getEmail(), usrReq.getNewPassword());
-		if (currentUser.isPresent()) {
-			return ResponseEntity.ok(currentUser.get());
-		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-
-		}
+		authService.updatePassword(usrReq.getEmail(), usrReq.getNewPassword());
+		return ResponseEntity.ok("Password was updated successfully!");
 	}
 
 }
