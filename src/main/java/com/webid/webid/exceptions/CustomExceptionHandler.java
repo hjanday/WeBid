@@ -1,21 +1,26 @@
 package com.webid.webid.exceptions;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/** 
-        How to use the handler:
-        Create a custom exception -> extends runtime exception
-        Add a handler to custom exception handler
-        throw the exception as needed
-*/
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+
+/**
+ * How to use the handler:
+ * Create a custom exception -> extends runtime exception
+ * Add a handler to custom exception handler
+ * throw the exception as needed
+ */
 
 @RestControllerAdvice
 public class CustomExceptionHandler {
@@ -55,5 +60,21 @@ public class CustomExceptionHandler {
         error.put("error", ex.getMessage());
         return error;
     }
-    
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public Map<String, String> handleInvalidEnum(HttpMessageNotReadableException ex) {
+        Throwable cause = ex.getCause();
+        if (cause instanceof InvalidFormatException) {
+            InvalidFormatException ife = (InvalidFormatException) cause;
+            Class<?> targetType = ife.getTargetType();
+            if (targetType.isEnum()) {
+                String validValues = Arrays.toString(targetType.getEnumConstants());
+                return Map.of("error", "Invalid value '" + ife.getValue() +
+                        "'. Accepted values are: " + validValues);
+            }
+        }
+        return Map.of("error", "Malformed JSON request");
+    }
+
 }
