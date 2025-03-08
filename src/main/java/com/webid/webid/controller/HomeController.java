@@ -22,4 +22,9 @@ public class HomeController {
     public String register() {
         return "sign_up"; 
     }
+
+    @GetMapping("/forgotpassword")
+    public String forgotpassword() {
+        return "forgot_password"; 
+    }
 }

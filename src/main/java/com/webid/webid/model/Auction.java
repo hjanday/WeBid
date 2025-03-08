@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,6 +21,14 @@ import lombok.*;
 
 @Table(name = "auctions")
 public class Auction {
+
+    // Define enum for auction type
+    public enum AuctionType {
+        DUTCH,
+        FORWARD
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,7 +51,8 @@ public class Auction {
     @Column(nullable = false)
     private Instant endTime;
     @Column(nullable = false)
-    private String auctionType;
+    @Enumerated(EnumType.STRING) 
+    private AuctionType auctionType;
     @Column(nullable = true)
     private ArrayList<User> prevBidder;
     @Column(nullable = false)
