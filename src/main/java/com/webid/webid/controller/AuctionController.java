@@ -55,7 +55,6 @@ public class AuctionController {
     }
 
     // edits a Dutch auction
-    // still requires: check for dutch type and check if bid is over
     @PutMapping("dutch/{auctionId}/{userId}")
     public ResponseEntity<Object> decrementDutch(@PathVariable Long auctionId, @PathVariable Long userId) {
         // Retrieve the auction by its ID
@@ -76,16 +75,18 @@ public class AuctionController {
         Auction auction = optionalAuction.get();
         User user = optionalUser.get();
 
-        // Only allow owner to change
-        if (!user.getId().equals(auction.getOwnerID())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Only the owner of the auction may reduce the bid!");
+        // verififcation of request
+        try {
+            auctionService.verifyOwner(user, auction);
+            auctionService.verifyRequest(auction, "DUTCH");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
         // Uses bid_increment to decrement values
         if (auction.getCurrentBid() > auction.getBidIncrement()) {
             auction.setCurrentBid(auction.getCurrentBid() - auction.getBidIncrement());
-            auctionService.createAuction(auction); // Save the updated auction
+            auctionService.saveAuction(auction); // Save the updated auction
 
             return ResponseEntity.ok("Auction successfully decremented");
         } else {
@@ -95,7 +96,6 @@ public class AuctionController {
     }
 
     // places bid for forward bidding
-    // still requires: check auction type and if auction is over
     @PutMapping("/update/{auctionId}/{bidderID}/{bidAmount}")
     public ResponseEntity<Object> placeBid(
             @PathVariable long auctionId,
@@ -120,6 +120,14 @@ public class AuctionController {
         Auction auction = optionalAuction.get();
         User user = optionalUser.get();
 
+        // verification of request
+        try {
+            auctionService.verifyNonOwner(user, auction);
+            auctionService.verifyRequest(auction, "FORWARD");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
         // Check if the bid amount is greater than the current bid
         if (auction.getCurrentBid().equals(null) || bidAmount > auction.getCurrentBid()) {
             // Update the auction with the new bidder and bid amount
@@ -130,7 +138,7 @@ public class AuctionController {
             Bid newBid = bidService.placeBid(auction, user, bidAmount);
 
             // Save the updated auction
-            auctionService.createAuction(auction);
+            auctionService.saveAuction(auction);
 
             // Return the updated auction with status 200 OK
             return ResponseEntity.ok(auction);
@@ -168,7 +176,6 @@ public class AuctionController {
     // }
 
     // Complete a dutch auction
-    // still requires: check that owner is not the bidder
     @PutMapping("complete/{auctionId}/{bidderID}")
     public ResponseEntity<Object> updateDutch(@PathVariable long auctionId, @PathVariable Long bidderID) {
         // Retrieve the auction by its ID
@@ -189,6 +196,13 @@ public class AuctionController {
         Auction auction = optionalAuction.get();
         User user = optionalUser.get();
 
+        // verify owner is not the bidder
+        try {
+            auctionService.verifyNonOwner(user, auction);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
         // set currentbidder; since dutch is basically a 'purchase' rather than a bid
         auction.setCurrentBidderID(bidderID);
 
@@ -196,7 +210,7 @@ public class AuctionController {
         if (user.getId() == auction.getCurrentBidderID()) {
             // complete the auction and save new values
             auction.completeAuction();
-            auctionService.createAuction(auction); // saves the new auction values
+            auctionService.saveAuction(auction); // saves the new auction values
             return ResponseEntity.ok(auction);
         } else {
             return ResponseEntity.badRequest().body("Only the current bidder can complete the auction.");
