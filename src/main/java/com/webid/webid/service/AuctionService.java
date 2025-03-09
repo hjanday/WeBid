@@ -6,10 +6,10 @@ import com.webid.webid.model.User;
 import com.webid.webid.repository.AuctionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -40,6 +40,15 @@ public class AuctionService {
                     "An auction with item name " + auction.getItemName() + " already exists.");
         }
         try {
+            // if auction type is FORWARD, set start and end time.
+            try {
+                if (auction.getAuctionType().name().equals("FORWARD")) {
+                    auction.setStartTime(Instant.now());
+                    auction.setEndTime(Instant.now().plus(24, ChronoUnit.HOURS));
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
             return auctionRepository.save(auction);
         } catch (DataIntegrityViolationException ex) {
             throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());

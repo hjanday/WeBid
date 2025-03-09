@@ -4,12 +4,13 @@ import com.webid.webid.model.*;
 import com.webid.webid.service.AuctionService;
 import com.webid.webid.service.BidService;
 import com.webid.webid.service.UserService;
-import com.webid.webid.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,8 +78,8 @@ public class AuctionController {
 
         // verififcation of request
         try {
-            auctionService.verifyOwner(user, auction);
             auctionService.verifyRequest(auction, "DUTCH");
+            auctionService.verifyOwner(user, auction);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -86,6 +87,13 @@ public class AuctionController {
         // Uses bid_increment to decrement values
         if (auction.getCurrentBid() > auction.getBidIncrement()) {
             auction.setCurrentBid(auction.getCurrentBid() - auction.getBidIncrement());
+            // ON dutch auction: Check if currentbid is floor price and start timer.
+            if (auction.getCurrentBid() <= auction.getLowestBid()) {
+                auction.setCurrentBid(auction.getLowestBid());
+                auction.setStartTime(Instant.now());
+                auction.setEndTime(Instant.now().plus(24, ChronoUnit.HOURS));
+            }
+
             auctionService.saveAuction(auction); // Save the updated auction
 
             return ResponseEntity.ok("Auction successfully decremented");
@@ -122,8 +130,8 @@ public class AuctionController {
 
         // verification of request
         try {
-            auctionService.verifyNonOwner(user, auction);
             auctionService.verifyRequest(auction, "FORWARD");
+            auctionService.verifyNonOwner(user, auction);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
