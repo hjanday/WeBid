@@ -1,9 +1,11 @@
 package com.webid.webid.service;
 
+import com.webid.webid.exceptions.ResourceAlreadyExistsException;
 import com.webid.webid.model.Auction;
 import com.webid.webid.model.User;
 import com.webid.webid.repository.AuctionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,7 +31,17 @@ public class AuctionService {
 
     // Create a new auction
     public Auction createAuction(Auction auction) {
+        // Check if an auction with the same item name exists already and throw exception that the itemName already exists
+        if(auctionRepository.findByItemName(auction.getItemName()).isPresent()){
+            throw new ResourceAlreadyExistsException("An auction with item name " + auction.getItemName() + " already exists.");
+        }
+        try{
         return auctionRepository.save(auction);
+        }
+        catch (DataIntegrityViolationException ex){
+			throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
+		}
+
     }
 
     // Delete an auction

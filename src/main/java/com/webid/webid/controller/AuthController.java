@@ -16,6 +16,8 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -54,13 +56,10 @@ public class AuthController {
 
 	@PostMapping("/forgotpassword")
 	public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordRequestDTO usrReq) {
-		Optional<User> currentUser = authService.updatePassword(usrReq.getEmail(), usrReq.getNewPassword());
-		if (currentUser.isPresent()) {
-			return ResponseEntity.ok(currentUser.get());
-		} else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
-
-		}
+		authService.updatePassword(usrReq.getEmail(), usrReq.getNewPassword());
+		Map<String, String> response = new HashMap<>();
+		response.put("message", "Password was updated successfully!");
+		return ResponseEntity.ok(response);
 	}
 
 }
