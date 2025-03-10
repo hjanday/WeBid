@@ -69,6 +69,9 @@
         })
         .then(data => {
             alert("Login successful! Token: " + data.token);
+            localStorage.setItem("jwtToken", data.token);
+            window.location.href = "/auctions";
+            console.log(data);
         })
         .catch(error => {
             alert("Login failed: " + error.message);

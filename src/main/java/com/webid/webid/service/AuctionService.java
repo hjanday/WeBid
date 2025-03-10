@@ -29,10 +29,25 @@ public class AuctionService {
         return auctionRepository.findById(id);
     }
 
+    public List<Auction> findAuctionByItemName(String itemName){
+        if(auctionRepository.findByItemName(itemName).isEmpty()) {
+            throw new ResourceAlreadyExistsException("No auctions found");
+        }
+
+        try{
+            return auctionRepository.findByItemName(itemName);
+        }
+
+        catch (DataIntegrityViolationException ex){
+			throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
+		}
+        
+    }
+
     // Create a new auction
     public Auction createAuction(Auction auction) {
         // Check if an auction with the same item name exists already and throw exception that the itemName already exists
-        if(auctionRepository.findByItemName(auction.getItemName()).isPresent()){
+        if(!auctionRepository.findByItemName(auction.getItemName()).isEmpty()){
             throw new ResourceAlreadyExistsException("An auction with item name " + auction.getItemName() + " already exists.");
         }
         try{

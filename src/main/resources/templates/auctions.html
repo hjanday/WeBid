@@ -1,0 +1,416 @@
+<!-- Todo List
+- Add dutch auction bidding
+- Update auction display screen with user name instead of id
+-  How do I get the bidderID? 
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bid on an Auction</title>
+  <style>
+    /* Basic reset and body styling */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #f9f9f9;
+      font-family: Arial, sans-serif;
+      padding: 1rem;
+    }
+
+    /* Headings and layout */
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 2rem;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    /* Form container */
+    #auctionForm {
+      max-width: 400px;
+      margin: 0 auto 1rem auto;
+      background-color: #fff;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #auctionForm label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    #auctionForm input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #auctionForm button {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #auctionForm button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Error message */
+    #errorMessage {
+      text-align: center;
+      color: red;
+      margin-bottom: 1rem;
+    }
+
+    /* Auction table */
+    #auctionTable {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      display: none; /* hidden by default */
+    }
+    #auctionTable thead tr {
+      background-color: #eee;
+    }
+    #auctionTable th, #auctionTable td {
+      border: 1px solid #ccc;
+      padding: 0.75rem;
+      text-align: left;
+    }
+    #auctionTable tr:hover {
+      background-color: #f0f0f0;
+    }
+
+    /* Bid Now button - hidden initially */
+    #bidNowButton {
+      display: none; /* crucial: ensure it's not visible until selected */
+      margin: 1.5rem auto 0 auto;
+      padding: 0.75rem 1.5rem;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      display: block;
+    }
+    #bidNowButton:hover {
+      background-color: #218838;
+    }
+
+    /* Forward Auction Detail Section */
+    #forwardAuctionSection {
+      display: none; /* hidden by default */
+      max-width: 800px;
+      margin: 1.5rem auto 0 auto;
+      background-color: #fff;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    /* Simple layout for the two columns */
+    .forward-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .forward-left,
+    .forward-right {
+      flex: 1 1 300px;
+    }
+    .forward-left h3 {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+    .forward-right label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .forward-right input[type="number"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #faPlaceBidButton {
+      padding: 0.75rem 1.5rem;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #faPlaceBidButton:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header / Logo -->
+  <div style="font-size:1.5rem; font-weight:bold; margin-bottom:1rem;">
+    idk bro put a logo here
+  </div>
+
+  <h1>Auction Search</h1>
+
+  <!-- Search Form -->
+  <form id="auctionForm">
+    <label for="itemNameInput">Enter Auction Item Name:</label>
+    <input type="text" id="itemNameInput" placeholder="Item Name" required>
+    <button type="submit">Search Auctions</button>
+  </form>
+
+  <!-- Error Message -->
+  <div id="errorMessage"></div>
+
+  <!-- Auction Table -->
+  <table id="auctionTable">
+    <thead>
+      <tr>
+        <th>Item Name</th>
+        <th>Current Bid</th>
+        <th>Auction Type</th>
+        <th>Remaining Time</th>
+        <th>Select</th>
+      </tr>
+    </thead>
+    <tbody id="auctionTbody"></tbody>
+  </table>
+
+  <!-- Bid Now Button (initially display:none in CSS) -->
+  <button id="bidNowButton">Bid Now</button>
+
+  <!-- Forward Auction Section (hidden by default) -->
+  <div id="forwardAuctionSection">
+    <h2>Screen for Bidding on Forward Auctions</h2>
+    <div class="forward-container">
+      <!-- Left Column: Item & Shipping -->
+      <div class="forward-left">
+        <h3 id="faItemName"></h3>
+        <p id="faDescription"></p>
+        <p id="faShippingPrice"></p>
+      </div>
+      <!-- Right Column: Current price, highest bidder, bid input -->
+      <div class="forward-right">
+        <p id="faCurrentPrice"></p>
+        <p id="faHighestBidder"></p>
+        <label for="faBidAmount">Your Bid:</label>
+        <input type="number" step="0.01" id="faBidAmount" placeholder="Enter your bid amount">
+        <button id="faPlaceBidButton">Place Bid</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedAuction = null;
+    document.getElementById("bidNowButton").style.display = "none";
+    // Called when a radio button is selected
+    function onRadioSelect(auction) {
+      selectedAuction = auction;
+      // Show the "Bid Now" button
+      document.getElementById("bidNowButton").style.display = "block";
+    }
+
+    // "Bid Now" button logic
+    document.getElementById("bidNowButton").addEventListener("click", function() {
+      if (!selectedAuction) return;
+      if ((selectedAuction.auctionType || "").toLowerCase() === "forward") {
+        showForwardAuctionSection(selectedAuction);
+      } else if ((selectedAuction.auctionType || "").toLowerCase() === "dutch") {
+        alert("Dutch auction: handle 'now' logic here!");
+      }
+    });
+
+    // Show the forward auction section, hide the table
+    function showForwardAuctionSection(auction) {
+      // Hide the table and the Bid Now button
+      document.getElementById("auctionTable").style.display = "none";
+      document.getElementById("bidNowButton").style.display = "none";
+
+      // Fill in forward auction fields
+      document.getElementById("faItemName").textContent = auction.itemName || "";
+      document.getElementById("faDescription").textContent = "Description: " + (auction.description || "N/A");
+      // Shipping price (mock or from auction data)
+      document.getElementById("faShippingPrice").textContent = "Shipping Price: $20";
+
+      // Current price
+      const currentBidText = (auction.currentBid != null && auction.currentBid !== "") 
+        ? "$" + auction.currentBid 
+        : "No Bid Yet";
+      document.getElementById("faCurrentPrice").textContent = "Current Price: " + currentBidText;
+
+      // Highest bidder
+      const highestBidderText = auction.currentBidderID || "Unknown";
+      document.getElementById("faHighestBidder").textContent = "Highest Bidder: " + highestBidderText;
+
+      // Show forward auction section
+      document.getElementById("forwardAuctionSection").style.display = "block";
+    }
+
+    // Place bid button in forward auction section
+    document.getElementById("faPlaceBidButton").addEventListener("click", function() {
+      if (!selectedAuction) return;
+      const bidAmount = document.getElementById("faBidAmount").value;
+      alert(`Placing a forward auction bid of $${bidAmount} on auction ID: ${selectedAuction.id}`);
+      // In real usage, you'd do a POST or PATCH to your server
+    });
+
+    // Search form submission
+    document.getElementById("auctionForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const itemName = document.getElementById("itemNameInput").value.trim();
+      const url = "/api/auctions/search?itemName=" + encodeURIComponent(itemName);
+
+      fetch(url, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" }
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => { throw new Error(text); });
+        }
+        return response.json();
+      })
+      .then(data => {
+        document.getElementById("errorMessage").textContent = "";
+        const tbody = document.getElementById("auctionTbody");
+        tbody.innerHTML = "";
+        selectedAuction = null;
+        // Hide forward auction if open
+        document.getElementById("forwardAuctionSection").style.display = "none";
+        // Hide Bid Now button
+        document.getElementById("bidNowButton").style.display = "none";
+
+        if (data.length === 0) {
+          document.getElementById("auctionTable").style.display = "none";
+          document.getElementById("errorMessage").textContent = "No auctions found.";
+          return;
+        }
+
+        // Show the table
+        document.getElementById("auctionTable").style.display = "table";
+
+        data.forEach(auction => {
+          const row = document.createElement("tr");
+
+          // Item Name
+          const cellItemName = document.createElement("td");
+          cellItemName.textContent = auction.itemName || "";
+          row.appendChild(cellItemName);
+
+          // Current Bid
+          const cellCurrentBid = document.createElement("td");
+          cellCurrentBid.textContent = (auction.currentBid != null && auction.currentBid !== "") 
+            ? "$" + auction.currentBid 
+            : "No Bid Yet";
+          row.appendChild(cellCurrentBid);
+
+          // Auction Type
+          const cellAuctionType = document.createElement("td");
+          cellAuctionType.textContent = auction.auctionType || "";
+          row.appendChild(cellAuctionType);
+
+          // Remaining Time
+          const cellRemainingTime = document.createElement("td");
+          if ((auction.auctionType || "").toLowerCase() === "forward") {
+            if (auction.endTime) {
+              cellRemainingTime.textContent = calculateRemainingTime(auction.endTime);
+            } else {
+              cellRemainingTime.textContent = "N/A";
+            }
+          } else if ((auction.auctionType || "").toLowerCase() === "dutch") {
+            cellRemainingTime.textContent = "now";
+          } else {
+            cellRemainingTime.textContent = "";
+          }
+          row.appendChild(cellRemainingTime);
+
+          // Radio button
+          const cellSelect = document.createElement("td");
+          const radio = document.createElement("input");
+          radio.type = "radio";
+          radio.name = "auctionSelect";
+          radio.addEventListener("click", function() {
+            onRadioSelect(auction);
+          });
+          cellSelect.appendChild(radio);
+          row.appendChild(cellSelect);
+
+          tbody.appendChild(row);
+        });
+      })
+      .catch(error => {
+        document.getElementById("errorMessage").textContent = "Error: " + error.message;
+        document.getElementById("auctionTable").style.display = "none";
+        document.getElementById("forwardAuctionSection").style.display = "none";
+      });
+    });
+
+    // Utility: calculates the difference between now and endTime
+    function calculateRemainingTime(endTime) {
+      const now = new Date();
+      const end = new Date(endTime);
+      let diff = end - now;
+      if (diff <= 0) {
+        return "Expired";
+      }
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      diff -= hours * (1000 * 60 * 60);
+      const minutes = Math.floor(diff / (1000 * 60));
+      diff -= minutes * (1000 * 60);
+      const seconds = Math.floor(diff / 1000);
+      return `${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    document.getElementById("faPlaceBidButton").addEventListener("click", function() {
+    if (!selectedAuction) return;
+    // Get the new bid amount from the input field (faBidAmount)
+    const bidAmount = document.getElementById("faBidAmount").value;
+    const token = localStorage.getItem("jwtToken");
+    
+    
+    // Build the URL using the selected auction's id, currentBidderID, and the bid amount input
+    const url = `http://localhost:8080/api/auctions/update/${selectedAuction.id}/${selectedAuction.currentBidderID}/${bidAmount}`;
+
+    console.log(selectedAuction);
+    
+    fetch(url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      }
+      // No body needed if your endpoint is defined with path variables only.
+    })
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(text => { throw new Error(text); });
+      }
+      return response.json();
+    })
+    .then(data => {
+      alert("Bid placed successfully!");
+      // Optionally update the page with new auction data
+    })
+    .catch(error => {
+      alert("Bid failed: " + error.message);
+    });
+  });
+
+  </script>
+</body>
+</html>

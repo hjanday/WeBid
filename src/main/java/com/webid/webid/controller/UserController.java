@@ -38,15 +38,13 @@ public class UserController {
 
     @PostMapping("/findusername")
     ResponseEntity<User> queryUsername(@RequestBody String username) {
-        String cleanUN = username.replaceAll("^\"|\"$", "").trim();
-        return this.userRepository.findByUsername(cleanUN).map(ResponseEntity::ok)
+        return this.userRepository.findByUsername(username).map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping("/findemail")
     ResponseEntity<User> queryEmail(@RequestBody String email) {
-        String cleanEmail = email.replaceAll("^\"|\"$", "").trim();
-        return this.userRepository.findByEmail(cleanEmail).map(ResponseEntity::ok)
+        return this.userRepository.findByEmail(email).map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 

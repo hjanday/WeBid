@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/auctions")
@@ -35,6 +38,13 @@ public class AuctionController {
     public Optional<Auction> getAuctionById(@PathVariable Long id) {
         return auctionService.getAuctionById(id);
     }
+
+    // Get auctions by item name queries
+    @GetMapping("/search")
+    public List<Auction> getAuctionByItemName(@RequestParam("itemName") String itemName){
+        return auctionService.findAuctionByItemName(itemName);
+    }
+    
 
     // Get auctions by status
     // @GetMapping("/status/{status}")
