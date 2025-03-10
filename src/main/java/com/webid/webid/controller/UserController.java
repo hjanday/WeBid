@@ -53,14 +53,10 @@ public class UserController {
     }
 
     @PostMapping("/getdetails")
-	 public ResponseEntity<?> getTokenClaims(@RequestHeader("Authorization") String authHeader) {
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Missing or invalid Authorization header");
-        }
-        String token = authHeader.substring(7); // remove "Bearer " prefix
+	 public ResponseEntity<?> getTokenClaims(@RequestBody String token) {
         try {
+            token = token.replaceAll("^\"|\"$", "");
             String username = jwtService.extractUsername(token);
-            System.out.println(username);
             Optional<User> foundUser = userRepository.findByUsername(username);
             Long id = foundUser.get().getId();
             return ResponseEntity.ok(id);
