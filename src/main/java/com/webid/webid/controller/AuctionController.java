@@ -17,6 +17,10 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/api/auctions")
@@ -24,13 +28,23 @@ public class AuctionController {
 
     @Autowired
     private AuctionService auctionService;
-    @Autowired
-    private UserService userService;
-    @Autowired
     private BidService bidService;
+    private UserService userService;
 
-    // private UserRepository userRepository;
+    // Create auction
+    @PostMapping("/create")
+    public ResponseEntity<Auction> createAuction(@RequestBody Auction auction) {
+        Auction createdAuction = auctionService.createAuction(auction);
 
+        return ResponseEntity.ok(createdAuction);
+    }
+
+    // Delete an auction
+    @DeleteMapping("/{id}")
+    public void deleteAuction(@PathVariable Long id) {
+        auctionService.deleteAuction(id);
+    }
+    
     // Get all auctions
     @GetMapping
     public List<Auction> getAllAuctions() {
@@ -55,19 +69,9 @@ public class AuctionController {
     // return auctionService.getAuctionsByStatus(status);
     // }
 
-    // Create auction
-    @PostMapping("/create")
-    public ResponseEntity<Auction> createAuction(@RequestBody Auction auction) {
-        Auction createdAuction = auctionService.createAuction(auction);
+    
 
-        return ResponseEntity.ok(createdAuction);
-    }
-
-    // Delete an auction
-    @DeleteMapping("/{id}")
-    public void deleteAuction(@PathVariable Long id) {
-        auctionService.deleteAuction(id);
-    }
+    
 
     // edits a Dutch auction
     @PutMapping("dutch/{auctionId}")
