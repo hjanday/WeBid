@@ -45,7 +45,7 @@ public class AuctionController {
 
     // Get auctions by item name queries
     @GetMapping("/search")
-    public List<Auction> getAuctionByItemName(@RequestParam String itemName){
+    public List<Auction> getAuctionByItemName(@RequestParam String itemName) {
         return auctionService.findAuctionByItemName(itemName);
     }
 
@@ -81,11 +81,10 @@ public class AuctionController {
         }
     }
 
+    // Updates forward auctions
     @PostMapping("/{auctionId}")
     public ResponseEntity<Object> placeBid(@PathVariable long auctionId, @RequestParam double bidAmount) {
-
         Bid bid = bidService.placeBid(auctionId, bidAmount);
-
         return ResponseEntity.ok(bid);
     }
 

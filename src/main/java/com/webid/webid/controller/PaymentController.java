@@ -32,55 +32,17 @@ public class PaymentController {
     private PaymentService paymentService;
 
     // Simulate a payment process
-    @PostMapping("/{userID}/{auctionID}/{shipDays}/pay")
-    public ResponseEntity<Object> makePayment(@PathVariable Long userID, @PathVariable Long auctionID,
+    @PostMapping("/{auctionID}/{shipDays}/pay")
+    public ResponseEntity<Object> makePayment(@PathVariable Long auctionID,
             @PathVariable int shipDays) {
 
-        // obtain user and auction via userService and auctionService
-        Optional<Auction> optionalAuction = auctionService.getAuctionById(auctionID);
-        Optional<User> optionalUser = userService.getUserById(userID);
-
-        // Check if the auction exists
-        if (!optionalAuction.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Auction not found.");
-        }
-        if (!optionalUser.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found.");
+        Payment payment = paymentService.makePayment(auctionID, shipDays);
+        if (payment == null) {
+            return ResponseEntity.badRequest().body("Payment could not be added");
+        } else {
+            return ResponseEntity.ok("Payment successfully processed");
         }
 
-        // Retrieve the auction and user
-        Auction auction = optionalAuction.get();
-        User user = optionalUser.get();
-
-        // verify auction belongs to user
-        if (auction.getCurrentBidderID() != user.getId()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Auction's current bidder does not belong to user");
-        }
-
-        // verify auction is over
-        // if (!auction.isOver()) {
-        // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        // .body("Auction is currently ongoing!");
-        // }
-
-        // verify bid type and time is allowed
-        // type is FORWARD: check if endTime has passed
-        // if (auction.getAuctionType().name().equals("FORWARD") &&
-        // auction.getEndTime().isBefore(Instant.now())) {
-        // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        // .body("Auction is not yet over!");
-        // }
-
-        // type is DUTCH: no checks needed ... payment should occur after
-        // api/auctions/complete
-        // create payment and add to db
-        Payment payment = paymentService.createPayment(user.getId(), auction.getId(), auction.getAuctionType().name(),
-                auction.getCurrentBid(), auction.isExpeditedShipping(), auction.getExpeditedShippingCost(), shipDays);
-
-        return ResponseEntity.ok("Payment has completed");
     }
 
     // Check payment status
