@@ -384,7 +384,7 @@
     // Get the new bid amount from the input field (faBidAmount)
     const bidAmount = document.getElementById("faBidAmount").value;
     const token = localStorage.getItem("jwtToken");
-    const userID = null;
+    
     fetch("/api/users/getdetails", {
       method: "POST",
       headers: {
@@ -401,13 +401,11 @@
       return response.json();
     })
     .then (data => {
-    userID = Number(data);
-  })
-  
-   // Build the URL using the selected auction's id, currentBidderID, and the bid amount input
+    let userID = Number(data);
+    // Build the URL using the selected auction's id, currentBidderID, and the bid amount input
    const url = `http://localhost:8080/api/auctions/update/${selectedAuction.id}/${userID}/${bidAmount}`;
 
-console.log(selectedAuction);
+
 
 
 
@@ -432,6 +430,9 @@ fetch(url, {
   alert("Bid failed: " + error.message);
 });
 });
+  })
+  
+   
   </script>
 </body>
 </html>
