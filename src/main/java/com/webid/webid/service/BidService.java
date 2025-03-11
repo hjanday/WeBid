@@ -7,13 +7,19 @@ import com.webid.webid.repository.AuctionRepository;
 import com.webid.webid.repository.BidRepository;
 import com.webid.webid.repository.UserRepository;
 
+import lombok.AllArgsConstructor;
+
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class BidService {
 
@@ -21,12 +27,7 @@ public class BidService {
     private BidRepository bidRepository;
     private AuctionRepository auctionRepository;
     private UserRepository userRepository;
-
-    public BidService(BidRepository bidRepository, AuctionRepository auctionRepository, UserRepository userRepository) {
-        this.bidRepository = bidRepository;
-        this.auctionRepository = auctionRepository;
-        this.userRepository = userRepository;
-    }
+    private AuctionService auctionService;
 
     public Bid placeBid(Long auctionId, double amount) {
         
@@ -39,8 +40,10 @@ public class BidService {
 
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
-
+        
+        // maybe add a previous bid to see how much the bid was before this new one
         Bid bid = new Bid();
+
         bid.setAmount(amount);
         bid.setTimestamp(Instant.now());
         bid.setUser(user);
