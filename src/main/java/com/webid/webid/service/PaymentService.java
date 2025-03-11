@@ -16,9 +16,10 @@ public class PaymentService {
     /**
      * Creates a new Payment record.
      */
-    public Payment createPayment(Long userID, Long itemID, String auctionType, float itemPrice, 
-                                 boolean expeditedShipping, float expeditedShippingCost, int shippingDays) {
-        Payment payment = Payment.create(userID, itemID, auctionType, itemPrice, expeditedShipping, expeditedShippingCost, shippingDays);
+    public Payment createPayment(Long userID, Long itemID, String auctionType, double itemPrice,
+            boolean expeditedShipping, double expeditedShippingCost, int shippingDays) {
+        Payment payment = Payment.create(userID, itemID, auctionType, itemPrice, expeditedShipping,
+                expeditedShippingCost, shippingDays);
         return paymentRepository.save(payment);
     }
 
@@ -35,7 +36,5 @@ public class PaymentService {
     public Payment getPaymentById(Long id) {
         return paymentRepository.findById(id).orElse(null);
     }
-
-
 
 }

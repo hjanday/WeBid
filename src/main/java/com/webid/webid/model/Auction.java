@@ -57,7 +57,7 @@ public class Auction {
     @Column(nullable = false)
     private boolean over = false;
     @Column(nullable = false)
-    private float expeditedShippingCost;
+    private double expeditedShippingCost;
     @Column(nullable = false)
     private boolean expeditedShipping = false;
 
