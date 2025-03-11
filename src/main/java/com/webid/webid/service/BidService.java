@@ -30,7 +30,7 @@ public class BidService {
     private AuctionService auctionService;
 
     public Bid placeBid(Long auctionId, double amount) {
-        
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String username = authentication.getName();
@@ -40,16 +40,30 @@ public class BidService {
 
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
-        
-        // maybe add a previous bid to see how much the bid was before this new one
-        Bid bid = new Bid();
 
-        bid.setAmount(amount);
-        bid.setTimestamp(Instant.now());
-        bid.setUser(user);
-        bid.setAuction(auction);
+        // logic to verify bid
+        auctionService.verifyRequest(auction, username);
+        auctionService.verifyNonOwner(user, auction);
 
-        return bidRepository.save(bid);
+        if ((auction.getCurrentBid() == null)
+                || (auction.getCurrentBidderID() == 0 && amount >= auction.getCurrentBid()) // if there are no
+                                                                                            // bidders, user can bid
+                || (auction.getBidIncrement() == 0 ? amount > auction.getCurrentBid() // logic for bidding with bid
+                                                                                      // increment
+                        : amount >= (auction.getCurrentBid() + auction.getBidIncrement()))) {
+
+            // maybe add a previous bid to see how much the bid was before this new one
+            Bid bid = new Bid();
+
+            bid.setAmount(amount);
+            bid.setTimestamp(Instant.now());
+            bid.setUser(user);
+            bid.setAuction(auction);
+
+            return bidRepository.save(bid);
+        } else {
+            return null; // return a null bid if it could not be created
+        }
     }
 
     // You can add other business logic for managing bids as needed
