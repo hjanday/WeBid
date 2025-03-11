@@ -13,6 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +40,21 @@ public class AuctionService {
     // Get auction by ID
     public Optional<Auction> getAuctionById(Long id) {
         return auctionRepository.findById(id);
+    }
+
+    public List<Auction> findAuctionByItemName(String itemName){
+        if(auctionRepository.findByItemName(itemName).isEmpty()) {
+            throw new ResourceAlreadyExistsException("No auctions found");
+        }
+
+        try{
+            return auctionRepository.findByItemName(itemName);
+        }
+
+        catch (DataIntegrityViolationException ex){
+			throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
+		}
+        
     }
 
     // Create a new auction
@@ -66,6 +83,38 @@ public class AuctionService {
 
         return auctionRepository.save(auction);
 
+    }
+
+    // Create a new auction
+    // public Auction createAuction(Auction auction) {
+    //     // Check if an auction with the same item name exists already and throw exception that the itemName already exists
+    //     if(!auctionRepository.findByItemName(auction.getItemName()).isEmpty()){
+    //         throw new ResourceAlreadyExistsException("An auction with item name " + auction.getItemName() + " already exists.");
+    //     }
+    //     try {
+    //         // if auction type is FORWARD, set start and end time.
+    //         try {
+    //             if (auction.getAuctionType().name().equals("FORWARD")) {
+    //                 auction.setStartTime(Instant.now());
+    //                 auction.setEndTime(Instant.now().plus(24, ChronoUnit.HOURS));
+    //             }
+    //         } catch (Exception e) {
+    //             System.out.println(e);
+    //         }
+    //         return auctionRepository.save(auction);
+    //     } catch (DataIntegrityViolationException ex) {
+    //         throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
+    //     }
+
+    // }
+
+    // Save an auction
+    public Auction saveAuction(Auction auction) {
+        try {
+            return auctionRepository.save(auction);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
+        }
     }
 
     // Delete an auction
@@ -140,4 +189,35 @@ public class AuctionService {
         foundAuction.setExpeditedShipping(false);
 
     }
+
+    // Verify owner
+    public void verifyOwner(User user, Auction auction) {
+        if (!user.getId().equals(auction.getOwnerID())) {
+            throw new IllegalArgumentException("Only the owner of the auction may change the bid.");
+        }
+    }
+
+    // verify non-owner
+    public void verifyNonOwner(User user, Auction auction) {
+        if (user.getId().equals(auction.getOwnerID())) {
+            throw new IllegalArgumentException("The owner of the auction may not bid.");
+        }
+    }
+
+    // Verify Request
+    public void verifyRequest(Auction auction, String type) {
+
+        type.toUpperCase(); // set type to all uppercase
+
+        // Check if auction is over
+        if (auction.isOver()) {
+            throw new IllegalArgumentException("Auction is already over.");
+        }
+
+        // Check if auction type is correct
+        if (!auction.getAuctionType().name().equals(type)) {
+            throw new IllegalArgumentException("Request is for the wrong type.");
+        }
+    }
+
 }
