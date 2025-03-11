@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,13 +52,30 @@ public class AuctionService {
         if(!auctionRepository.findByItemName(auction.getItemName()).isEmpty()){
             throw new ResourceAlreadyExistsException("An auction with item name " + auction.getItemName() + " already exists.");
         }
-        try{
-        return auctionRepository.save(auction);
+        try {
+            // if auction type is FORWARD, set start and end time.
+            try {
+                if (auction.getAuctionType().name().equals("FORWARD")) {
+                    auction.setStartTime(Instant.now());
+                    auction.setEndTime(Instant.now().plus(24, ChronoUnit.HOURS));
+                }
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+            return auctionRepository.save(auction);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
         }
-        catch (DataIntegrityViolationException ex){
-			throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
-		}
 
+    }
+
+    // Save an auction
+    public Auction saveAuction(Auction auction) {
+        try {
+            return auctionRepository.save(auction);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
+        }
     }
 
     // Delete an auction
@@ -131,4 +150,35 @@ public class AuctionService {
         foundAuction.setExpeditedShipping(false);
 
     }
+
+    // Verify owner
+    public void verifyOwner(User user, Auction auction) {
+        if (!user.getId().equals(auction.getOwnerID())) {
+            throw new IllegalArgumentException("Only the owner of the auction may change the bid.");
+        }
+    }
+
+    // verify non-owner
+    public void verifyNonOwner(User user, Auction auction) {
+        if (user.getId().equals(auction.getOwnerID())) {
+            throw new IllegalArgumentException("The owner of the auction may not bid.");
+        }
+    }
+
+    // Verify Request
+    public void verifyRequest(Auction auction, String type) {
+
+        type.toUpperCase(); // set type to all uppercase
+
+        // Check if auction is over
+        if (auction.isOver()) {
+            throw new IllegalArgumentException("Auction is already over.");
+        }
+
+        // Check if auction type is correct
+        if (!auction.getAuctionType().name().equals(type)) {
+            throw new IllegalArgumentException("Request is for the wrong type.");
+        }
+    }
+
 }
