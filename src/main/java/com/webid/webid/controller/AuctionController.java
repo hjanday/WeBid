@@ -45,7 +45,7 @@ public class AuctionController {
 
     // Get auctions by item name queries
     @GetMapping("/search")
-    public List<Auction> getAuctionByItemName(@RequestParam("itemName") String itemName) {
+    public List<Auction> getAuctionByItemName(@RequestParam String itemName){
         return auctionService.findAuctionByItemName(itemName);
     }
 
@@ -57,16 +57,9 @@ public class AuctionController {
 
     // Create auction
     @PostMapping("/create")
-    public ResponseEntity<Auction> createAuction(@RequestBody Auction auction, Principal principal) {
-
-        // Fetch authenticated user
-        // User user = userRepository.findByUsername(principal.getName()).orElseThrow(()
-        // -> new UsernameNotFoundException("User not found"));
-
-        // // Set the ownerID before saving
-        // auction.setOwnerID(user.getId());
-
+    public ResponseEntity<Auction> createAuction(@RequestBody Auction auction) {
         Auction createdAuction = auctionService.createAuction(auction);
+
         return ResponseEntity.ok(createdAuction);
     }
 

@@ -60,6 +60,9 @@ public class BidService {
             bid.setUser(user);
             bid.setAuction(auction);
 
+            auction.setCurrentBid(amount);
+            auction.setCurrentBidderID(user.getId());
+
             return bidRepository.save(bid);
         } else {
             return null; // return a null bid if it could not be created
