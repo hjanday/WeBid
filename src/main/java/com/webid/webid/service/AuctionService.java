@@ -188,6 +188,8 @@ public class AuctionService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
+
         // get auction
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
         if (!existingAuction.isPresent()) {
@@ -195,8 +197,13 @@ public class AuctionService {
         }
         Auction auction = existingAuction.get();
 
+        // verify dutch typing
+        if (!auction.getAuctionType().name().equals("DUTCH")) {
+            return null;
+        }
+
         // only owner may update the auction
-        if (auction.getOwner().getUsername().equals(username)) {
+        if (auction.getOwner().getId().equals(user.getId())) {
             // Uses bid_increment to decrement values and check if auction is already at
             // lowest bid
             if (auction.getCurrentBid() > auction.getBidIncrement()
@@ -219,16 +226,21 @@ public class AuctionService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
+
         // get auction and user for userID
-        Optional<User> existingUser = userRepository.findByUsername(username);
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
-        if (!existingAuction.isPresent() || !existingUser.isPresent()) {
+        if (!existingAuction.isPresent()) {
             return null;
         }
         Auction auction = existingAuction.get();
-        User user = existingUser.get();
+
+        // verify dutch typing
+        if (!auction.getAuctionType().name().equals("DUTCH")) {
+            return null;
+        }
         // only non owner may complete the auction
-        if (!auction.getOwner().getUsername().equals(username)) {
+        if (!auction.getOwner().getId().equals(user.getId())) {
             auction.setCurrentBidderID(user.getId());
             auction.completeAuction();
             auctionRepository.save(auction);
