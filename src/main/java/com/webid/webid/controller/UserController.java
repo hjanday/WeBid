@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.webid.webid.model.User;
 import com.webid.webid.repository.UserRepository;
 import com.webid.webid.service.JwtService;
+import com.webid.webid.service.NotificationService;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import java.util.Map;
 import java.util.Optional;
@@ -23,16 +25,25 @@ import org.springframework.web.bind.annotation.RequestHeader;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
     private final JwtService jwtService;
 
-    public UserController(UserRepository userRepository, JwtService jwtService) {
+    public UserController(UserRepository userRepository,
+            NotificationService notificationService,
+            JwtService jwtService) {
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
         this.jwtService = jwtService;
     }
 
     @GetMapping
     public Iterable<User> findAllUsers() {
         return this.userRepository.findAll();
+    }
+
+    @GetMapping("/notify")
+    public String getNotif() {
+        return notificationService.getNotification();
     }
 
     @PostMapping
@@ -53,7 +64,7 @@ public class UserController {
     }
 
     @PostMapping("/getdetails")
-	 public ResponseEntity<?> getTokenClaims(@RequestBody String token) {
+    public ResponseEntity<?> getTokenClaims(@RequestBody String token) {
         try {
             token = token.replaceAll("^\"|\"$", "");
             String username = jwtService.extractUsername(token);
