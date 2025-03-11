@@ -4,10 +4,15 @@ import com.webid.webid.exceptions.ResourceAlreadyExistsException;
 import com.webid.webid.model.Auction;
 import com.webid.webid.model.User;
 import com.webid.webid.repository.AuctionRepository;
+import com.webid.webid.repository.UserRepository;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +21,14 @@ import java.util.Optional;
 public class AuctionService {
 
     @Autowired
+    private UserRepository userRepository;
     private AuctionRepository auctionRepository;
     private NotificationService notifService;
+
+    public AuctionService(AuctionRepository auctionRepository, UserRepository userRepository) {
+        this.auctionRepository = auctionRepository;
+        this.userRepository = userRepository;
+    }
 
     // Get all auctions
     public List<Auction> getAllAuctions() {
@@ -32,15 +43,28 @@ public class AuctionService {
     // Create a new auction
     public Auction createAuction(Auction auction) {
         // Check if an auction with the same item name exists already and throw exception that the itemName already exists
-        if(auctionRepository.findByItemName(auction.getItemName()).isPresent()){
-            throw new ResourceAlreadyExistsException("An auction with item name " + auction.getItemName() + " already exists.");
-        }
-        try{
+        // if(auctionRepository.findByItemName(auction.getItemName()).isPresent()){
+        //     throw new ResourceAlreadyExistsException("An auction with item name " + auction.getItemName() + " already exists.");
+        // }
+        // try{
+        // return auctionRepository.save(auction);
+        // }
+        // catch (DataIntegrityViolationException ex){
+		// 	throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
+		// }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName(); 
+        System.out.println("!!!!!!!!!!!!!!HERE: " + username);
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        auction.setOwner(user);
+        System.out.println("OVER HEREEEEE!!!!!!!");
+        System.out.println(auction.getOwner().getId());
+        // Set time??
+
         return auctionRepository.save(auction);
-        }
-        catch (DataIntegrityViolationException ex){
-			throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
-		}
 
     }
 

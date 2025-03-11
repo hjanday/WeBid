@@ -8,8 +8,10 @@ import com.webid.webid.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +25,8 @@ public class AuctionController {
     private UserService userService;
     @Autowired
     private BidService bidService;
+
+    private UserRepository userRepository;
 
     // Get all auctions
     @GetMapping
@@ -43,9 +47,18 @@ public class AuctionController {
     // }
 
     // Create auction
-    @PostMapping
-    public Auction createAuction(@RequestBody Auction auction) {
-        return auctionService.createAuction(auction);
+    @PostMapping("/create")
+    public ResponseEntity<Auction> createAuction(@RequestBody Auction auction, Principal principal) {
+
+
+        // Fetch authenticated user
+        // User user = userRepository.findByUsername(principal.getName()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // // Set the ownerID before saving
+        // auction.setOwnerID(user.getId());
+
+        Auction createdAuction = auctionService.createAuction(auction);
+        return ResponseEntity.ok(createdAuction);
     }
 
     // Delete an auction
