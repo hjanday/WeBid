@@ -137,7 +137,12 @@ public class AuctionController {
         }
 
         // Check if the bid amount is greater than the current bid
-        if (auction.getCurrentBid().equals(null) || bidAmount > auction.getCurrentBid()) {
+        if ((auction.getCurrentBid() == null)
+                || (auction.getCurrentBidderID() == 0 && bidAmount >= auction.getCurrentBid()) // if there are no
+                                                                                               // bidders, user can bid
+                || (auction.getBidIncrement() == 0 ? bidAmount > auction.getCurrentBid() // logic for bidding with bid
+                                                                                         // increment
+                        : bidAmount >= (auction.getCurrentBid() + auction.getBidIncrement()))) {
             // Update the auction with the new bidder and bid amount
             auction.setCurrentBid(bidAmount);
             auction.setCurrentBidderID(bidderID);
