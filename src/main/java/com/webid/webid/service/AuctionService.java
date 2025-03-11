@@ -71,16 +71,14 @@ public class AuctionService {
 		// }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
         String username = authentication.getName(); 
-        System.out.println("!!!!!!!!!!!!!!HERE: " + username);
+
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         auction.setOwner(user);
-        System.out.println("OVER HEREEEEE!!!!!!!");
-        System.out.println(auction.getOwner().getId());
-        // Set time??
-
+        
         return auctionRepository.save(auction);
 
     }

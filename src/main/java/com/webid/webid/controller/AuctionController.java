@@ -126,64 +126,71 @@ public class AuctionController {
         }
     }
 
+    @PostMapping("/{auctionId}")
+    public ResponseEntity<Object> placeBid(@PathVariable long auctionId, @RequestParam double bidAmount) {
+
+        Bid bid = bidService.placeBid(auctionId, bidAmount);
+        
+        return  ResponseEntity.ok(bid);
+    }   
     // places bid for forward bidding
-    @PutMapping("/update/{auctionId}/{bidderID}/{bidAmount}")
-    public ResponseEntity<Object> placeBid(
-            @PathVariable long auctionId,
-            @PathVariable long bidderID,
-            @PathVariable double bidAmount) {
+    // @PutMapping("/update/{auctionId}/{bidderID}/{bidAmount}")
+    // public ResponseEntity<Object> placeBid(
+    //         @PathVariable long auctionId,
+    //         @PathVariable long bidderID,
+    //         @PathVariable double bidAmount) {
 
-        // Retrieve the auction by its ID
-        Optional<Auction> optionalAuction = auctionService.getAuctionById(auctionId);
-        Optional<User> optionalUser = userService.getUserById(bidderID);
+    //     // Retrieve the auction by its ID
+    //     Optional<Auction> optionalAuction = auctionService.getAuctionById(auctionId);
+    //     Optional<User> optionalUser = userService.getUserById(bidderID);
 
-        // Check if the auction exists
-        if (!optionalAuction.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("Auction not found.");
-        }
-        if (!optionalUser.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("User not found.");
-        }
+    //     // Check if the auction exists
+    //     if (!optionalAuction.isPresent()) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    //                 .body("Auction not found.");
+    //     }
+    //     if (!optionalUser.isPresent()) {
+    //         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+    //                 .body("User not found.");
+    //     }
 
-        // Retrieve the auction and user
-        Auction auction = optionalAuction.get();
-        User user = optionalUser.get();
+    //     // Retrieve the auction and user
+    //     Auction auction = optionalAuction.get();
+    //     User user = optionalUser.get();
 
-        // verification of request
-        try {
-            auctionService.verifyRequest(auction, "FORWARD");
-            auctionService.verifyNonOwner(user, auction);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+    //     // verification of request
+    //     try {
+    //         auctionService.verifyRequest(auction, "FORWARD");
+    //         auctionService.verifyNonOwner(user, auction);
+    //     } catch (IllegalArgumentException e) {
+    //         return ResponseEntity.badRequest().body(e.getMessage());
+    //     }
 
-        // Check if the bid amount is greater than the current bid
-        if ((auction.getCurrentBid() == null)
-                || (auction.getCurrentBidderID() == 0 && bidAmount >= auction.getCurrentBid()) // if there are no
-                                                                                               // bidders, user can bid
-                || (auction.getBidIncrement() == 0 ? bidAmount > auction.getCurrentBid() // logic for bidding with bid
-                                                                                         // increment
-                        : bidAmount >= (auction.getCurrentBid() + auction.getBidIncrement()))) {
-            // Update the auction with the new bidder and bid amount
-            auction.setCurrentBid(bidAmount);
-            auction.setCurrentBidderID(bidderID);
+    //     // Check if the bid amount is greater than the current bid
+    //     if ((auction.getCurrentBid() == null)
+    //             || (auction.getCurrentBidderID() == 0 && bidAmount >= auction.getCurrentBid()) // if there are no
+    //                                                                                            // bidders, user can bid
+    //             || (auction.getBidIncrement() == 0 ? bidAmount > auction.getCurrentBid() // logic for bidding with bid
+    //                                                                                      // increment
+    //                     : bidAmount >= (auction.getCurrentBid() + auction.getBidIncrement()))) {
+    //         // Update the auction with the new bidder and bid amount
+    //         auction.setCurrentBid(bidAmount);
+    //         auction.setCurrentBidderID(bidderID);
 
-            // Create and save a new Bid record
-            Bid newBid = bidService.placeBid(auction, user, bidAmount);
+    //         // Create and save a new Bid record
+    //         Bid newBid = bidService.placeBid(auction, user, bidAmount);
 
-            // Save the updated auction
-            auctionService.saveAuction(auction);
+    //         // Save the updated auction
+    //         auctionService.saveAuction(auction);
 
-            // Return the updated auction with status 200 OK
-            return ResponseEntity.ok(auction);
-        } else {
-            // Return an error response if the bid is not higher than the current bid
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Bid amount must be greater than the current bid.");
-        }
-    }
+    //         // Return the updated auction with status 200 OK
+    //         return ResponseEntity.ok(auction);
+    //     } else {
+    //         // Return an error response if the bid is not higher than the current bid
+    //         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+    //                 .body("Bid amount must be greater than the current bid.");
+    //     }
+    // }
 
     // // update a forward auction
     // @PutMapping("update/{id}/{userName}/{bidAmount}")
