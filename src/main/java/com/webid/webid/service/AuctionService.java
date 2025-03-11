@@ -42,67 +42,73 @@ public class AuctionService {
         return auctionRepository.findById(id);
     }
 
-    public List<Auction> findAuctionByItemName(String itemName){
-        if(auctionRepository.findByItemName(itemName).isEmpty()) {
+    public List<Auction> findAuctionByItemName(String itemName) {
+        if (auctionRepository.findByItemName(itemName).isEmpty()) {
             throw new ResourceAlreadyExistsException("No auctions found");
         }
 
-        try{
+        try {
             return auctionRepository.findByItemName(itemName);
         }
 
-        catch (DataIntegrityViolationException ex){
-			throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
-		}
-        
+        catch (DataIntegrityViolationException ex) {
+            throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
+        }
+
     }
 
     // Create a new auction
     public Auction createAuction(Auction auction) {
-        // Check if an auction with the same item name exists already and throw exception that the itemName already exists
+        // Check if an auction with the same item name exists already and throw
+        // exception that the itemName already exists
         // if(auctionRepository.findByItemName(auction.getItemName()).isPresent()){
-        //     throw new ResourceAlreadyExistsException("An auction with item name " + auction.getItemName() + " already exists.");
+        // throw new ResourceAlreadyExistsException("An auction with item name " +
+        // auction.getItemName() + " already exists.");
         // }
         // try{
         // return auctionRepository.save(auction);
         // }
         // catch (DataIntegrityViolationException ex){
-		// 	throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
-		// }
+        // throw new ResourceAlreadyExistsException("Data Integrity Error: " +
+        // ex.getMessage());
+        // }
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
-        String username = authentication.getName(); 
+
+        String username = authentication.getName();
 
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         auction.setOwner(user);
-        
+
         return auctionRepository.save(auction);
 
     }
 
     // Create a new auction
     // public Auction createAuction(Auction auction) {
-    //     // Check if an auction with the same item name exists already and throw exception that the itemName already exists
-    //     if(!auctionRepository.findByItemName(auction.getItemName()).isEmpty()){
-    //         throw new ResourceAlreadyExistsException("An auction with item name " + auction.getItemName() + " already exists.");
-    //     }
-    //     try {
-    //         // if auction type is FORWARD, set start and end time.
-    //         try {
-    //             if (auction.getAuctionType().name().equals("FORWARD")) {
-    //                 auction.setStartTime(Instant.now());
-    //                 auction.setEndTime(Instant.now().plus(24, ChronoUnit.HOURS));
-    //             }
-    //         } catch (Exception e) {
-    //             System.out.println(e);
-    //         }
-    //         return auctionRepository.save(auction);
-    //     } catch (DataIntegrityViolationException ex) {
-    //         throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
-    //     }
+    // // Check if an auction with the same item name exists already and throw
+    // exception that the itemName already exists
+    // if(!auctionRepository.findByItemName(auction.getItemName()).isEmpty()){
+    // throw new ResourceAlreadyExistsException("An auction with item name " +
+    // auction.getItemName() + " already exists.");
+    // }
+    // try {
+    // // if auction type is FORWARD, set start and end time.
+    // try {
+    // if (auction.getAuctionType().name().equals("FORWARD")) {
+    // auction.setStartTime(Instant.now());
+    // auction.setEndTime(Instant.now().plus(24, ChronoUnit.HOURS));
+    // }
+    // } catch (Exception e) {
+    // System.out.println(e);
+    // }
+    // return auctionRepository.save(auction);
+    // } catch (DataIntegrityViolationException ex) {
+    // throw new ResourceAlreadyExistsException("Data Integrity Error: " +
+    // ex.getMessage());
+    // }
 
     // }
 
@@ -176,6 +182,59 @@ public class AuctionService {
             // dutch auction successful/completed
             return true;
         }
+    }
+
+    public Auction updateDutch(long auctionID) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        // get auction
+        Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
+        if (!existingAuction.isPresent()) {
+            return null;
+        }
+        Auction auction = existingAuction.get();
+
+        // only owner may update the auction
+        if (auction.getOwner().getUsername().equals(username)) {
+            // Uses bid_increment to decrement values and check if auction is already at
+            // lowest bid
+            if (auction.getCurrentBid() > auction.getBidIncrement()
+                    && auction.getCurrentBid() != auction.getLowestBid()) {
+                auction.setCurrentBid(auction.getCurrentBid() - auction.getBidIncrement());
+                // ON dutch auction: Check if currentbid is floor price and start timer.
+                if (auction.getCurrentBid() <= auction.getLowestBid()) {
+                    auction.setCurrentBid(auction.getLowestBid());
+                    auction.setStartTime(Instant.now());
+                    auction.setEndTime(Instant.now().plus(24, ChronoUnit.HOURS));
+                }
+                auctionRepository.save(auction);
+                return auction;
+            }
+        }
+        return null;
+    }
+
+    public Auction completeDutch(long auctionID) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        // get auction and user for userID
+        Optional<User> existingUser = userRepository.findByUsername(username);
+        Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
+        if (!existingAuction.isPresent() || !existingUser.isPresent()) {
+            return null;
+        }
+        Auction auction = existingAuction.get();
+        User user = existingUser.get();
+        // only non owner may complete the auction
+        if (!auction.getOwner().getUsername().equals(username)) {
+            auction.setCurrentBidderID(user.getId());
+            auction.completeAuction();
+            auctionRepository.save(auction);
+            return auction;
+        }
+        return null;
     }
 
     public void selectExpeditedShipping(Auction foundAuction) {

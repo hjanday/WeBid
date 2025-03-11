@@ -42,7 +42,7 @@ public class BidService {
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
 
         // logic to verify bid
-        auctionService.verifyRequest(auction, username);
+        auctionService.verifyRequest(auction, auction.getAuctionType().name());
         auctionService.verifyNonOwner(user, auction);
 
         if ((auction.getCurrentBid() == null)
