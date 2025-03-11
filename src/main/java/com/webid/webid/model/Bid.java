@@ -8,6 +8,8 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "bids")
 public class Bid {
     @Id
@@ -28,15 +30,5 @@ public class Bid {
     @Column(nullable = false)
     private Instant timestamp;
 
-    public Bid() {
-        this.timestamp = Instant.now();
-    }
-
-    public Bid(Auction auction, User user, double amount) {
-        this.auction = auction;
-        this.user = user;
-        this.amount = amount;
-        this.timestamp = Instant.now();
-    }
 
 }

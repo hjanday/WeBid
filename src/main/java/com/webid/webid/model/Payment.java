@@ -13,7 +13,6 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-
 @Getter
 @Setter
 @Entity
@@ -32,32 +31,34 @@ public class Payment {
     private String auctionType;
 
     @Column(nullable = false)
-    private float itemPrice;
+    private double itemPrice;
     @Column(nullable = false)
     private boolean expeditedShipping;
     @Column(nullable = false)
-    private float expeditedShippingCost;
+    private double expeditedShippingCost;
     @Column(nullable = false)
-    private float totalCost = expeditedShippingCost+itemPrice;
+    private double totalCost;
     private int shippingDays;
 
-    private Payment(Long userID, Long auctionID, String auctionType, float itemPrice, boolean expeditedShipping,
-    float expeditedShippingCost,int shippingDays) {
+    private Payment(Long userID, Long auctionID, String auctionType, double itemPrice, boolean expeditedShipping,
+            double expeditedShippingCost, int shippingDays) {
         this.userID = userID;
         this.auctionID = auctionID;
         this.auctionType = auctionType;
         this.itemPrice = itemPrice;
         this.expeditedShipping = expeditedShipping;
         this.expeditedShippingCost = expeditedShippingCost;
-        
         this.shippingDays = shippingDays;
-        
+
+        this.totalCost = this.itemPrice + (this.expeditedShipping ? this.expeditedShippingCost : 0);
 
     }
 
-    public static Payment create(Long userID, Long auctionID, String auctionType, float itemPrice, boolean expeditedShipping,
-    float expeditedShippingCost,int shippingDays) {
-        return new Payment(userID, auctionID, auctionType, itemPrice, expeditedShipping, expeditedShippingCost, shippingDays);
+    public static Payment create(Long userID, Long auctionID, String auctionType, double itemPrice,
+            boolean expeditedShipping,
+            double expeditedShippingCost, int shippingDays) {
+        return new Payment(userID, auctionID, auctionType, itemPrice, expeditedShipping, expeditedShippingCost,
+                shippingDays);
     }
 
 }

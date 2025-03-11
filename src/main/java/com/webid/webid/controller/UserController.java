@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.webid.webid.model.User;
 import com.webid.webid.repository.UserRepository;
+import com.webid.webid.service.JwtService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -15,15 +16,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
     private final UserRepository userRepository;
+    private final JwtService jwtService;
 
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, JwtService jwtService) {
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
 
     @GetMapping
@@ -38,16 +42,27 @@ public class UserController {
 
     @PostMapping("/findusername")
     ResponseEntity<User> queryUsername(@RequestBody String username) {
-        String cleanUN = username.replaceAll("^\"|\"$", "").trim();
-        return this.userRepository.findByUsername(cleanUN).map(ResponseEntity::ok)
+        return this.userRepository.findByUsername(username).map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping("/findemail")
     ResponseEntity<User> queryEmail(@RequestBody String email) {
-        String cleanEmail = email.replaceAll("^\"|\"$", "").trim();
-        return this.userRepository.findByEmail(cleanEmail).map(ResponseEntity::ok)
+        return this.userRepository.findByEmail(email).map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @PostMapping("/getdetails")
+	 public ResponseEntity<?> getTokenClaims(@RequestBody String token) {
+        try {
+            token = token.replaceAll("^\"|\"$", "");
+            String username = jwtService.extractUsername(token);
+            Optional<User> foundUser = userRepository.findByUsername(username);
+            Long id = foundUser.get().getId();
+            return ResponseEntity.ok(id);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid token: " + ex.getMessage());
+        }
     }
 
 }

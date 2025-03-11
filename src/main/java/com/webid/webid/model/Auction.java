@@ -12,6 +12,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
@@ -28,7 +30,6 @@ public class Auction {
         FORWARD
     }
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -39,32 +40,40 @@ public class Auction {
     @Column(nullable = false)
     private long ownerID;
     @Column(nullable = false)
-    private float startingBid;
+    private double lowestBid;
     @Column(nullable = true)
     private Double currentBid;
     @Column(nullable = true)
     private long currentBidderID;
     @Column(nullable = false)
     private double bidIncrement;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Instant startTime;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Instant endTime;
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING) 
+    @Enumerated(EnumType.STRING)
     private AuctionType auctionType;
     @Column(nullable = true)
     private ArrayList<User> prevBidder;
     @Column(nullable = false)
     private boolean over = false;
     @Column(nullable = false)
-    private float expeditedShippingCost;
+    private double expeditedShippingCost;
     @Column(nullable = false)
     private boolean expeditedShipping = false;
 
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
+
     public Auction() {
-        this.startTime = Instant.now();
-        this.endTime = this.startTime.plus(24, ChronoUnit.HOURS);
+        // // only set start and endtime immediately on Forward bid; otherwise on dutch,
+        // // set timer when floor (lowest) price is reached.
+        // if (this.getAuctionType().name().equals("FORWARD")) {
+        // this.startTime = Instant.now();
+        // this.endTime = this.startTime.plus(24, ChronoUnit.HOURS);
+        // }
     }
 
     public Auction completeAuction() {

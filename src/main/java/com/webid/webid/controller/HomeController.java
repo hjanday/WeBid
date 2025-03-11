@@ -27,4 +27,10 @@ public class HomeController {
     public String forgotpassword() {
         return "forgot_password"; 
     }
+
+    @GetMapping("/auctions")
+    public String auctions() {
+        return "auctions"; 
+    }
+
 }

@@ -17,11 +17,13 @@ public class UserService {
 
     // Get auction by ID
     public Optional<User> getUserbyEmail(String email) {
-        return userRepository.findByEmail(email);
+        String cleanEmail = email.replaceAll("^\"|\"$", "").trim();
+        return userRepository.findByEmail(cleanEmail);
     }
 
     public Optional<User> getUserbyUsername(String un) {
-        return userRepository.findByUsername(un);
+        String cleanUN = un.replaceAll("^\"|\"$", "").trim();
+        return userRepository.findByUsername(cleanUN);
     }
 
     public Optional<User> getUserById(Long id) {
