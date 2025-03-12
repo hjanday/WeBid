@@ -335,7 +335,7 @@
                               ? "$" + auc.currentBid 
                               : "No Bid Yet";
         document.getElementById("faCurrentPrice").textContent = "Current Price: " + newCurrentBid;
-        document.getElementById("faHighestBidder").textContent = "Highest Bidder: " + (auc.currentBidderID || "Unknown");
+        document.getElementById("faHighestBidder").textContent = "Highest Bidder: " + (auc.currentBidderID || "Unknown")
       })
       .catch(error => {
         alert("Bid failed: " + error.message);
@@ -360,6 +360,7 @@
           return new Error(response);
         }
         alert("Dutch auction completed successfully!");
+        window.location.href = `/paynow?auctionId=${selectedAuction.id}`;
         return response;
       })
       .catch(error => {
