@@ -96,6 +96,13 @@
     <h1>Create Auction</h1>
     <form id="auctionForm">
       <div class="form-group">
+        <label for="auctionType">Auction Type *</label>
+        <select id="auctionType" name="auctionType" required>
+          <option value="FORWARD">FORWARD</option>
+          <option value="DUTCH">DUTCH</option>
+        </select>
+      </div>
+      <div class="form-group">
         <label for="itemName">Item Name *</label>
         <input type="text" id="itemName" name="itemName" required>
       </div>
@@ -114,13 +121,7 @@
         <label for="bidIncrement">Bid Increment *</label>
         <input type="number" step="0.01" id="bidIncrement" name="bidIncrement" required>
       </div>
-      <div class="form-group">
-        <label for="auctionType">Auction Type *</label>
-        <select id="auctionType" name="auctionType" required>
-          <option value="FORWARD">FORWARD</option>
-          <option value="DUTCH">DUTCH</option>
-        </select>
-      </div>
+      
 
       <!-- Current Bid field (hidden unless DUTCH is selected) -->
       <div class="form-group" id="currentBidGroup" style="display: none;">
