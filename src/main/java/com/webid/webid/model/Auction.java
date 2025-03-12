@@ -81,19 +81,10 @@ public class Auction {
     // = true)
     // private List<Bid> bids;
     
-//     public Auction(){
-//         if (this.getAuctionType().name().equals("FORWARD")) {
-//         this.startTime = Instant.now();
-//         this.endTime = this.startTime.plus(24, ChronoUnit.HOURS);
-//     }
-// }
-
     public Auction completeAuction() {
         // set auction to be completed at this time
         this.endTime = Instant.now();
         this.over = true;
         return this;
     }
-
-    
 }
