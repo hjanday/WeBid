@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.webid.webid.repository.UserRepository;
 import com.webid.webid.service.JwtService;
+import com.webid.webid.service.LogoutService;
 
 @Configuration
 public class AppConfig {
@@ -22,8 +23,13 @@ public class AppConfig {
     }
 
     @Bean
-    public JwtService jwtService() {
+    JwtService jwtService() {
         return new JwtService();
+    }
+
+    @Bean
+    LogoutService logoutService() {
+        return new LogoutService();
     }
 
     @Bean
