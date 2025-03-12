@@ -190,6 +190,7 @@ public class AuctionService {
             throw new IllegalArgumentException("The owner of the auction may not bid.");
         }
     }
+    
 
     // Verify Request
     public void verifyRequest(Auction auction, String type) {
