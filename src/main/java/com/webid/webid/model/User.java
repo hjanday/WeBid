@@ -56,7 +56,7 @@ public class User implements UserDetails {
 	private String city;
 
 	@Column(nullable = true)
-	private ArrayList<String> notif;
+	private String notif;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
