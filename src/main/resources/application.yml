@@ -12,6 +12,9 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     defer-datasource-initialization: true
+  
+  config:
+    import: optional:file:.env[.properties]
 
 security:
   jwt:

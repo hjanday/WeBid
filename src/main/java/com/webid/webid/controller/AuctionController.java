@@ -1,6 +1,7 @@
 package com.webid.webid.controller;
 
 import com.webid.webid.model.*;
+import com.webid.webid.security.CurrentUser;
 import com.webid.webid.service.AuctionService;
 import com.webid.webid.service.BidService;
 import com.webid.webid.service.UserService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.security.Principal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -17,6 +19,10 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/api/auctions")
@@ -24,13 +30,23 @@ public class AuctionController {
 
     @Autowired
     private AuctionService auctionService;
-    @Autowired
-    private UserService userService;
-    @Autowired
     private BidService bidService;
+    private UserService userService;
 
-    // private UserRepository userRepository;
+    // Create auction
+    @PostMapping("/create")
+    public ResponseEntity<Auction> createAuction(@CurrentUser User currentUser, @RequestBody Auction auction) throws AccessDeniedException {
+        Auction createdAuction = auctionService.createAuction(auction, currentUser);
 
+        return ResponseEntity.ok(createdAuction);
+    }
+
+    // Delete an auction
+    @DeleteMapping("/{id}")
+    public void deleteAuction(@CurrentUser User currentUser, @PathVariable Long id) {
+        auctionService.deleteAuction(id, currentUser);
+    }
+    
     // Get all auctions
     @GetMapping
     public List<Auction> getAllAuctions() {
@@ -55,25 +71,11 @@ public class AuctionController {
     // return auctionService.getAuctionsByStatus(status);
     // }
 
-    // Create auction
-    @PostMapping("/create")
-    public ResponseEntity<Auction> createAuction(@RequestBody Auction auction) {
-        Auction createdAuction = auctionService.createAuction(auction);
-
-        return ResponseEntity.ok(createdAuction);
-    }
-
-    // Delete an auction
-    @DeleteMapping("/{id}")
-    public void deleteAuction(@PathVariable Long id) {
-        auctionService.deleteAuction(id);
-    }
-
     // edits a Dutch auction
     @PutMapping("dutch/{auctionId}")
-    public ResponseEntity<Object> decrementDutch(@PathVariable Long auctionId) {
+    public ResponseEntity<Object> decrementDutch(@CurrentUser User currentUser, @PathVariable Long auctionId) {
         // Retrieve the auction by its ID
-        Auction auction = auctionService.updateDutch(auctionId);
+        Auction auction = auctionService.updateDutch(auctionId, currentUser);
         if (auction == null) {
             return ResponseEntity.badRequest().body("Dutch auction cannot be updated");
         } else {
@@ -82,16 +84,16 @@ public class AuctionController {
     }
 
     // Updates forward auctions
-    @PostMapping("/{auctionId}")
-    public ResponseEntity<Object> placeBid(@PathVariable long auctionId, @RequestParam double bidAmount) {
-        Bid bid = bidService.placeBid(auctionId, bidAmount);
-        return ResponseEntity.ok(bid);
-    }
+    // @PostMapping("/{auctionId}")
+    // public ResponseEntity<Object> placeBid(@PathVariable long auctionId, @RequestParam double bidAmount) {
+    //     Bid bid = bidService.placeBid(auctionId, bidAmount);
+    //     return ResponseEntity.ok(bid);
+    // }
 
     // Complete a dutch auction
     @PutMapping("complete/{auctionId}")
-    public ResponseEntity<Object> updateDutch(@PathVariable long auctionId) {
-        Auction auction = auctionService.completeDutch(auctionId);
+    public ResponseEntity<Object> updateDutch(@CurrentUser User currentUser, @PathVariable long auctionId) {
+        Auction auction = auctionService.completeDutch(auctionId, currentUser);
         if (auction == null) {
             return ResponseEntity.badRequest().body("Dutch auction cannot be completed");
         } else {
