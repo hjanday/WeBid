@@ -73,11 +73,11 @@ public class BidService {
             List<User> prevUsers = prevBidders.stream()
                     .map(Bid::getUser) // Extracts the User from each Bid
                     .collect(Collectors.toList());
-            System.out.println(prevBidders);
-            System.out.println(prevBidders.get(0).getUser());
-            System.out.println();
-            System.out.println();
-            System.out.println();
+            // System.out.println(prevBidders);
+            // System.out.println(prevBidders.get(0).getUser());
+            // System.out.println();
+            // System.out.println();
+            // System.out.println();
 
             for (User u : prevUsers) {
 

@@ -336,6 +336,11 @@
                               : "No Bid Yet";
         document.getElementById("faCurrentPrice").textContent = "Current Price: " + newCurrentBid;
         document.getElementById("faHighestBidder").textContent = "Highest Bidder: " + (auc.currentBidderID || "Unknown")
+
+        if(calculateRemainingTime(auc.endTime) == "Expired"){
+          alert("Auction is over! Please pay for your bid!");
+          window.location.href = "/paynow"
+        }
       })
       .catch(error => {
         alert("Bid failed: " + error.message);
