@@ -120,8 +120,20 @@
     #bidNowButton:hover {
       background-color: #218838;
     }
+
+    #buyNowButton {
+      padding: 0.75rem 1.5rem;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #buyNowButton:hover {
+      background-color: #218838;
+    }
     /* Forward Auction Detail Section */
-    #forwardAuctionSection {
+    #auctionSection {
       display: none; /* hidden by default */
       max-width: 800px;
       margin: 1.5rem auto 0 auto;
@@ -209,8 +221,8 @@
   <button id="bidNowButton">Bid Now</button>
 
   <!-- Forward Auction Detail Section -->
-  <div id="forwardAuctionSection">
-    <h2>Screen for Bidding on Forward Auctions</h2>
+  <div id="auctionSection">
+    <h2>Screen for Bidding on Auctions</h2>
     <div class="forward-container">
       <!-- Left Column: Auction Details -->
       <div class="forward-left">
@@ -222,9 +234,10 @@
       <div class="forward-right">
         <p id="faCurrentPrice"></p>
         <p id="faHighestBidder"></p>
-        <label for="faBidAmount">Your Bid:</label>
+        <label for="faBidAmount" id="bidLabel">Your Bid:</label>
         <input type="number" step="0.01" id="faBidAmount" placeholder="Enter your bid amount">
         <button id="faPlaceBidButton">Place Bid</button>
+        <button id="buyNowButton">Buy Now</button>
       </div>
     </div>
   </div>
@@ -233,7 +246,7 @@
     let selectedAuction = null;
     // Ensure "Bid Now" button is hidden initially
     document.getElementById("bidNowButton").style.display = "none";
-
+    document.getElementById("buyNowButton").style.display = "none";
     // Called when a radio button is selected in the auction table
     function onRadioSelect(auction) {
       selectedAuction = auction;
@@ -244,20 +257,21 @@
     document.getElementById("bidNowButton").addEventListener("click", function() {
       if (!selectedAuction) return;
       if ((selectedAuction.auctionType || "").toLowerCase() === "forward") {
-        showForwardAuctionSection(selectedAuction);
+        showauctionSection(selectedAuction);
       } else if ((selectedAuction.auctionType || "").toLowerCase() === "dutch") {
-        alert("Dutch auction: handle 'now' logic here!");
+        showauctionSectionDutch(selectedAuction)
       }
     });
 
     // Show the forward auction detail section, hide the auction table and "Bid Now" button
-    function showForwardAuctionSection(auction) {
+    function showauctionSection(auction) {
       document.getElementById("auctionTable").style.display = "none";
       document.getElementById("bidNowButton").style.display = "none";
-
+      document.getElementById("buyNowButton").style.display = "none";
+      document.getElementById("faPlaceBidButton").style.display = "block";
       document.getElementById("faItemName").textContent = auction.itemName || "";
       document.getElementById("faDescription").textContent = "Description: " + (auction.description || "N/A");
-      document.getElementById("faShippingPrice").textContent = "Shipping Price: $20"; // Adjust if needed
+      document.getElementById("faShippingPrice").textContent = "Shipping Price: $" + auction.expeditedShippingCost; // Adjust if needed
 
       const currentBidText = (auction.currentBid != null && auction.currentBid !== "") 
         ? "$" + auction.currentBid 
@@ -267,9 +281,31 @@
       const highestBidderText = auction.currentBidderID || "Unknown";
       document.getElementById("faHighestBidder").textContent = "Highest Bidder: " + highestBidderText;
 
-      document.getElementById("forwardAuctionSection").style.display = "block";
+      document.getElementById("auctionSection").style.display = "block";
     }
 
+    function showauctionSectionDutch(auction) {
+      document.getElementById("auctionTable").style.display = "none";
+      document.getElementById("bidNowButton").style.display = "none";
+      document.getElementById("faPlaceBidButton").style.display = "none";
+      document.getElementById("buyNowButton").style.display = "block";
+      document.getElementById("faBidAmount").style.display = "none";
+      document.getElementById("bidLabel").style.display = "none";
+
+
+
+      document.getElementById("faItemName").textContent = auction.itemName || "";
+      document.getElementById("faDescription").textContent = "Description: " + (auction.description || "N/A");
+      document.getElementById("faShippingPrice").textContent = "Shipping Price: $" + auction.expeditedShippingCost; // Adjust if needed
+
+      const currentBidText = (auction.currentBid != null && auction.currentBid !== "") 
+        ? "$" + auction.currentBid 
+        : "No Bid Yet";
+      document.getElementById("faCurrentPrice").textContent = "Current Price: " + currentBidText;
+      document.getElementById("auctionSection").style.display = "block";
+    }
+
+   
     // Place bid button in forward auction section: calls API to update auction bid,
     // then updates the section immediately with new details
     document.getElementById("faPlaceBidButton").addEventListener("click", function() {
@@ -277,47 +313,60 @@
       const bidAmount = document.getElementById("faBidAmount").value;
       // Retrieve the JWT token from localStorage
       const token = localStorage.getItem("jwtToken");
-      
-      // First, get the current user's ID using the token
-      fetch("/api/users/getdetails", {
+      if (!token) {
+        alert("User is not logged in.");
+        return;
+      }
+      const url = `http://localhost:8080/api/bid/${selectedAuction.id}?bidAmount=${bidAmount}`;
+      fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(token)
-      })
-      .then(response => {
-        if (!response.ok) {
-          return response.text().then(text => { throw new Error(text); });
-        }
-        return response.json();
-      })
-      .then(data => {
-        let userID = Number(data);
-        // Build the PUT URL to update the auction bid
-        const url = `http://localhost:8080/api/auctions/update/${selectedAuction.id}/${userID}/${bidAmount}`;
-        
-        return fetch(url, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" }
-        });
-      })
-      .then(response => {
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` }
+      }) .then(response => {
         if (!response.ok) {
           return response.text().then(text => { throw new Error(text); });
         }
         return response.json();
       })
       .then(updatedAuction => {
+        let auc = updatedAuction.auction;
         alert("Bid placed successfully!");
         // Update the forward auction section with new details from updatedAuction
-        const newCurrentBid = (updatedAuction.currentBid != null && updatedAuction.currentBid !== "") 
-                              ? "$" + updatedAuction.currentBid 
+        const newCurrentBid = (auc.currentBid != null && auc.currentBid !== "") 
+                              ? "$" + auc.currentBid 
                               : "No Bid Yet";
         document.getElementById("faCurrentPrice").textContent = "Current Price: " + newCurrentBid;
-        document.getElementById("faHighestBidder").textContent = "Highest Bidder: " + (updatedAuction.currentBidderID || "Unknown");
+        document.getElementById("faHighestBidder").textContent = "Highest Bidder: " + (auc.currentBidderID || "Unknown");
       })
       .catch(error => {
         alert("Bid failed: " + error.message);
       });
+    });
+
+    document.getElementById("buyNowButton").addEventListener("click", function() {
+      if (!selectedAuction) return;
+      // Retrieve the JWT token from localStorage
+      const token = localStorage.getItem("jwtToken");
+      if (!token) {
+        alert("User is not logged in.");
+        return;
+      }
+      const url = `http://localhost:8080/api/auctions/complete/${selectedAuction.id}`;
+      fetch(url, {
+        method: "PUT",
+        headers: {"Content-Type": "application/json", "Authorization": `Bearer ${token}`}
+      }) .then(response => {
+        console.log(response);
+        if (!response.ok) {
+          return response.text().then(text => { throw new Error(text); });
+        }
+        return response.json();
+      })
+      // .then(updatedAuction => {
+      //   console.log(updatedAuction);
+      // })
+      // .catch(error => {
+      //   alert("Buy failed: " + error.message);
+      // });
     });
 
     // Search form submission handler
@@ -342,7 +391,7 @@
         tbody.innerHTML = "";
         selectedAuction = null;
         // Hide forward auction section and bid now button
-        document.getElementById("forwardAuctionSection").style.display = "none";
+        document.getElementById("auctionSection").style.display = "none";
         document.getElementById("bidNowButton").style.display = "none";
 
         if (data.length === 0) {
@@ -405,7 +454,7 @@
       .catch(error => {
         document.getElementById("errorMessage").textContent = "Error: " + error.message;
         document.getElementById("auctionTable").style.display = "none";
-        document.getElementById("forwardAuctionSection").style.display = "none";
+        document.getElementById("auctionSection").style.display = "none";
       });
     });
 

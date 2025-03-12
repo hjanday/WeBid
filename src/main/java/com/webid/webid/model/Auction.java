@@ -23,8 +23,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Table(name = "auctions")
 public class Auction {
 
@@ -78,8 +77,16 @@ public class Auction {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    // @OneToMany(mappedBy = "auction", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    // @OneToMany(mappedBy = "auction", cascade = CascadeType.REMOVE, orphanRemoval
+    // = true)
     // private List<Bid> bids;
+    
+//     public Auction(){
+//         if (this.getAuctionType().name().equals("FORWARD")) {
+//         this.startTime = Instant.now();
+//         this.endTime = this.startTime.plus(24, ChronoUnit.HOURS);
+//     }
+// }
 
     public Auction completeAuction() {
         // set auction to be completed at this time
@@ -87,4 +94,6 @@ public class Auction {
         this.over = true;
         return this;
     }
+
+    
 }
