@@ -1,7 +1,6 @@
 package com.webid.webid.repository;
 
 import com.webid.webid.model.Bid;
-import com.webid.webid.model.User;
 
 import java.util.List;
 
@@ -18,5 +17,4 @@ public interface BidRepository extends JpaRepository<Bid, Long> {
     // You can add custom queries here if needed, for example:
     // List<Bid> findByAuctionId(Long auctionId);
     // List<Bid> findByUserId(Long userId);
-
 }

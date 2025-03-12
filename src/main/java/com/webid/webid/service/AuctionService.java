@@ -3,15 +3,21 @@ package com.webid.webid.service;
 import com.webid.webid.exceptions.ResourceAlreadyExistsException;
 import com.webid.webid.model.Auction;
 import com.webid.webid.model.User;
+import com.webid.webid.model.Bid;
 import com.webid.webid.repository.AuctionRepository;
+import com.webid.webid.repository.BidRepository;
 import com.webid.webid.repository.UserRepository;
 
+import lombok.AllArgsConstructor;
+
+import org.springframework.security.access.method.P;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.Instant;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -20,17 +26,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class AuctionService {
 
     @Autowired
     private UserRepository userRepository;
     private AuctionRepository auctionRepository;
-    private NotificationService notifService;
-
-    public AuctionService(AuctionRepository auctionRepository, UserRepository userRepository) {
-        this.auctionRepository = auctionRepository;
-        this.userRepository = userRepository;
-    }
+    private BidRepository bidRepository;
+    // private NotificationService notifService;
 
     // Get all auctions
     public List<Auction> getAllAuctions() {
@@ -58,72 +61,41 @@ public class AuctionService {
     }
 
     // Create a new auction
-    public Auction createAuction(Auction auction) {
-        // Check if an auction with the same item name exists already and throw
-        // exception that the itemName already exists
-        // if(auctionRepository.findByItemName(auction.getItemName()).isPresent()){
-        // throw new ResourceAlreadyExistsException("An auction with item name " +
-        // auction.getItemName() + " already exists.");
-        // }
-        // try{
-        // return auctionRepository.save(auction);
-        // }
-        // catch (DataIntegrityViolationException ex){
-        // throw new ResourceAlreadyExistsException("Data Integrity Error: " +
-        // ex.getMessage());
-        // }
+    public Auction createAuction(Auction auction, User user) throws AccessDeniedException {
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // String username = authentication.getName();
 
-        String username = authentication.getName();
-
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        // User user = userRepository.findByEmail(username)
+        //         .orElseThrow(() -> new RuntimeException("User not found"));
 
         auction.setOwner(user);
+        auction.setStartTime(Instant.now());
+        auction.setEndTime(Instant.now().plus(24, ChronoUnit.HOURS));
 
         return auctionRepository.save(auction);
 
     }
 
-    // Create a new auction
-    // public Auction createAuction(Auction auction) {
-    // // Check if an auction with the same item name exists already and throw
-    // exception that the itemName already exists
-    // if(!auctionRepository.findByItemName(auction.getItemName()).isEmpty()){
-    // throw new ResourceAlreadyExistsException("An auction with item name " +
-    // auction.getItemName() + " already exists.");
-    // }
-    // try {
-    // // if auction type is FORWARD, set start and end time.
-    // try {
-    // if (auction.getAuctionType().name().equals("FORWARD")) {
-    // auction.setStartTime(Instant.now());
-    // auction.setEndTime(Instant.now().plus(24, ChronoUnit.HOURS));
-    // }
-    // } catch (Exception e) {
-    // System.out.println(e);
-    // }
-    // return auctionRepository.save(auction);
-    // } catch (DataIntegrityViolationException ex) {
-    // throw new ResourceAlreadyExistsException("Data Integrity Error: " +
-    // ex.getMessage());
-    // }
-
-    // }
-
-    // Save an auction
-    public Auction saveAuction(Auction auction) {
-        try {
-            return auctionRepository.save(auction);
-        } catch (DataIntegrityViolationException ex) {
-            throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
-        }
-    }
-
     // Delete an auction
-    public void deleteAuction(Long id) {
-        auctionRepository.deleteById(id);
+    public void deleteAuction(Long id, User user) {
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // String username = authentication.getName();
+
+        // User user = userRepository.findByEmail(username)
+        //         .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        Auction auction = auctionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Auction not found"));
+
+        if(auction.getOwner().getId().equals(user.getId())){
+            
+            // User should not be able to delete an active auciton.
+            
+            auctionRepository.deleteById(id);
+        }
+        
     }
 
     // // Find auctions by status (example method)
@@ -169,16 +141,7 @@ public class AuctionService {
             }
         }
     }
-    public boolean lowerDutchPrice(Auction foundAuction,User user,double amount){
-        if (user.getId().equals(foundAuction.getOwnerID()) && foundAuction.getAuctionType().equals("Dutch")){
-            foundAuction.setCurrentBid(amount);
-            return true;
-        }else if(!user.getId().equals(foundAuction.getOwnerID())){
-            return false;
-        }else{
-            return false;
-        }
-    }
+
     // Dutch Auction completed
     public boolean confirmBid(Auction foundAuction, User user) {
         if (foundAuction == null) {
@@ -186,18 +149,18 @@ public class AuctionService {
         } else { // auction is found; server processes purchase
             foundAuction.setCurrentBidderID(user.getId());
             foundAuction.completeAuction();
-            notifService.notify(user, "Your bid has been confirmed");
+            // notifService.notify(user, "Your bid has been confirmed");
             auctionRepository.save(foundAuction);
             // dutch auction successful/completed
             return true;
         }
     }
 
-    public Auction updateDutch(long auctionID) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+    public Auction updateDutch(long auctionID, User user) {
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // String username = authentication.getName();
 
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
+        // User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
 
         // get auction
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
@@ -231,11 +194,11 @@ public class AuctionService {
         return null;
     }
 
-    public Auction completeDutch(long auctionID) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+    public Auction completeDutch(long auctionID, User user) {
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // String username = authentication.getName();
 
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
+        // User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
 
         // get auction and user for userID
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
@@ -270,14 +233,14 @@ public class AuctionService {
 
     // Verify owner
     public void verifyOwner(User user, Auction auction) {
-        if (!user.getId().equals(auction.getOwnerID())) {
+        if (!user.getId().equals(auction.getOwner().getId())) {
             throw new IllegalArgumentException("Only the owner of the auction may change the bid.");
         }
     }
 
     // verify non-owner
     public void verifyNonOwner(User user, Auction auction) {
-        if (user.getId().equals(auction.getOwnerID())) {
+        if (user.getId().equals(auction.getOwner().getId())) {
             throw new IllegalArgumentException("The owner of the auction may not bid.");
         }
     }
