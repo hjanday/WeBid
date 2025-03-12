@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
 @RestController
 @RequestMapping("/api/auctions")
 public class AuctionController {
@@ -35,7 +34,8 @@ public class AuctionController {
 
     // Create auction
     @PostMapping("/create")
-    public ResponseEntity<Auction> createAuction(@CurrentUser User currentUser, @RequestBody Auction auction) throws AccessDeniedException {
+    public ResponseEntity<Auction> createAuction(@CurrentUser User currentUser, @RequestBody Auction auction)
+            throws AccessDeniedException {
         Auction createdAuction = auctionService.createAuction(auction, currentUser);
 
         return ResponseEntity.ok(createdAuction);
@@ -46,7 +46,7 @@ public class AuctionController {
     public void deleteAuction(@CurrentUser User currentUser, @PathVariable Long id) {
         auctionService.deleteAuction(id, currentUser);
     }
-    
+
     // Get all auctions
     @GetMapping
     public List<Auction> getAllAuctions() {
@@ -63,6 +63,14 @@ public class AuctionController {
     @GetMapping("/search")
     public List<Auction> getAuctionByItemName(@RequestParam String itemName) {
         return auctionService.findAuctionByItemName(itemName);
+    }
+
+    // Edits the expedited shipping of an auction to be true
+    @PutMapping("{auctionID}")
+    public ResponseEntity<Object> setExpeditedShipping(@CurrentUser User currentUser, @PathVariable Long auctionID,
+            @RequestParam boolean expShip) {
+        auctionService.setExpeditedShipping(auctionID, expShip, currentUser);
+        return ResponseEntity.ok().body("Expedited shipping has been set to: " + expShip);
     }
 
     // Get auctions by status
@@ -85,9 +93,10 @@ public class AuctionController {
 
     // Updates forward auctions
     // @PostMapping("/{auctionId}")
-    // public ResponseEntity<Object> placeBid(@PathVariable long auctionId, @RequestParam double bidAmount) {
-    //     Bid bid = bidService.placeBid(auctionId, bidAmount);
-    //     return ResponseEntity.ok(bid);
+    // public ResponseEntity<Object> placeBid(@PathVariable long auctionId,
+    // @RequestParam double bidAmount) {
+    // Bid bid = bidService.placeBid(auctionId, bidAmount);
+    // return ResponseEntity.ok(bid);
     // }
 
     // Complete a dutch auction

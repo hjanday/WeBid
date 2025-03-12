@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Service;
 
-import java.lang.classfile.ClassFile.Option;
 import java.util.Optional;
 
 @Service
@@ -38,7 +37,7 @@ public class AuthService {
 	}
 
 	public User signUp(RegisterUserDTO input) {
-		
+
 		// Check for input validation prior to setting data
 		if (userRepository.findByEmail(input.getEmail()).isPresent()) {
 			throw new ResourceAlreadyExistsException("Email already registered!");
@@ -66,17 +65,16 @@ public class AuthService {
 		}
 	}
 
-	public void updatePassword(String userEmail, String newPw){
+	public void updatePassword(String userEmail, String newPw) {
 		Optional<User> u = userRepository.findByEmail(userEmail);
 		// Check if record does not exist and throw exception
-		if (u.equals(Optional.empty())){
+		if (u.equals(Optional.empty())) {
 			throw new ResourceNotFoundException("Record with email: " + userEmail + " not found.");
 		}
-		try{
+		try {
 			String encodedPassword = passwordEncoder.encode(newPw);
 			userRepository.updatePasswordByEmail(userEmail, encodedPassword);
-		}
-		catch (DataIntegrityViolationException ex){
+		} catch (DataIntegrityViolationException ex) {
 			throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
 		}
 	}
