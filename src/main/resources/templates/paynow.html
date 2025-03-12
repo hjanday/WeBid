@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Auction Ended – Pay Now</title>
+  <style>
+    /* Basic Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f9f9f9;
+      font-family: Arial, sans-serif;
+      padding: 1rem;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 1.5rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .item-description {
+      margin-bottom: 1rem;
+    }
+
+    /* Shipping Options */
+    .shipping-options {
+      margin: 1rem 0;
+      padding: 1rem;
+      background-color: #f3f3f3;
+      border-radius: 4px;
+    }
+    .shipping-options label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .shipping-options input[type="radio"] {
+      margin-right: 0.5rem;
+    }
+
+    /* Pay Now Button */
+    .pay-now-btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+    .pay-now-btn:hover {
+      background-color: #218838;
+    }
+
+    /* Price info */
+    .price-info {
+      margin: 0.5rem 0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header/Logo -->
+  <header>
+    <div class="logo">My Auction App</div>
+  </header>
+
+  <!-- Main Content Container -->
+  <div class="container">
+    <h1>Bidding Ended!</h1>
+
+    <!-- Item / Auction Details -->
+    <div class="item-description">
+      <p><strong>Item Description:</strong> This is where the item’s details go.</p>
+      <p class="price-info">Winning Price: $XXX</p>
+      <p class="price-info">Highest Bidder: YYY</p>
+    </div>
+
+    <!-- Shipping Options (Radio Buttons) -->
+    <div class="shipping-options">
+      <p><strong>Shipping Options:</strong></p>
+      <label>
+        <input type="radio" name="shippingOption" value="standard" checked>
+        Standard Shipping - $ZZZ
+      </label>
+      <label>
+        <input type="radio" name="shippingOption" value="expedited">
+        Expedited Shipping - Add: $XXX
+      </label>
+    </div>
+
+    <!-- Pay Now Button -->
+    <button class="pay-now-btn" id="payNowButton">Pay Now</button>
+  </div>
+
+  <script>
+    // Click handler for Pay Now
+    document.getElementById("payNowButton").addEventListener("click", function() {
+      alert("Payment flow not implemented yet. This is a placeholder alert.");
+    });
+  </script>
+</body>
+</html>
