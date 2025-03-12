@@ -11,6 +11,9 @@ import lombok.AllArgsConstructor;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +31,7 @@ public class BidService {
     private AuctionRepository auctionRepository;
     private UserRepository userRepository;
     private AuctionService auctionService;
+    private NotificationService notifService;
 
     public Bid placeBid(Long auctionId, double amount, User user) {
 
@@ -62,6 +66,29 @@ public class BidService {
 
             auction.setCurrentBid(amount);
             auction.setCurrentBidderID(user.getId());
+
+            // Find previous bidders and notify all.
+            List<Bid> prevBidders = bidRepository.findByAuctionId(auction.getId());
+            List<User> prevUsers = prevBidders.stream()
+                    .map(Bid::getUser) // Extracts the User from each Bid
+                    .collect(Collectors.toList());
+            System.out.println(prevBidders);
+            System.out.println(prevBidders.get(0).getUser());
+            System.out.println();
+            System.out.println();
+            System.out.println();
+
+            for (User u : prevUsers) {
+
+                if (u.getId().equals(auction.getCurrentBidderID())) {
+                    notifService.notify(u, String.format("You have successfully %f bid on %s",
+                            auction.getCurrentBid(), auction.getItemName()));
+                } else {
+                    notifService.notify(u, String.format("A new bid of %f has been placed on %s",
+                            auction.getCurrentBid(), auction.getItemName()));
+                }
+
+            }
 
             return bidRepository.save(bid);
         } else {
