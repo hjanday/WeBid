@@ -12,6 +12,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.*;
 
@@ -57,9 +59,13 @@ public class Auction {
     @Column(nullable = false)
     private boolean over = false;
     @Column(nullable = false)
-    private float expeditedShippingCost;
+    private double expeditedShippingCost;
     @Column(nullable = false)
     private boolean expeditedShipping = false;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
 
     public Auction() {
         // // only set start and endtime immediately on Forward bid; otherwise on dutch,

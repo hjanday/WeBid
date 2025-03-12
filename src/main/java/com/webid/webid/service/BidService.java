@@ -3,19 +3,70 @@ package com.webid.webid.service;
 import com.webid.webid.model.Auction;
 import com.webid.webid.model.Bid;
 import com.webid.webid.model.User;
+import com.webid.webid.repository.AuctionRepository;
 import com.webid.webid.repository.BidRepository;
+import com.webid.webid.repository.UserRepository;
+
+import lombok.AllArgsConstructor;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class BidService {
 
     @Autowired
     private BidRepository bidRepository;
+    private AuctionRepository auctionRepository;
+    private UserRepository userRepository;
+    private AuctionService auctionService;
 
-    public Bid placeBid(Auction auction, User user, double amount) {
-        Bid newBid = new Bid(auction, user, amount);
-        return bidRepository.save(newBid);
+    public Bid placeBid(Long auctionId, double amount) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String username = authentication.getName();
+
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Auction auction = auctionRepository.findById(auctionId)
+                .orElseThrow(() -> new RuntimeException("Auction not found"));
+
+        // logic to verify bid
+        auctionService.verifyRequest(auction, auction.getAuctionType().name());
+        auctionService.verifyNonOwner(user, auction);
+
+        if ((auction.getCurrentBid() == null)
+                || (auction.getCurrentBidderID() == 0 && amount >= auction.getCurrentBid()) // if there are no
+                                                                                            // bidders, user can bid
+                || (auction.getBidIncrement() == 0 ? amount > auction.getCurrentBid() // logic for bidding with bid
+                                                                                      // increment
+                        : amount >= (auction.getCurrentBid() + auction.getBidIncrement()))) {
+
+            // maybe add a previous bid to see how much the bid was before this new one
+            Bid bid = new Bid();
+
+            bid.setAmount(amount);
+            bid.setTimestamp(Instant.now());
+            bid.setUser(user);
+            bid.setAuction(auction);
+
+            auction.setCurrentBid(amount);
+            auction.setCurrentBidderID(user.getId());
+
+            return bidRepository.save(bid);
+        } else {
+            return null; // return a null bid if it could not be created
+        }
     }
 
     // You can add other business logic for managing bids as needed
