@@ -78,8 +78,8 @@ public class Auction {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    @OneToMany(mappedBy = "auction", cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<Bid> bids;
+    // @OneToMany(mappedBy = "auction", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    // private List<Bid> bids;
 
     public Auction completeAuction() {
         // set auction to be completed at this time

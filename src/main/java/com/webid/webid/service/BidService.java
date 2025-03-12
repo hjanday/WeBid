@@ -29,14 +29,14 @@ public class BidService {
     private UserRepository userRepository;
     private AuctionService auctionService;
 
-    public Bid placeBid(Long auctionId, double amount) {
+    public Bid placeBid(Long auctionId, double amount, User user) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        String username = authentication.getName();
+        // String username = authentication.getName();
 
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        // User user = userRepository.findByEmail(username)
+        //         .orElseThrow(() -> new RuntimeException("User not found"));
 
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));

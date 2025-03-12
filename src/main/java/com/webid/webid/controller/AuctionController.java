@@ -43,8 +43,8 @@ public class AuctionController {
 
     // Delete an auction
     @DeleteMapping("/{id}")
-    public void deleteAuction(@PathVariable Long id) {
-        auctionService.deleteAuction(id);
+    public void deleteAuction(@CurrentUser User currentUser, @PathVariable Long id) {
+        auctionService.deleteAuction(id, currentUser);
     }
     
     // Get all auctions
@@ -73,9 +73,9 @@ public class AuctionController {
 
     // edits a Dutch auction
     @PutMapping("dutch/{auctionId}")
-    public ResponseEntity<Object> decrementDutch(@PathVariable Long auctionId) {
+    public ResponseEntity<Object> decrementDutch(@CurrentUser User currentUser, @PathVariable Long auctionId) {
         // Retrieve the auction by its ID
-        Auction auction = auctionService.updateDutch(auctionId);
+        Auction auction = auctionService.updateDutch(auctionId, currentUser);
         if (auction == null) {
             return ResponseEntity.badRequest().body("Dutch auction cannot be updated");
         } else {
@@ -84,16 +84,16 @@ public class AuctionController {
     }
 
     // Updates forward auctions
-    @PostMapping("/{auctionId}")
-    public ResponseEntity<Object> placeBid(@PathVariable long auctionId, @RequestParam double bidAmount) {
-        Bid bid = bidService.placeBid(auctionId, bidAmount);
-        return ResponseEntity.ok(bid);
-    }
+    // @PostMapping("/{auctionId}")
+    // public ResponseEntity<Object> placeBid(@PathVariable long auctionId, @RequestParam double bidAmount) {
+    //     Bid bid = bidService.placeBid(auctionId, bidAmount);
+    //     return ResponseEntity.ok(bid);
+    // }
 
     // Complete a dutch auction
     @PutMapping("complete/{auctionId}")
-    public ResponseEntity<Object> updateDutch(@PathVariable long auctionId) {
-        Auction auction = auctionService.completeDutch(auctionId);
+    public ResponseEntity<Object> updateDutch(@CurrentUser User currentUser, @PathVariable long auctionId) {
+        Auction auction = auctionService.completeDutch(auctionId, currentUser);
         if (auction == null) {
             return ResponseEntity.badRequest().body("Dutch auction cannot be completed");
         } else {

@@ -75,23 +75,14 @@ public class AuctionService {
 
     }
 
-    // Save an auction
-    public Auction saveAuction(Auction auction) {
-        try {
-            return auctionRepository.save(auction);
-        } catch (DataIntegrityViolationException ex) {
-            throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
-        }
-    }
-
     // Delete an auction
-    public void deleteAuction(Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public void deleteAuction(Long id, User user) {
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        String username = authentication.getName();
+        // String username = authentication.getName();
 
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        // User user = userRepository.findByEmail(username)
+        //         .orElseThrow(() -> new RuntimeException("User not found"));
         
         Auction auction = auctionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
@@ -104,8 +95,6 @@ public class AuctionService {
         }
         
     }
-
-    
 
     // // Find auctions by status (example method)
     // public List<Auction> getAuctionsByStatus(String status) {
@@ -126,11 +115,11 @@ public class AuctionService {
         }
     }
 
-    public Auction updateDutch(long auctionID) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+    public Auction updateDutch(long auctionID, User user) {
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // String username = authentication.getName();
 
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
+        // User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
 
         // get auction
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
@@ -164,11 +153,11 @@ public class AuctionService {
         return null;
     }
 
-    public Auction completeDutch(long auctionID) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+    public Auction completeDutch(long auctionID, User user) {
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // String username = authentication.getName();
 
-        User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
+        // User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
 
         // get auction and user for userID
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
