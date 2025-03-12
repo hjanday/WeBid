@@ -1,6 +1,7 @@
 package com.webid.webid.controller;
 
 import com.webid.webid.model.*;
+import com.webid.webid.security.CurrentUser;
 import com.webid.webid.service.AuctionService;
 import com.webid.webid.service.BidService;
 import com.webid.webid.service.UserService;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.security.Principal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -57,8 +59,8 @@ public class AuctionController {
 
     // Create auction
     @PostMapping("/create")
-    public ResponseEntity<Auction> createAuction(@RequestBody Auction auction) {
-        Auction createdAuction = auctionService.createAuction(auction);
+    public ResponseEntity<Auction> createAuction(@CurrentUser User currentUser, @RequestBody Auction auction) throws AccessDeniedException {
+        Auction createdAuction = auctionService.createAuction(auction, currentUser);
 
         return ResponseEntity.ok(createdAuction);
     }

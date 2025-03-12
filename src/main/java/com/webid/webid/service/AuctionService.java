@@ -12,6 +12,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.Instant;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -58,7 +59,7 @@ public class AuctionService {
     }
 
     // Create a new auction
-    public Auction createAuction(Auction auction) {
+    public Auction createAuction(Auction auction, User user) throws AccessDeniedException {
         // Check if an auction with the same item name exists already and throw
         // exception that the itemName already exists
         // if(auctionRepository.findByItemName(auction.getItemName()).isPresent()){
@@ -73,12 +74,12 @@ public class AuctionService {
         // ex.getMessage());
         // }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        String username = authentication.getName();
+        // String username = authentication.getName();
 
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        // User user = userRepository.findByEmail(username)
+        //         .orElseThrow(() -> new RuntimeException("User not found"));
 
         auction.setOwner(user);
 
