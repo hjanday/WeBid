@@ -23,8 +23,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Table(name = "auctions")
 public class Auction {
 
@@ -78,9 +77,10 @@ public class Auction {
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
-    // @OneToMany(mappedBy = "auction", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    // @OneToMany(mappedBy = "auction", cascade = CascadeType.REMOVE, orphanRemoval
+    // = true)
     // private List<Bid> bids;
-
+    
     public Auction completeAuction() {
         // set auction to be completed at this time
         this.endTime = Instant.now();

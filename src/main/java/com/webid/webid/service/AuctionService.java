@@ -72,6 +72,8 @@ public class AuctionService {
         // .orElseThrow(() -> new RuntimeException("User not found"));
 
         auction.setOwner(user);
+        auction.setStartTime(Instant.now());
+        auction.setEndTime(Instant.now().plus(24, ChronoUnit.HOURS));
 
         return auctionRepository.save(auction);
 

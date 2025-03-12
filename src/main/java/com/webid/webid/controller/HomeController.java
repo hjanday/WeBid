@@ -33,4 +33,12 @@ public class HomeController {
         return "auctions"; 
     }
 
+    @GetMapping("/createauction")
+    public String createauction() {
+        return "create_auction"; 
+    }
+
+
+
+
 }
