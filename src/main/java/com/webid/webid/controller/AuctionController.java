@@ -3,18 +3,11 @@ package com.webid.webid.controller;
 import com.webid.webid.model.*;
 import com.webid.webid.security.CurrentUser;
 import com.webid.webid.service.AuctionService;
-import com.webid.webid.service.BidService;
-import com.webid.webid.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
-import java.security.Principal;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +22,6 @@ public class AuctionController {
 
     @Autowired
     private AuctionService auctionService;
-    private BidService bidService;
-    private UserService userService;
 
     // Create auction
     @PostMapping("/create")
@@ -73,12 +64,6 @@ public class AuctionController {
         return ResponseEntity.ok().body("Expedited shipping has been set to: " + expShip);
     }
 
-    // Get auctions by status
-    // @GetMapping("/status/{status}")
-    // public List<Auction> getAuctionsByStatus(@PathVariable String status) {
-    // return auctionService.getAuctionsByStatus(status);
-    // }
-
     // edits a Dutch auction
     @PutMapping("dutch/{auctionId}")
     public ResponseEntity<Object> decrementDutch(@CurrentUser User currentUser, @PathVariable Long auctionId) {
@@ -90,14 +75,6 @@ public class AuctionController {
             return ResponseEntity.ok("Dutch auction successfully decremented");
         }
     }
-
-    // Updates forward auctions
-    // @PostMapping("/{auctionId}")
-    // public ResponseEntity<Object> placeBid(@PathVariable long auctionId,
-    // @RequestParam double bidAmount) {
-    // Bid bid = bidService.placeBid(auctionId, bidAmount);
-    // return ResponseEntity.ok(bid);
-    // }
 
     // Complete a dutch auction
     @PutMapping("complete/{auctionId}")

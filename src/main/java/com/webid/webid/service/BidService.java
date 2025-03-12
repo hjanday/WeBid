@@ -5,21 +5,15 @@ import com.webid.webid.model.Bid;
 import com.webid.webid.model.User;
 import com.webid.webid.repository.AuctionRepository;
 import com.webid.webid.repository.BidRepository;
-import com.webid.webid.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Service;
 
 @AllArgsConstructor
@@ -29,19 +23,10 @@ public class BidService {
     @Autowired
     private BidRepository bidRepository;
     private AuctionRepository auctionRepository;
-    private UserRepository userRepository;
     private AuctionService auctionService;
     private NotificationService notifService;
 
     public Bid placeBid(Long auctionId, double amount, User user) {
-
-        // Authentication authentication =
-        // SecurityContextHolder.getContext().getAuthentication();
-
-        // String username = authentication.getName();
-
-        // User user = userRepository.findByEmail(username)
-        // .orElseThrow(() -> new RuntimeException("User not found"));
 
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
@@ -97,5 +82,4 @@ public class BidService {
         }
     }
 
-    // You can add other business logic for managing bids as needed
 }

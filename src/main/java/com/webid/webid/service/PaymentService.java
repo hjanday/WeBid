@@ -4,8 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -70,11 +69,6 @@ public class PaymentService {
         if (auction.getCurrentBidderID() != user.getId()) {
             return null;
         }
-
-        // verify auction is currently over
-        // if (!auction.isOver()) {
-        // return null;
-        // }
 
         Payment payment = Payment.create(user.getId(), auction.getId(), auction.getAuctionType().name(),
                 auction.getCurrentBid(), auction.isExpeditedShipping(), auction.getExpeditedShippingCost(), shipDays);
