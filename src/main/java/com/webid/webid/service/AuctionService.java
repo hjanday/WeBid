@@ -1,5 +1,6 @@
 package com.webid.webid.service;
 
+import com.webid.webid.config.AppConfig;
 import com.webid.webid.exceptions.ResourceAlreadyExistsException;
 import com.webid.webid.model.Auction;
 import com.webid.webid.model.User;
@@ -62,12 +63,13 @@ public class AuctionService {
 
     // Create a new auction
     public Auction createAuction(Auction auction, User user) throws AccessDeniedException {
-        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
 
         // String username = authentication.getName();
 
         // User user = userRepository.findByEmail(username)
-        //         .orElseThrow(() -> new RuntimeException("User not found"));
+        // .orElseThrow(() -> new RuntimeException("User not found"));
 
         auction.setOwner(user);
 
@@ -77,23 +79,24 @@ public class AuctionService {
 
     // Delete an auction
     public void deleteAuction(Long id, User user) {
-        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
 
         // String username = authentication.getName();
 
         // User user = userRepository.findByEmail(username)
-        //         .orElseThrow(() -> new RuntimeException("User not found"));
-        
+        // .orElseThrow(() -> new RuntimeException("User not found"));
+
         Auction auction = auctionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
 
-        if(auction.getOwner().getId().equals(user.getId())){
-            
+        if (auction.getOwner().getId().equals(user.getId())) {
+
             // User should not be able to delete an active auciton.
-            
+
             auctionRepository.deleteById(id);
         }
-        
+
     }
 
     // // Find auctions by status (example method)
@@ -116,10 +119,12 @@ public class AuctionService {
     }
 
     public Auction updateDutch(long auctionID, User user) {
-        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
         // String username = authentication.getName();
 
-        // User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
+        // User user = userRepository.findByEmail(username).orElseThrow(() -> new
+        // RuntimeException("User not found"));
 
         // get auction
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
@@ -154,10 +159,12 @@ public class AuctionService {
     }
 
     public Auction completeDutch(long auctionID, User user) {
-        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
         // String username = authentication.getName();
 
-        // User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("User not found"));
+        // User user = userRepository.findByEmail(username).orElseThrow(() -> new
+        // RuntimeException("User not found"));
 
         // get auction and user for userID
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
@@ -178,6 +185,26 @@ public class AuctionService {
             return auction;
         }
         return null;
+    }
+
+    public void setExpeditedShipping(long auctionID, boolean expShip, User user) {
+
+        // get auction
+        Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
+        if (!existingAuction.isPresent()) {
+            throw new IllegalArgumentException("Auction does not exist");
+        }
+        Auction auction = existingAuction.get();
+
+        // check that currentbidder is the user to be able to set expedited shipping
+        if (auction.getCurrentBidderID() != (user.getId())) {
+            throw new IllegalArgumentException("User did not win the auction!");
+        }
+
+        // set expeditied shipping
+        auction.setExpeditedShipping(expShip);
+        auctionRepository.save(auction);
+
     }
 
     public void selectExpeditedShipping(Auction foundAuction) {
