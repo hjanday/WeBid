@@ -19,6 +19,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
 
     // Optional: You can define custom query methods as needed
     Optional<Auction> findById(Long id);
+    
     @Query("SELECT a FROM Auction a WHERE a.endTime<=:now and a.over=false")
     List<Auction> findByEndTimeBeforeAndNotifiedFalse(LocalDateTime now);
 
