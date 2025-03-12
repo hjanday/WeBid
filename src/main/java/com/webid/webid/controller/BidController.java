@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webid.webid.model.Bid;
+import com.webid.webid.model.User;
+import com.webid.webid.security.CurrentUser;
 import com.webid.webid.service.AuctionService;
 import com.webid.webid.service.BidService;
 import com.webid.webid.service.UserService;
@@ -26,9 +28,9 @@ public class BidController {
     private BidService bidService;
 
     @PostMapping("/{auctionId}")
-    public ResponseEntity<Object> placeBid(@PathVariable long auctionId, @RequestParam double bidAmount) {
+    public ResponseEntity<Object> placeBid(@CurrentUser User currentUser, @PathVariable long auctionId, @RequestParam double bidAmount) {
 
-        Bid bid = bidService.placeBid(auctionId, bidAmount);
+        Bid bid = bidService.placeBid(auctionId, bidAmount, currentUser);
 
         if (bid == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

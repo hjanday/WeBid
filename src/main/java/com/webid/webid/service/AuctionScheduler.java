@@ -13,28 +13,28 @@ import java.util.List;
 
 @Service
 public class AuctionScheduler {
-    @Autowired
-    private  AuctionRepository auctionRepository;
-    private  NotificationService notificationService;
+    // @Autowired
+    // private  AuctionRepository auctionRepository;
+    // private  NotificationService notificationService;
 
 
-    @Scheduled(fixedRate = 60000) // Runs every 60 seconds
-    public void checkAuctionExpiry() {
-        List<Auction> expiredAuctions = auctionRepository.findByEndTimeBeforeAndNotifiedFalse(LocalDateTime.now());
+    // @Scheduled(fixedRate = 60000) // Runs every 60 seconds
+    // public void checkAuctionExpiry() {
+    //     List<Auction> expiredAuctions = auctionRepository.findByEndTimeBeforeAndNotifiedFalse(LocalDateTime.now());
 
-        for (Auction auction : expiredAuctions) {
-            for (User u: auction.getPrevBidder()){
-                if(!u.getId().equals(auction.getCurrentBidderID())){
-                    notificationService.notify(u,String.format("The Auction on %s is over with a bid of %f",auction.getItemName(),auction.getCurrentBid()));
-                }else if (u.getId().equals(auction.getCurrentBidderID())){
-                    notificationService.notify(u,String.format("Congratulations on winning the bid on %s with a bid of %f, please proceed to check out",auction.getItemName(),auction.getCurrentBid()));
+    //     for (Auction auction : expiredAuctions) {
+    //         for (User u: auction.getPrevBidder()){
+    //             if(!u.getId().equals(auction.getCurrentBidderID())){
+    //                 notificationService.notify(u,String.format("The Auction on %s is over with a bid of %f",auction.getItemName(),auction.getCurrentBid()));
+    //             }else if (u.getId().equals(auction.getCurrentBidderID())){
+    //                 notificationService.notify(u,String.format("Congratulations on winning the bid on %s with a bid of %f, please proceed to check out",auction.getItemName(),auction.getCurrentBid()));
 
-                }
+    //             }
                
-                auction.setOver(true); 
-                auctionRepository.save(auction);
-            }
-        }
-    }
+    //             auction.setOver(true); 
+    //             auctionRepository.save(auction);
+    //         }
+    //     }
+    // }
 }
 
