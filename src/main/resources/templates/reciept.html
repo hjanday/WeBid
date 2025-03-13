@@ -98,7 +98,7 @@
         <p><span class="label">Postal Code:</span> <span id="postalCode">Loading...</span></p>
       </div>
       <div class="divider"></div>
-    >
+    
       <div class="payment-summary">
         <p class="label">Total Paid: $<span id="totalAmount">0</span></p>
       </div>
@@ -130,8 +130,7 @@
         return response.json();
       })
       .then(auctionData => {
-        console.log("Auction data:", auctionData);
-    
+
         document.getElementById("itemName").textContent = auctionData.itemName || "Untitled";
         document.getElementById("itemDesc").textContent = auctionData.description || "No description";
         
@@ -151,8 +150,6 @@
             return resp.json();
           })
           .then(paymentData => {
-            console.log(paymentData)
-          
             document.getElementById("totalAmount").textContent = paymentData.totalCost || "0";
             document.getElementById("shipDaysSpan").textContent = paymentData.shippingDays || "N/A";
           })
@@ -179,7 +176,6 @@
               return response.json();
             })
             .then(userData => {
-              console.log("User data:", userData);
               document.getElementById("username").textContent = userData.username || "N/A";
               document.getElementById("firstName").textContent = userData.firstName || "N/A";
               document.getElementById("lastName").textContent = userData.lastName || "N/A";

@@ -186,8 +186,18 @@
         if (this.value === "1") {
           document.getElementById("radioSelected").textContent =
             "Express shipping selected. Additional fees apply.";
+            fetch("http://localhost:8080/api/auctions/" + auctionID + `?expShip=${true}`, {
+              method: "PUT",
+              headers: {"Authorization": `Bearer ${localStorage.getItem("jwtToken")}`} 
+            })
+
+
         } else {
           document.getElementById("radioSelected").textContent = "No additional fees!";
+          fetch("http://localhost:8080/api/auctions/" + auctionID + `?expShip=${false}`, {
+              method: "PUT",
+              headers: {"Authorization": `Bearer ${localStorage.getItem("jwtToken")}`} 
+            })
         }
       });
     });
