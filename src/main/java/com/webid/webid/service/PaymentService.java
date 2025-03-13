@@ -1,5 +1,6 @@
 package com.webid.webid.service;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -78,9 +79,10 @@ public class PaymentService {
         }
 
         // verify auction is currently over
-        // if (!auction.isOver()) {
-        // return null;
-        // }
+        // if auction is not over, or the auctions end time has not yet passed, error
+        if (!auction.isOver() || auction.getEndTime().isBefore(Instant.now())) {
+            return null;
+        }
 
         Payment payment = Payment.create(user.getId(), auction.getId(), auction.getAuctionType().name(),
                 auction.getCurrentBid(), auction.isExpeditedShipping(), auction.getExpeditedShippingCost(), shipDays);

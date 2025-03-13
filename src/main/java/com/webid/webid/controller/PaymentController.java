@@ -38,7 +38,7 @@ public class PaymentController {
 
         Payment payment = paymentService.makePayment(auctionID, shipDays);
         if (payment == null) {
-            return ResponseEntity.badRequest().body("Payment could not be added");
+            return ResponseEntity.badRequest().body("Payment could not be added for various reasons.");
         } else {
             return ResponseEntity.ok("Payment successfully processed");
         }
