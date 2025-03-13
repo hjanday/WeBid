@@ -57,4 +57,9 @@ public class PaymentController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{id}")
+    public Payment getPaymentById(@PathVariable Long id) {
+        return paymentService.getPaymentById(id);
+    }
 }
