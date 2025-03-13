@@ -33,16 +33,16 @@ public class PaymentController {
 
     // Simulate a payment process
     @PostMapping("/{auctionID}/{shipDays}/pay")
-    public ResponseEntity<Object> makePayment(@PathVariable Long auctionID,
-            @PathVariable int shipDays) {
-
-        Payment payment = paymentService.makePayment(auctionID, shipDays);
-        if (payment == null) {
-            return ResponseEntity.badRequest().body("Payment could not be added");
-        } else {
-            return ResponseEntity.ok("Payment successfully processed");
+    public ResponseEntity<?> makePayment(@PathVariable Long auctionID, @PathVariable int shipDays) {
+        try {
+            Payment payment = paymentService.makePayment(auctionID, shipDays);
+            return ResponseEntity.ok(Map.of("message", "Payment successfully processed"));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "An unexpected error occurred"));
         }
-
     }
 
     // Get a payment by ID

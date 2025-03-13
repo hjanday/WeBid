@@ -74,7 +74,7 @@ public class PaymentService {
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
         // verify auction belongs to user
         if (auction.getCurrentBidderID() != user.getId()) {
-            return null;
+            throw new RuntimeException("User is not the winner of the Bid!");
         }
 
         // verify auction is currently over
