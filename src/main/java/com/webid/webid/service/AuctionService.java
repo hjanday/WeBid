@@ -1,18 +1,28 @@
 package com.webid.webid.service;
 
+import com.webid.webid.config.AppConfig;
 import com.webid.webid.exceptions.ResourceAlreadyExistsException;
 import com.webid.webid.model.Auction;
 import com.webid.webid.model.User;
+import com.webid.webid.model.Bid;
 import com.webid.webid.repository.AuctionRepository;
+import com.webid.webid.repository.BidRepository;
+import com.webid.webid.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
+
+import org.springframework.security.access.method.P;
+import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
 import java.time.Instant;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,8 +31,9 @@ import java.util.Optional;
 public class AuctionService {
 
     @Autowired
-
+    private UserRepository userRepository;
     private AuctionRepository auctionRepository;
+    private BidRepository bidRepository;
     // private NotificationService notifService;
 
     // Get all auctions
@@ -52,6 +63,13 @@ public class AuctionService {
 
     // Create a new auction
     public Auction createAuction(Auction auction, User user) throws AccessDeniedException {
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
+
+        // String username = authentication.getName();
+
+        // User user = userRepository.findByEmail(username)
+        // .orElseThrow(() -> new RuntimeException("User not found"));
 
         auction.setOwner(user);
         auction.setStartTime(Instant.now());
@@ -63,6 +81,13 @@ public class AuctionService {
 
     // Delete an auction
     public void deleteAuction(Long id, User user) {
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
+
+        // String username = authentication.getName();
+
+        // User user = userRepository.findByEmail(username)
+        // .orElseThrow(() -> new RuntimeException("User not found"));
 
         Auction auction = auctionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
@@ -76,7 +101,12 @@ public class AuctionService {
 
     }
 
-    // Dutch Auction completed
+    // // Find auctions by status (example method)
+    // public List<Auction> getAuctionsByStatus(String status) {
+    // return auctionRepository.findByStatus(status);
+    // }
+
+    // Auction completed
     public boolean confirmBid(Auction foundAuction, User user) {
         if (foundAuction == null) {
             return false;
@@ -90,7 +120,14 @@ public class AuctionService {
         }
     }
 
+    // dutch updates
     public Auction updateDutch(long auctionID, User user) {
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
+        // String username = authentication.getName();
+
+        // User user = userRepository.findByEmail(username).orElseThrow(() -> new
+        // RuntimeException("User not found"));
 
         // get auction
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
@@ -124,7 +161,14 @@ public class AuctionService {
         return null;
     }
 
+    // Dutch Completes
     public Auction completeDutch(long auctionID, User user) {
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
+        // String username = authentication.getName();
+
+        // User user = userRepository.findByEmail(username).orElseThrow(() -> new
+        // RuntimeException("User not found"));
 
         // get auction and user for userID
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
@@ -190,7 +234,6 @@ public class AuctionService {
             throw new IllegalArgumentException("The owner of the auction may not bid.");
         }
     }
-    
 
     // Verify Request
     public void verifyRequest(Auction auction, String type) {

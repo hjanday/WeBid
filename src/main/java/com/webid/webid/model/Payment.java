@@ -19,7 +19,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private Long userID;
     @Column(unique = true, nullable = false)
     private Long auctionID;
@@ -35,6 +35,9 @@ public class Payment {
     @Column(nullable = false)
     private double totalCost;
     private int shippingDays;
+
+    public Payment() {
+    }
 
     private Payment(Long userID, Long auctionID, String auctionType, double itemPrice, boolean expeditedShipping,
             double expeditedShippingCost, int shippingDays) {

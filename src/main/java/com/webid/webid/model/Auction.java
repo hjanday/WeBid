@@ -61,7 +61,9 @@ public class Auction {
 
     @Column(nullable = false)
     private boolean over = false;
-
+    // may have to implement in future for D3
+    // @Column(nullable = true)
+    // private int deliveryDays;
     @Column(nullable = false)
     private double expeditedShippingCost;
     @Column(nullable = false)
