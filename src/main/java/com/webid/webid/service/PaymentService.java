@@ -57,14 +57,9 @@ public class PaymentService {
         return paymentRepository.findById(id).orElse(null);
     }
 
-    public Payment getPaymentByAuctionId(long auctionId) {
-        Optional<Payment> payment = paymentRepository.findByAuctionId(auctionId);
-        if (!payment.isPresent()) {
-            return null;
-        }
-        Payment goodPayment = payment.get();
-        return goodPayment;
+    public Optional<Payment> getPaymentByAuctionId(long auctionId) {
 
+        return paymentRepository.findByAuctionId(auctionId);
     }
 
     public Payment makePayment(long auctionId, int shipDays) {

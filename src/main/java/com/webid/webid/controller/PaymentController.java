@@ -46,8 +46,8 @@ public class PaymentController {
     }
 
     // Get a payment by ID
-    @GetMapping("/{id}")
-    public Payment getPaymentByAuctionId(@PathVariable Long auctionId) {
+    @GetMapping("/{auctionId}")
+    public Optional<Payment> getPaymentByAuctionId(@PathVariable Long auctionId) {
         return paymentService.getPaymentByAuctionId(auctionId);
     }
 
@@ -62,10 +62,5 @@ public class PaymentController {
         response.put("status", status);
 
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/{id}")
-    public Payment getPaymentById(@PathVariable Long id) {
-        return paymentService.getPaymentById(id);
     }
 }
