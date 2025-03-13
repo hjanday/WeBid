@@ -43,6 +43,16 @@ public class HomeController {
     public String paynow() {
         return "paynow";
     }
+    @GetMapping("/payment")
+    public String payment() {
+        return "payment";
+    }
+    @GetMapping("/reciept")
+    public String reciept(){
+        return "reciept";
+    }
+
+    
     
 
 

@@ -46,8 +46,8 @@ public class UserController {
     }
 
     @GetMapping("/{userID}")
-    public User getUserInfo(@PathVariable Long userID) {
-        return this.userRepository.getReferenceById(userID);
+    public Optional<User> getUserInfo(@PathVariable Long userID) {
+        return this.userRepository.findById(userID);
     }
     
 
@@ -71,19 +71,6 @@ public class UserController {
     ResponseEntity<User> queryEmail(@RequestBody String email) {
         return this.userRepository.findByEmail(email).map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
-    @PostMapping("/getdetails")
-    public ResponseEntity<?> getTokenClaims(@RequestBody String token) {
-        try {
-            token = token.replaceAll("^\"|\"$", "");
-            String username = jwtService.extractUsername(token);
-            Optional<User> foundUser = userRepository.findByUsername(username);
-            Long id = foundUser.get().getId();
-            return ResponseEntity.ok(id);
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid token: " + ex.getMessage());
-        }
     }
 
 }
