@@ -140,10 +140,10 @@
       // 1) Grab the auction ID from the URL
       const urlParams = new URLSearchParams(window.location.search);
       const auctionID = urlParams.get("auctionId");
+      const auctionUrl = `http://localhost:8080/api/auctions/${auctionID}`;
 
       // 2) Fetch auction info on page load
       window.onload = function () {
-        const auctionUrl = `http://localhost:8080/api/auctions/${auctionID}`;
         fetch(auctionUrl)
           .then((response) => {
             console.log(response);
@@ -182,15 +182,43 @@
       // Add event listener to each radio button
       shippingOptions.forEach((option) => {
         option.addEventListener("change", function () {
-          if (this.value === "0") {
-            console.log("Standard Shipping selected");
-            document.getElementById("radioSelected").textContent =
-              "No additional fees!";
-          } else if (this.value === "1") {
-            console.log("Express Shipping selected");
-            document.getElementById("radioSelected").textContent =
-              "Express shipping selected. Additional fees will be applied.";
+          const token = localStorage.getItem("jwtToken"); // Retrieve JWT token
+
+          if (!token) {
+            alert("Authentication required. Please log in.");
+            return;
           }
+
+          const isExpedited = this.value === "1"; // true for expedited, false for standard
+          const shippingUrl = `http://localhost:8080/api/auctions/${auctionID}?expShip=${isExpedited}`;
+
+          fetch(shippingUrl, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Failed to update shipping option.");
+              }
+              return response.text(); // Since your endpoint returns text
+            })
+            .then((message) => {
+              console.log(message); // Log success message
+              if (isExpedited) {
+                document.getElementById("radioSelected").textContent =
+                  "Express shipping selected. Additional fees will be applied.";
+              } else {
+                document.getElementById("radioSelected").textContent =
+                  "No additional fees!";
+              }
+            })
+            .catch((error) => {
+              console.error("Error updating shipping option:", error);
+              alert("Failed to update shipping option. Please try again.");
+            });
         });
       });
 
@@ -217,8 +245,50 @@
           // Calculate total
           const total = winningPrice + shippingCost;
 
-          // Now do something with total (like post to server or redirect)
+          // alert user of total cost
           alert(`Total cost is $${total.toFixed(2)} (including shipping).`);
+
+          // call payment endpoints
+          // fetch auction
+          fetch(auctionUrl)
+            .then((response) => {
+              console.log(response);
+              if (!response.ok) {
+                throw new Error("Failed to fetch auction data");
+              }
+              return response.json();
+            })
+            .then((auction) => {
+              // ✅ Fixed by removing extra parentheses
+              const token = localStorage.getItem("jwtToken");
+              const paymentUrl = `http://localhost:8080/api/payments/${auction.id}/5/pay`;
+
+              fetch(paymentUrl, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+                .then((paymentResponse) => {
+                  if (!paymentResponse.ok) {
+                    return paymentResponse.text().then((errorText) => {
+                      throw new Error(errorText || "Payment failed");
+                    });
+                  }
+                  return paymentResponse.text();
+                })
+                .then((paymentResults) => {
+                  alert(paymentResults);
+                  console.log("Payment success");
+                })
+                .catch((error) => {
+                  console.error("Error during payment:", error);
+                  alert(`Payment failed: ${error.message}`);
+                });
+            });
+
+          // now redirect to shipment information page
 
           // Example: Call a "pay" endpoint with the total
           // fetch(`http://localhost:8080/api/auctions/${auctionID}/pay`, {
