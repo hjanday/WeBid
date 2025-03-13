@@ -78,7 +78,7 @@
 <body>
   <div class="container">
     <h1>Receipt</h1>
-    <!-- Left Column: Item Info, User Info, Total Paid -->
+    <!-- Left Column: Item & User Info -->
     <div class="col" id="leftCol">
       <h2>Item &amp; User Info</h2>
       <!-- Item Information -->
@@ -107,27 +107,22 @@
     <!-- Right Column: Shipping Info -->
     <div class="col" id="rightCol">
       <h2>Shipping Details</h2>
-      <p class="label">Shipping Days:</p>
-      <p id="shipMessage">This item will be shipped in <span id="shipDaysSpan">N/A</span> day(s).</p>
+      <p class="label">
+        The Item will be shipped in <span id="shipDaysSpan">N/A</span> day(s).
+      </p>
       <a class="main-menu-btn" href="/auctions">Main Menu</a>
     </div>
   </div>
 
   <script>
-    // Parse query parameters: total, auctionId, shipDays
+    // Parse query parameters: auctionId and shipDays, total comes from payment endpoint
     const params = new URLSearchParams(window.location.search);
-    const total = params.get("total");
     const auctionID = params.get("auctionId");
-    const shipDays = params.get("shipDays");
-
-    // Set total paid and shipDays in the DOM
-    document.getElementById("totalAmount").textContent = total || "0";
-    document.getElementById("shipDaysSpan").textContent = shipDays || "N/A";
-
+    
     // Retrieve JWT token from localStorage
     const token = localStorage.getItem("jwtToken");
 
-    // Fetch auction info to get item info and currentBidderID
+    // Fetch auction info to get item info and currentBidderID, then fetch user info
     fetch(`http://localhost:8080/api/auctions/${auctionID}`)
       .then(response => {
         if (!response.ok) {
@@ -137,12 +132,37 @@
       })
       .then(auctionData => {
         console.log("Auction data:", auctionData);
-        // Populate item information
+        // Populate item info
         document.getElementById("itemName").textContent = auctionData.itemName || "Untitled";
         document.getElementById("itemDesc").textContent = auctionData.description || "No description";
-
-        // Extract current bidder's user ID
+        
+        // Get bidder's user ID
         const userId = auctionData.currentBidderID;
+        
+        // Fetch payment info (which contains totalCost and shippingDays)
+        fetch(`http://localhost:8080/api/payments/${auctionID}`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        })
+          .then(resp => {
+            if (!resp.ok) {
+              throw new Error("Failed to fetch payment info");
+            }
+            return resp.json();
+          })
+          .then(paymentData => {
+            console.log(paymentData)
+            // Populate payment summary (total paid and shipping days)
+            document.getElementById("totalAmount").textContent = paymentData.totalCost || "0";
+            document.getElementById("shipDaysSpan").textContent = paymentData.shippingDays || "N/A";
+          })
+          .catch(err => {
+            console.error("Error fetching payment info:", err);
+          });
+
+        // If token exists and we have a bidder ID, fetch user info
         if (!token) {
           alert("User not logged in!");
           setUserPlaceholders();
@@ -183,7 +203,7 @@
       });
 
     function setUserPlaceholders() {
-    document.getElementById("username").textContent = "Unknown";
+      document.getElementById("username").textContent = "Unknown";
       document.getElementById("firstName").textContent = "Unknown";
       document.getElementById("lastName").textContent = "Unknown";
       document.getElementById("email").textContent = "Unknown";

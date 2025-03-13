@@ -315,7 +315,7 @@
                 .then((paymentResults) => {
                   alert(paymentResults);
                   console.log("Payment success");
-                  window.location.href = `/reciept?total=${totalDue}&auctionId=${auctionID}&shipDays=10`;
+                  window.location.href = `/reciept?auctionId=${auctionID}`;
                 })
                 .catch((error) => {
                   console.error("Error during payment:", error);
