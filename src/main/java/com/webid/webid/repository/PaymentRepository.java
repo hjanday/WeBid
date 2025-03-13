@@ -16,6 +16,8 @@ import java.util.Optional;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     // Optional: You can define custom query methods as needed
-    Optional<Payment> findById(Long id);    // For example, find all auctions with a particular status
+
+    @Query("SELECT p FROM Payment p WHERE p.auctionId = :auctionId")
+    Optional<Payment> findByAuctionId(@Param("auctionId") Long auctionId);
     // List<Auction> findByStatus(String status);
 }
