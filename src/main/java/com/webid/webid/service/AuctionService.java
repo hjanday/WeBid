@@ -106,7 +106,7 @@ public class AuctionService {
     // return auctionRepository.findByStatus(status);
     // }
 
-    // Dutch Auction completed
+    // Auction completed
     public boolean confirmBid(Auction foundAuction, User user) {
         if (foundAuction == null) {
             return false;
@@ -120,6 +120,7 @@ public class AuctionService {
         }
     }
 
+    // dutch updates
     public Auction updateDutch(long auctionID, User user) {
         // Authentication authentication =
         // SecurityContextHolder.getContext().getAuthentication();
@@ -160,6 +161,7 @@ public class AuctionService {
         return null;
     }
 
+    // Dutch Completes
     public Auction completeDutch(long auctionID, User user) {
         // Authentication authentication =
         // SecurityContextHolder.getContext().getAuthentication();

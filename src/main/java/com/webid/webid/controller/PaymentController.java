@@ -45,6 +45,12 @@ public class PaymentController {
 
     }
 
+    // Get a payment by ID
+    @GetMapping("/{auctionId}")
+    public Optional<Payment> getPaymentByAuctionId(@PathVariable Long auctionId) {
+        return paymentService.getPaymentByAuctionId(auctionId);
+    }
+
     // Check payment status
     @GetMapping("/status/{paymentId}")
     public ResponseEntity<Map<String, String>> getPaymentStatus(@PathVariable String paymentId) {
@@ -56,10 +62,5 @@ public class PaymentController {
         response.put("status", status);
 
         return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/{id}")
-    public Payment getPaymentById(@PathVariable Long id) {
-        return paymentService.getPaymentById(id);
     }
 }

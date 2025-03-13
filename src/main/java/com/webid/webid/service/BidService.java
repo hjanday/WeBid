@@ -50,6 +50,12 @@ public class BidService {
         auctionService.verifyRequest(auction, auction.getAuctionType().name());
         auctionService.verifyNonOwner(user, auction);
 
+        // if the bid is already over, return null unless the user is the currentBidder
+        if (auction.isOver() || auction.getEndTime().isBefore(Instant.now())) {
+            // bid is over, check user:
+            return null;
+        }
+
         if ((auction.getCurrentBid() == null)
                 || (auction.getCurrentBidderID() == 0 && amount >= auction.getCurrentBid()) // if there are no
                                                                                             // bidders, user can bid
