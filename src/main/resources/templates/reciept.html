@@ -89,6 +89,7 @@
       <div class="divider"></div>
       <!-- User Information -->
       <div class="user-info">
+        <p><span class="label">Username:</span> <span id="username">Loading...</span></p>
         <p><span class="label">First Name:</span> <span id="firstName">Loading...</span></p>
         <p><span class="label">Last Name:</span> <span id="lastName">Loading...</span></p>
         <p><span class="label">Email:</span> <span id="email">Loading...</span></p>
@@ -161,6 +162,7 @@
             })
             .then(userData => {
               console.log("User data:", userData);
+              document.getElementById("username").textContent = userData.username || "N/A";
               document.getElementById("firstName").textContent = userData.firstName || "N/A";
               document.getElementById("lastName").textContent = userData.lastName || "N/A";
               document.getElementById("email").textContent = userData.email || "N/A";
@@ -181,6 +183,7 @@
       });
 
     function setUserPlaceholders() {
+    document.getElementById("username").textContent = "Unknown";
       document.getElementById("firstName").textContent = "Unknown";
       document.getElementById("lastName").textContent = "Unknown";
       document.getElementById("email").textContent = "Unknown";
