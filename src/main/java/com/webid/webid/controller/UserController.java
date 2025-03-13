@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.webid.webid.model.User;
 import com.webid.webid.repository.UserRepository;
+import com.webid.webid.security.CurrentUser;
 import com.webid.webid.service.JwtService;
 import com.webid.webid.service.NotificationService;
 import com.webid.webid.service.UserService;
@@ -60,6 +61,11 @@ public class UserController {
     public User addUser(@RequestBody User user) {
         return this.userRepository.save(user);
     }
+    @GetMapping("/currentuser")
+    public User getCurrentUser(@CurrentUser User currentUser){
+        return currentUser;
+    }
+    
 
     @PostMapping("/findusername")
     ResponseEntity<User> queryUsername(@RequestBody String username) {
