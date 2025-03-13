@@ -183,9 +183,9 @@
 </head>
 <script src="/logout.js"></script>
 <body>
-  <!-- Header with Logo and Navigation Buttons -->
+
   <header>
-    <div class="logo">idk bro put a logo here</div>
+    <div class="logo">WeBid</div>
     <nav>
       <a href="#" onclick="logout()">Logout</a>
       <a href="/createauction">Create Auction</a>
@@ -196,17 +196,15 @@
 
   <h1>Auction Search</h1>
 
-  <!-- Search Form -->
   <form id="auctionForm">
     <label for="itemNameInput">Enter Auction Item Name:</label>
     <input type="text" id="itemNameInput" placeholder="Item Name" required>
     <button type="submit">Search Auctions</button>
   </form>
 
-  <!-- Error Message -->
+
   <div id="errorMessage"></div>
 
-  <!-- Auction Table -->
   <table id="auctionTable">
     <thead>
       <tr>
@@ -220,20 +218,20 @@
     <tbody id="auctionTbody"></tbody>
   </table>
 
-  <!-- Bid Now Button -->
+
   <button id="bidNowButton">Bid Now</button>
 
-  <!-- Forward Auction Detail Section -->
+  
   <div id="auctionSection">
     <h2>Screen for Bidding on Auctions</h2>
     <div class="forward-container">
-      <!-- Left Column: Auction Details -->
+   
       <div class="forward-left">
         <h3 id="faItemName"></h3>
         <p id="faDescription"></p>
         <p id="faShippingPrice"></p>
       </div>
-      <!-- Right Column: Bidding Info -->
+     
       <div class="forward-right">
         <p id="faCurrentPrice"></p>
         <p id="faHighestBidder"></p>
@@ -247,16 +245,16 @@
 
   <script>
     let selectedAuction = null;
-    // Ensure "Bid Now" button is hidden initially
+    // hide bids
     document.getElementById("bidNowButton").style.display = "none";
     document.getElementById("buyNowButton").style.display = "none";
-    // Called when a radio button is selected in the auction table
+    // pick radio btn
     function onRadioSelect(auction) {
       selectedAuction = auction;
       document.getElementById("bidNowButton").style.display = "block";
     }
 
-    // "Bid Now" button click handler
+    // update bid
     document.getElementById("bidNowButton").addEventListener("click", function() {
       if (!selectedAuction) return;
       if ((selectedAuction.auctionType || "").toLowerCase() === "forward") {
@@ -266,7 +264,7 @@
       }
     });
 
-    // Show the forward auction detail section, hide the auction table and "Bid Now" button
+    // fwd
     function showauctionSection(auction) {
       document.getElementById("auctionTable").style.display = "none";
       document.getElementById("bidNowButton").style.display = "none";
@@ -286,7 +284,7 @@
 
       document.getElementById("auctionSection").style.display = "block";
     }
-
+    // dutch
     function showauctionSectionDutch(auction) {
       document.getElementById("auctionTable").style.display = "none";
       document.getElementById("bidNowButton").style.display = "none";
@@ -309,12 +307,11 @@
     }
 
    
-    // Place bid button in forward auction section: calls API to update auction bid,
-    // then updates the section immediately with new details
+    // place bid
     document.getElementById("faPlaceBidButton").addEventListener("click", function() {
       if (!selectedAuction) return;
       const bidAmount = document.getElementById("faBidAmount").value;
-      // Retrieve the JWT token from localStorage
+    
       const token = localStorage.getItem("jwtToken");
       if (!token) {
         alert("User is not logged in.");
@@ -333,12 +330,17 @@
       .then(updatedAuction => {
         let auc = updatedAuction.auction;
         alert("Bid placed successfully!");
-        // Update the forward auction section with new details from updatedAuction
+        // update auc
         const newCurrentBid = (auc.currentBid != null && auc.currentBid !== "") 
                               ? "$" + auc.currentBid 
                               : "No Bid Yet";
         document.getElementById("faCurrentPrice").textContent = "Current Price: " + newCurrentBid;
         document.getElementById("faHighestBidder").textContent = "Highest Bidder: " + (auc.currentBidderID || "Unknown")
+
+        if(calculateRemainingTime(auc.endTime) == "Expired"){
+          alert("Auction is over! Please pay for your bid!");
+          window.location.href = "/paynow"
+        }
       })
       .catch(error => {
         alert("Bid failed: " + error.message);
@@ -347,7 +349,6 @@
 
     document.getElementById("buyNowButton").addEventListener("click", function() {
       if (!selectedAuction) return;
-      // Retrieve the JWT token from localStorage
       const token = localStorage.getItem("jwtToken");
       if (!token) {
         alert("User is not logged in.");
@@ -370,8 +371,7 @@
         alert("Dutch complete failed: " + error.message);
       });
     });
-
-    // Search form submission handler
+    // handle form
     document.getElementById("auctionForm").addEventListener("submit", function(event) {
       event.preventDefault();
       const itemName = document.getElementById("itemNameInput").value.trim();
@@ -392,7 +392,7 @@
         const tbody = document.getElementById("auctionTbody");
         tbody.innerHTML = "";
         selectedAuction = null;
-        // Hide forward auction section and bid now button
+        
         document.getElementById("auctionSection").style.display = "none";
         document.getElementById("bidNowButton").style.display = "none";
 
@@ -407,24 +407,23 @@
         data.forEach(auction => {
           const row = document.createElement("tr");
 
-          // Item Name cell
+         
           const cellItemName = document.createElement("td");
           cellItemName.textContent = auction.itemName || "";
           row.appendChild(cellItemName);
 
-          // Current Bid cell
+         
           const cellCurrentBid = document.createElement("td");
           cellCurrentBid.textContent = (auction.currentBid != null && auction.currentBid !== "")
             ? "$" + auction.currentBid 
             : "No Bid Yet";
           row.appendChild(cellCurrentBid);
 
-          // Auction Type cell
           const cellAuctionType = document.createElement("td");
           cellAuctionType.textContent = auction.auctionType || "";
           row.appendChild(cellAuctionType);
 
-          // Remaining Time cell
+          
           const cellRemainingTime = document.createElement("td");
           if ((auction.auctionType || "").toLowerCase() === "forward") {
             if (auction.endTime) {
@@ -439,7 +438,7 @@
           }
           row.appendChild(cellRemainingTime);
 
-          // Radio button cell for selection
+          
           const cellSelect = document.createElement("td");
           const radio = document.createElement("input");
           radio.type = "radio";
@@ -460,7 +459,7 @@
       });
     });
 
-    // Utility: calculate remaining time between now and endTime
+    // get remaining time
     function calculateRemainingTime(endTime) {
       const now = new Date();
       const end = new Date(endTime);

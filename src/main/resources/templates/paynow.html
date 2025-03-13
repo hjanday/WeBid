@@ -1,238 +1,218 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Auction Ended – Pay Now</title>
-    <style>
-      /* Basic Reset */
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>Auction Ended – Pay Now</title>
+  <style>
+    /* Basic Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-      body {
-        background-color: #f9f9f9;
-        font-family: Arial, sans-serif;
-        padding: 1rem;
-      }
+    body {
+      background-color: #f9f9f9;
+      font-family: Arial, sans-serif;
+      padding: 1rem;
+    }
 
-      /* Header */
-      header {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 2rem;
-      }
-      .logo {
-        font-size: 1.8rem;
-        font-weight: bold;
-      }
+    /* Header */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
 
-      /* Main Container */
-      .container {
-        max-width: 600px;
-        margin: 0 auto;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        padding: 1.5rem;
-      }
+    /* Main Container */
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 1.5rem;
+    }
 
-      h1 {
-        font-size: 1.8rem;
-        text-align: center;
-        margin-bottom: 1rem;
-      }
-      .item-description {
-        margin-bottom: 1rem;
-      }
+    h1 {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+    .item-description {
+      margin-bottom: 1rem;
+    }
 
-      /* Shipping Options */
-      .shipping-options {
-        margin: 1rem 0;
-        padding: 1rem;
-        background-color: #f3f3f3;
-        border-radius: 4px;
-      }
-      .shipping-options label {
-        display: block;
-        margin-bottom: 0.5rem;
-      }
-      .shipping-options input[type="radio"] {
-        margin-right: 0.5rem;
-      }
+    .price-info {
+      margin: 0.5rem 0;
+      font-weight: bold;
+    }
 
-      /* Pay Now Button */
-      .pay-now-btn {
-        display: inline-block;
-        padding: 0.75rem 1.5rem;
-        background-color: #28a745;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 1rem;
-        margin-top: 1rem;
-      }
-      .pay-now-btn:hover {
-        background-color: #218838;
-      }
+    /* Shipping Options */
+    .shipping-options {
+      margin: 1rem 0;
+      padding: 1rem;
+      background-color: #f3f3f3;
+      border-radius: 4px;
+    }
+    .shipping-options label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .shipping-options input[type="radio"] {
+      margin-right: 0.5rem;
+    }
+    #radioSelected {
+      margin-top: 0.5rem;
+      display: block;
+      font-style: italic;
+    }
 
-      /* Price info */
-      .price-info {
-        margin: 0.5rem 0;
-        font-weight: bold;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Header/Logo -->
-    <header>
-      <div class="logo">My Auction App</div>
-    </header>
+    /* Pay Now Button */
+    .pay-now-btn {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background-color: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+    .pay-now-btn:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
 
-    <!-- Main Content Container -->
-    <div class="container">
-      <h1>Bidding Ended!</h1>
-      <!-- Item / Auction Details -->
-      <div class="item-description">
-        <p>
-          <strong>Item Description:</strong>
-          <span id="itemDesc">Loading...</span>
-        </p>
-        <p class="price-info">
-          Winning Price: $<span id="winningPrice">0</span>
-        </p>
-        <p class="price-info">
-          Highest Bidder: <span id="highestBidder">???</span>
-        </p>
-      </div>
+  <header>
+    <div class="logo">My Auction App</div>
+  </header>
 
-      <!-- Shipping Options (Radio Buttons) -->
-      <div class="shipping-options">
-        <p><strong>Shipping Options:</strong></p>
-        <!-- Hardcode some shipping cost values, or derive them from the API if needed -->
-        <label>
-          <input
-            type="radio"
-            name="shippingOption"
-            value="0"
-            amount="0"
-            checked
-          />
-          Standard Shipping - Free
-        </label>
-        <label>
-          <input type="radio" name="shippingOption" value="1" amount="0" />
-          <span id="expship_label">Express Shipping - Error</span>
-        </label>
-      </div>
+  
+  <div class="container">
+    <h1>Bidding Ended!</h1>
 
-      <label id="radioSelected">No additional fees!</label>
-      <br />
-
-      <!-- Pay Now Button -->
-      <button class="pay-now-btn" id="payNowButton">Pay Now</button>
+ 
+    <div class="item-description">
+      <p>
+        <strong>Item Name:</strong>
+        <span id="itemName">Loading...</span>
+      </p>
+      <p>
+        <strong>Item Description:</strong>
+        <span id="itemDesc">Loading...</span>
+      </p>
+      <p class="price-info">
+        Winning Price: $<span id="winningPrice">0</span>
+      </p>
+      <p class="price-info">
+        Highest Bidder: <span id="highestBidder">???</span>
+      </p>
     </div>
 
-    <script>
-      // 1) Grab the auction ID from the URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const auctionID = urlParams.get("auctionId");
+    
+    <div class="shipping-options">
+      <p><strong>Shipping Options:</strong></p>
+      <label>
+        <input
+          type="radio"
+          name="shippingOption"
+          value="0"
+          amount="0"
+          checked
+        />
+        Standard Shipping - Free
+      </label>
+      <label>
+        <input type="radio" name="shippingOption" value="1" amount="0" />
+        <span id="expship_label">Express Shipping - $?</span>
+      </label>
+      <span id="radioSelected">No additional fees!</span>
+    </div>
 
-      // 2) Fetch auction info on page load
-      window.onload = function () {
-        const auctionUrl = `http://localhost:8080/api/auctions/${auctionID}`;
-        fetch(auctionUrl)
-          .then((response) => {
-            console.log(response);
-            if (!response.ok) {
-              throw new Error("Failed to fetch auction data");
-            }
-            return response.json();
-          })
-          .then((data) => {
-            // Insert the data into the page
-            document.getElementById("itemDesc").textContent =
-              data.description || "No description";
-            document.getElementById("winningPrice").textContent =
-              data.currentBid || 0;
-            document.getElementById("highestBidder").textContent =
-              data.currentBidderID || "N/A";
-            document.getElementById("expship_label").textContent =
-              "Expedited Shipping - $" + data.expeditedShippingCost;
-            document
-              .querySelector('input[name="shippingOption"][value="1"]')
-              .setAttribute("amount", data.expeditedShippingCost);
-          })
-          .catch((error) => {
-            console.error("Error fetching auction:", error);
-            // You could show an error message on the page
-            document.getElementById("itemDesc").textContent =
-              "Error loading data";
-          });
-      };
+    
+    <button class="pay-now-btn" id="payNowButton">Pay Now</button>
+  </div>
 
-      // 3) onRadio select
-      const shippingOptions = document.querySelectorAll(
-        'input[name="shippingOption"]'
-      );
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const auctionID = urlParams.get("auctionId");
+    const auctionUrl = `http://localhost:8080/api/auctions/${auctionID}`;
 
-      // Add event listener to each radio button
-      shippingOptions.forEach((option) => {
-        option.addEventListener("change", function () {
-          if (this.value === "0") {
-            console.log("Standard Shipping selected");
-            document.getElementById("radioSelected").textContent =
-              "No additional fees!";
-          } else if (this.value === "1") {
-            console.log("Express Shipping selected");
-            document.getElementById("radioSelected").textContent =
-              "Express shipping selected. Additional fees will be applied.";
+  
+    window.onload = function () {
+      fetch(auctionUrl)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch auction data");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          
+          document.getElementById("itemName").textContent =
+            data.itemName || "Untitled";
+          document.getElementById("itemDesc").textContent =
+            data.description || "No description";
+          document.getElementById("winningPrice").textContent =
+            data.currentBid || 0;
+          document.getElementById("highestBidder").textContent =
+            data.currentBidderID || "N/A";
+
+          document.getElementById("expship_label").textContent =
+            "Express Shipping - $" + data.expeditedShippingCost;
+          document
+            .querySelector('input[name="shippingOption"][value="1"]')
+            .setAttribute("amount", data.expeditedShippingCost);
+        })
+        .catch((error) => {
+          console.error("Error fetching auction:", error);
+          document.getElementById("itemDesc").textContent = "Error loading data";
+        });
+    };
+
+    
+    const shippingOptions = document.querySelectorAll('input[name="shippingOption"]');
+    shippingOptions.forEach((option) => {
+      option.addEventListener("change", function () {
+        if (this.value === "1") {
+          document.getElementById("radioSelected").textContent =
+            "Express shipping selected. Additional fees apply.";
+        } else {
+          document.getElementById("radioSelected").textContent = "No additional fees!";
+        }
+      });
+    });
+
+    document
+      .getElementById("payNowButton")
+      .addEventListener("click", function () {
+        // winner price
+        const winningPrice = parseFloat(
+          document.getElementById("winningPrice").textContent
+        ) || 0;
+
+        // get ship cost
+        let shippingCost = 0;
+        shippingOptions.forEach((radio) => {
+          if (radio.checked) {
+            shippingCost = parseFloat(radio.getAttribute("amount")) || 0;
           }
         });
+
+        const total = winningPrice + shippingCost;
+        alert(`Total cost is $${total.toFixed(2)} (including shipping).`);
+        window.location.href = `/payment?total=${total.toFixed(2)}&auctionId=${auctionID}`;
+        
       });
-
-      // 4) Pay Now button click
-      document
-        .getElementById("payNowButton")
-        .addEventListener("click", function () {
-          // Get the currently displayed winning price from the DOM
-          const winningPrice = parseFloat(
-            document.getElementById("winningPrice").textContent
-          );
-
-          // Check which shipping option is selected
-          const shippingRadios = document.querySelectorAll(
-            'input[name="shippingOption"]'
-          );
-          let shippingCost = 0;
-          shippingRadios.forEach((radio) => {
-            if (radio.checked) {
-              shippingCost = parseFloat(radio.getAttribute("amount"));
-            }
-          });
-
-          // Calculate total
-          const total = winningPrice + shippingCost;
-
-          // Now do something with total (like post to server or redirect)
-          alert(`Total cost is $${total.toFixed(2)} (including shipping).`);
-
-          // Example: Call a "pay" endpoint with the total
-          // fetch(`http://localhost:8080/api/auctions/${auctionID}/pay`, {
-          //   method: "POST",
-          //   headers: { "Content-Type": "application/json" },
-          //   body: JSON.stringify({ total })
-          // })
-          // .then(res => res.json())
-          // .then(result => {
-          //   alert("Payment processed!");
-          //   // Possibly redirect to a confirmation page
-          // })
-          // .catch(err => console.error(err));
-        });
-    </script>
-  </body>
+  </script>
+</body>
 </html>

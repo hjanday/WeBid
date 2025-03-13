@@ -67,7 +67,9 @@ public class Auction {
 
     @Column(nullable = false)
     private boolean over = false;
-
+    // may have to implement in future for D3
+    // @Column(nullable = true)
+    // private int deliveryDays;
     @Column(nullable = false)
     private double expeditedShippingCost;
     @Column(nullable = false)
@@ -80,7 +82,7 @@ public class Auction {
     // @OneToMany(mappedBy = "auction", cascade = CascadeType.REMOVE, orphanRemoval
     // = true)
     // private List<Bid> bids;
-    
+
     public Auction completeAuction() {
         // set auction to be completed at this time
         this.endTime = Instant.now();

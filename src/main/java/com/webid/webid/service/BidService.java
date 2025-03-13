@@ -50,6 +50,12 @@ public class BidService {
         auctionService.verifyRequest(auction, auction.getAuctionType().name());
         auctionService.verifyNonOwner(user, auction);
 
+        // if the bid is already over, return null unless the user is the currentBidder
+        if (auction.isOver() || auction.getEndTime().isBefore(Instant.now())) {
+            // bid is over, check user:
+            return null;
+        }
+
         if ((auction.getCurrentBid() == null)
                 || (auction.getCurrentBidderID() == 0 && amount >= auction.getCurrentBid()) // if there are no
                                                                                             // bidders, user can bid
@@ -73,11 +79,11 @@ public class BidService {
             List<User> prevUsers = prevBidders.stream()
                     .map(Bid::getUser) // Extracts the User from each Bid
                     .collect(Collectors.toList());
-            System.out.println(prevBidders);
-            System.out.println(prevBidders.get(0).getUser());
-            System.out.println();
-            System.out.println();
-            System.out.println();
+            // System.out.println(prevBidders);
+            // System.out.println(prevBidders.get(0).getUser());
+            // System.out.println();
+            // System.out.println();
+            // System.out.println();
 
             for (User u : prevUsers) {
 
