@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>WeBid – Receipt</title>
   <style>
-    /* Basic Reset */
+   
     * {
       box-sizing: border-box;
       margin: 0;
@@ -50,7 +50,7 @@
     .label {
       font-weight: bold;
     }
-    /* Main Menu Button */
+  
     .main-menu-btn {
       display: inline-block;
       padding: 0.75rem 1.5rem;
@@ -68,7 +68,7 @@
     .main-menu-btn:hover {
       background-color: #0056b3;
     }
-    /* Divider */
+
     .divider {
       border-top: 1px solid #ccc;
       margin: 1rem 0;
@@ -78,16 +78,16 @@
 <body>
   <div class="container">
     <h1>Receipt</h1>
-    <!-- Left Column: Item & User Info -->
+   
     <div class="col" id="leftCol">
       <h2>Item &amp; User Info</h2>
-      <!-- Item Information -->
+     
       <div class="item-info">
         <p><span class="label">Item Name:</span> <span id="itemName">Loading...</span></p>
         <p><span class="label">Description:</span> <span id="itemDesc">Loading...</span></p>
       </div>
       <div class="divider"></div>
-      <!-- User Information -->
+      
       <div class="user-info">
         <p><span class="label">Username:</span> <span id="username">Loading...</span></p>
         <p><span class="label">First Name:</span> <span id="firstName">Loading...</span></p>
@@ -98,13 +98,12 @@
         <p><span class="label">Postal Code:</span> <span id="postalCode">Loading...</span></p>
       </div>
       <div class="divider"></div>
-      <!-- Total Paid -->
+    >
       <div class="payment-summary">
         <p class="label">Total Paid: $<span id="totalAmount">0</span></p>
       </div>
     </div>
 
-    <!-- Right Column: Shipping Info -->
     <div class="col" id="rightCol">
       <h2>Shipping Details</h2>
       <p class="label">
@@ -115,14 +114,14 @@
   </div>
 
   <script>
-    // Parse query parameters: auctionId and shipDays, total comes from payment endpoint
+    // get params
     const params = new URLSearchParams(window.location.search);
     const auctionID = params.get("auctionId");
     
-    // Retrieve JWT token from localStorage
+    
     const token = localStorage.getItem("jwtToken");
 
-    // Fetch auction info to get item info and currentBidderID, then fetch user info
+    // get auc
     fetch(`http://localhost:8080/api/auctions/${auctionID}`)
       .then(response => {
         if (!response.ok) {
@@ -132,14 +131,13 @@
       })
       .then(auctionData => {
         console.log("Auction data:", auctionData);
-        // Populate item info
+    
         document.getElementById("itemName").textContent = auctionData.itemName || "Untitled";
         document.getElementById("itemDesc").textContent = auctionData.description || "No description";
         
-        // Get bidder's user ID
         const userId = auctionData.currentBidderID;
         
-        // Fetch payment info (which contains totalCost and shippingDays)
+        //get payments
         fetch(`http://localhost:8080/api/payments/${auctionID}`, {
           method: "GET",
           headers: {
@@ -154,7 +152,7 @@
           })
           .then(paymentData => {
             console.log(paymentData)
-            // Populate payment summary (total paid and shipping days)
+          
             document.getElementById("totalAmount").textContent = paymentData.totalCost || "0";
             document.getElementById("shipDaysSpan").textContent = paymentData.shippingDays || "N/A";
           })
@@ -162,7 +160,7 @@
             console.error("Error fetching payment info:", err);
           });
 
-        // If token exists and we have a bidder ID, fetch user info
+        
         if (!token) {
           alert("User not logged in!");
           setUserPlaceholders();

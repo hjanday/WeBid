@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>WeBid – Payment Page</title>
   <style>
-    /* Basic Reset */
+    
     * {
       box-sizing: border-box;
       margin: 0;
@@ -17,7 +17,7 @@
       padding: 1rem;
     }
 
-    /* Header */
+   
     header {
       display: flex;
       align-items: center;
@@ -29,7 +29,7 @@
       font-weight: bold;
     }
 
-    /* Flex Container for Two Columns */
+    
     .flex-container {
       display: flex;
       flex-wrap: wrap;
@@ -38,7 +38,7 @@
       margin: 0 auto;
     }
 
-    /* Left Column (User Info + Payment Summary) */
+  
     .left-col {
       flex: 1 1 450px;
       background-color: #fff;
@@ -64,7 +64,7 @@
       font-size: 1.5rem;
     }
 
-    /* Right Column (Payment Form) */
+    
     .right-col {
       flex: 1 1 450px;
       background-color: #fff;
@@ -123,13 +123,13 @@
   </style>
 </head>
 <body>
-  <!-- Header/Logo -->
+
   <header>
     <div class="logo">WeBid</div>
   </header>
 
   <div class="flex-container">
-    <!-- Left Column: User Info + Payment Summary -->
+  
     <div class="left-col">
       <h2>User Information</h2>
       <div class="info-block">
@@ -145,7 +145,7 @@
       <p class="price-info">Total Due: $<span id="totalAmount">0</span></p>
     </div>
 
-    <!-- Right Column: Payment Form -->
+ 
     <div class="right-col">
       <h2>Payment Details</h2>
       <form id="paymentForm">
@@ -166,7 +166,7 @@
           <input type="text" id="cvv" required />
         </div>
 
-        <!-- Terms and Conditions -->
+        
         <div class="terms-container">
           <label for="termsCheck">
             <input type="checkbox" id="termsCheck" required />
@@ -180,14 +180,13 @@
   </div>
 
   <script>
-    // Grab parameters: total, auctionId
+    // Grab query params
     const queryParams = new URLSearchParams(window.location.search);
     const total = queryParams.get("total");   // e.g. 123.45
     const auctionID = queryParams.get("auctionId"); // e.g. 42
     const token = localStorage.getItem("jwtToken");
     document.getElementById("totalAmount").textContent = total || "0";
-    
-    // Get bidderID from auction lookup
+ 
     fetch(`http://localhost:8080/api/auctions/${auctionID}`) // GET /api/auctions/{auctionID}
       .then(response => {
         if (!response.ok) {
@@ -218,14 +217,14 @@
         document.getElementById("lastName").textContent = userData.lastName || "N/A";
         document.getElementById("email").textContent = userData.email || "N/A";
 
-        // Additional fields:
+        
         document.getElementById("country").textContent = userData.country || "N/A";
         document.getElementById("city").textContent = userData.city || "N/A";
         document.getElementById("postalCode").textContent = userData.postalCode || "N/A";
       })
       .catch(err => {
         console.error("Error fetching user info:", err);
-        // Provide fallback or error message
+      
         document.getElementById("firstName").textContent = "Unknown";
         document.getElementById("lastName").textContent = "Unknown";
         document.getElementById("email").textContent = "Unknown";
@@ -235,7 +234,7 @@
         document.getElementById("postalCode").textContent = "Unknown";
       });
   } else {
-    // if no userID param is given, set placeholders
+    // if no userID param 
     document.getElementById("firstName").textContent = "Unknown";
     document.getElementById("lastName").textContent = "Unknown";
     document.getElementById("email").textContent = "Unknown";
@@ -252,7 +251,7 @@
     document.getElementById("paymentForm").addEventListener("submit", function(e) {
       e.preventDefault();
 
-      // Gather payment details
+      // payment details
       const cardHolder = document.getElementById("cardHolder").value.trim();
       const cardNumber = document.getElementById("cardNumber").value.trim();
       const expDate = document.getElementById("expDate").value.trim();
@@ -266,7 +265,7 @@
 
       const paymentUrl = `http://localhost:8080/api/payments/${auctionID}/10/pay`;
 
-      // Payment data
+    
       const paymentData = {
         cardHolder,
         cardNumber,
@@ -274,28 +273,6 @@
         cvv,
         totalDue
       };
-
-    //   fetch(paymentUrl, {
-    //     method: "POST",
-    //     headers: {
-    //       "Authorization": `Bearer ${token}`
-    //     },
-    //   })
-    //     .then(res => {
-    //         console.log(res)
-    //       if (!res.ok) {
-    //         return res.text().then(text => { throw new Error(text); });
-    //       }
-    //       return res.text();
-    //     })
-    //     .then(result => {
-    //       alert("Payment processed successfully!");
-    //       console.log("Payment response:", result);
-    //     })
-    //     .catch(err => {
-    //       alert("Payment failed: " + err.message);
-    //       console.error("Error processing payment:", err);
-    //     });
 
     fetch(paymentUrl, {
                 method: "POST",
