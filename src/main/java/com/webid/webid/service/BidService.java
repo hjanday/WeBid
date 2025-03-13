@@ -35,12 +35,13 @@ public class BidService {
 
     public Bid placeBid(Long auctionId, double amount, User user) {
 
-        // Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
 
         // String username = authentication.getName();
 
         // User user = userRepository.findByEmail(username)
-        //         .orElseThrow(() -> new RuntimeException("User not found"));
+        // .orElseThrow(() -> new RuntimeException("User not found"));
 
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
@@ -81,10 +82,10 @@ public class BidService {
             for (User u : prevUsers) {
 
                 if (u.getId().equals(auction.getCurrentBidderID())) {
-                    notifService.notify(u, String.format("You have successfully %f bid on %s",
+                    notifService.notify(u, String.format("You have successfully placed a $ %f bid on %s",
                             auction.getCurrentBid(), auction.getItemName()));
                 } else {
-                    notifService.notify(u, String.format("A new bid of %f has been placed on %s",
+                    notifService.notify(u, String.format("A new bid of $ %f has been placed on %s",
                             auction.getCurrentBid(), auction.getItemName()));
                 }
 
