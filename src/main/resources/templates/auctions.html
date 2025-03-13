@@ -179,6 +179,30 @@
     #faPlaceBidButton:hover {
       background-color: #218838;
     }
+
+    #editDutchBtn {
+      padding: 0.8rem 1.5rem;
+      background-color: #0844c5;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #editDutchBtn:hover {
+      background-color: #0844c5;
+    }
+
+    #payNowButton {
+      padding: 0.8rem 1.5rem;
+      background-color: #0844c5;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #payNowButton:hover {
+      background-color: #0844c5;
+    }
   </style>
 </head>
 <body>
@@ -235,7 +259,9 @@
         <label for="faBidAmount" id="bidLabel">Your Bid:</label>
         <input type="number" step="0.01" id="faBidAmount" placeholder="Enter your bid amount">
         <button id="faPlaceBidButton">Place Bid</button>
+        <button id="payNowButton">Pay Now</button>
         <button id="buyNowButton">Buy Now</button>
+        <button id ="editDutchBtn">Edit Dutch Auction</button>
       </div>
     </div>
   </div>
@@ -245,6 +271,7 @@
     // hide bids
     document.getElementById("bidNowButton").style.display = "none";
     document.getElementById("buyNowButton").style.display = "none";
+    document.getElementById("editDutchBtn").style.display = "none";
     // pick radio btn
     function onRadioSelect(auction) {
       selectedAuction = auction;
@@ -267,6 +294,7 @@
       document.getElementById("bidNowButton").style.display = "none";
       document.getElementById("buyNowButton").style.display = "none";
       document.getElementById("faPlaceBidButton").style.display = "block";
+      document.getElementById("payNowButton").style.display = "block";
       document.getElementById("faItemName").textContent = auction.itemName || "";
       document.getElementById("faDescription").textContent = "Description: " + (auction.description || "N/A");
       document.getElementById("faShippingPrice").textContent = "Shipping Price: $" + auction.expeditedShippingCost; // Adjust if needed
@@ -286,9 +314,11 @@
       document.getElementById("auctionTable").style.display = "none";
       document.getElementById("bidNowButton").style.display = "none";
       document.getElementById("faPlaceBidButton").style.display = "none";
+      document.getElementById("payNowButton").style.display = "none";
       document.getElementById("buyNowButton").style.display = "block";
       document.getElementById("faBidAmount").style.display = "none";
       document.getElementById("bidLabel").style.display = "none";
+      document.getElementById("editDutchBtn").style.display = "block";
 
 
 
@@ -303,6 +333,25 @@
       document.getElementById("auctionSection").style.display = "block";
     }
 
+    // edit dutch
+    document.getElementById("editDutchBtn").addEventListener("click", function() {
+      if (!selectedAuction) return;
+      var editDutchUrl = `/api/auctions/dutch/${selectedAuction.id}`;
+      fetch(editDutchUrl, {
+        method: "PUT",
+        headers: {"Authorization": `Bearer ${localStorage.getItem("jwtToken")}`}
+      })
+      .then(
+        response => {
+          if (!response.ok) {
+            alert("You are not authorized to edit this auction!");
+            return response.text().then(text => { throw new Error(text); });
+          }
+          alert("Dutch auction decremented successfully!");
+          return response.json();
+        }
+      )
+    });
    
     // place bid
     document.getElementById("faPlaceBidButton").addEventListener("click", function() {
@@ -343,6 +392,45 @@
         alert("Bid failed: " + error.message);
       });
     });
+
+    document
+        .getElementById("payNowButton")
+        .addEventListener("click", function () {
+          if (!selectedAuction) return;
+
+          const bidAmount = document.getElementById("faBidAmount").value;
+
+          // Retrieve the JWT token from localStorage
+          const token = localStorage.getItem("jwtToken");
+          if (!token) {
+            alert("User is not logged in.");
+            return;
+          }
+
+          const auctionUrl = `http://localhost:8080/api/auctions/${selectedAuction.id}`;
+
+          // Fetch auction data
+          fetch(auctionUrl, {
+            method: "GET",
+            headers: {
+              "Authorization": `Bearer ${token}`, // Fixed string interpolation
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Failed to fetch auction data");
+              }
+              return response.json();
+            })
+            .then((auctionData) => {
+              // Redirect to the payment page with auction ID as a URL parameter
+              window.location.href = `/paynow?auctionId=${selectedAuction.id}`;
+            })
+            .catch((error) => {
+              console.error("Error fetching auction data:", error);
+              alert("Failed to retrieve auction data. Please try again.");
+            });
+        });
 
     document.getElementById("buyNowButton").addEventListener("click", function() {
       if (!selectedAuction) return;

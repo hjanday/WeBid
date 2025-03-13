@@ -282,15 +282,10 @@
                 },
               })
                 .then((paymentResponse) => {
-                  if (!paymentResponse.ok) {
-                    return paymentResponse.text().then((errorText) => {
-                      throw new Error(errorText || "Payment failed");
-                    });
-                  }
-                  return paymentResponse.text();
+                  console.log(paymentResponse);
                 })
                 .then((paymentResults) => {
-                  alert(paymentResults);
+                  alert("Thank you for your payment!");
                   console.log("Payment success");
                   window.location.href = `/reciept?auctionId=${auctionID}`;
                 })
