@@ -40,6 +40,9 @@ public class Payment {
     private double totalCost;
     private int shippingDays;
 
+    public Payment() {
+    }
+
     private Payment(Long userID, Long auctionID, String auctionType, double itemPrice, boolean expeditedShipping,
             double expeditedShippingCost, int shippingDays) {
         this.userID = userID;

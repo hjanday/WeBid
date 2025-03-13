@@ -83,9 +83,9 @@
   </style>
 </head>
 <body>
-  <!-- Header with navigation links -->
+  
   <header>
-    <div class="logo">My Auction App</div>
+    <div class="logo">WeBid</div>
     <div class="nav-buttons">
       <a href="/login">Logout</a>
       <a href="/auctions">View Auctions</a>
@@ -111,7 +111,6 @@
         <textarea id="description" name="description" rows="3" required></textarea>
       </div>
 
-      <!-- Lowest Bid group (hidden when DUTCH) -->
       <div class="form-group" id="lowestBidGroup">
         <label for="lowestBid">Lowest Bid *</label>
         <input type="number" step="0.01" id="lowestBid" name="lowestBid" required>
@@ -122,8 +121,6 @@
         <input type="number" step="0.01" id="bidIncrement" name="bidIncrement" required>
       </div>
       
-
-      <!-- Current Bid field (hidden unless DUTCH is selected) -->
       <div class="form-group" id="currentBidGroup" style="display: none;">
         <label for="currentBid">Current Bid *</label>
         <input type="number" step="0.01" id="currentBid" name="currentBid">
@@ -144,7 +141,7 @@
   </div>
 
   <script>
-    // Grab DOM references
+    
     const auctionTypeSelect = document.getElementById("auctionType");
     const lowestBidGroup = document.getElementById("lowestBidGroup");
     const currentBidGroup = document.getElementById("currentBidGroup");
@@ -152,21 +149,21 @@
     const lowestBidInput = document.getElementById("lowestBid");
     const currentBidInput = document.getElementById("currentBid");
 
-    // Show/hide fields based on auction type
+  
     auctionTypeSelect.addEventListener("change", function() {
       if (this.value === "DUTCH") {
-        // Show currentBid, hide lowestBid
+      
         currentBidGroup.style.display = "block";
         currentBidInput.required = true;
 
         lowestBidGroup.style.display = "none";
         lowestBidInput.required = false;
-        lowestBidInput.value = ""; // clear out any leftover data
+        lowestBidInput.value = ""; 
       } else {
-        // Show lowestBid, hide currentBid
+    
         currentBidGroup.style.display = "none";
         currentBidInput.required = false;
-        currentBidInput.value = ""; // clear out any leftover data
+        currentBidInput.value = ""; 
 
         lowestBidGroup.style.display = "block";
         lowestBidInput.required = true;
@@ -176,7 +173,7 @@
     document.getElementById("auctionForm").addEventListener("submit", function(event) {
       event.preventDefault();
 
-      // Gather form values
+      // get data frm form
       const itemName = document.getElementById("itemName").value;
       const description = document.getElementById("description").value;
       const bidIncrement = parseFloat(document.getElementById("bidIncrement").value);
@@ -184,14 +181,13 @@
       const expeditedShippingCost = parseFloat(document.getElementById("expeditedShippingCost").value);
       const expeditedShipping = document.getElementById("expeditedShipping").checked;
 
-      // Retrieve JWT token from localStorage
       const token = localStorage.getItem("jwtToken");
       if (!token) {
         alert("User is not logged in.");
         return;
       }
 
-      // Construct auction object
+     
       const auction = {
         itemName,
         description,
@@ -201,7 +197,8 @@
         expeditedShipping,
         startTime: new Date().toISOString()
       };
-
+     
+      // NOTE vv
       // For DUTCH auctions, include currentBid
       // For FORWARD auctions, include lowestBid
       if (auctionType === "DUTCH") {
@@ -210,7 +207,7 @@
         auction.lowestBid = parseFloat(lowestBidInput.value);
       }
 
-      // Send POST request to create auction with Bearer token
+  
       fetch("http://localhost:8080/api/auctions/create", {
         method: "POST",
         headers: {
@@ -228,7 +225,7 @@
       .then(data => {
         alert("Auction created successfully!");
         console.log("Created Auction:", data);
-        // Optionally redirect to /auctions
+      
         window.location.href = "/auctions";
       })
       .catch(error => {

@@ -1,6 +1,7 @@
 package com.webid.webid.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,11 @@ public class PaymentService {
      */
     public Payment getPaymentById(Long id) {
         return paymentRepository.findById(id).orElse(null);
+    }
+
+    public Optional<Payment> getPaymentByAuctionId(long auctionId) {
+
+        return paymentRepository.findByAuctionId(auctionId);
     }
 
     public Payment makePayment(long auctionId, int shipDays) {

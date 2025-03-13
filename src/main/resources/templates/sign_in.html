@@ -50,10 +50,10 @@
   <script>
     document.getElementById("login_form").addEventListener("submit", function(event) {
         event.preventDefault(); 
-
+        // get email/pw from form
         const email = document.getElementById("email").value;
         const password = document.getElementById("password").value;
-
+       // login endpoint
         fetch("/auth/login", {
             method: "POST",
             headers: {
