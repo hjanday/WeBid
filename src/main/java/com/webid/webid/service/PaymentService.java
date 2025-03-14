@@ -74,40 +74,49 @@ public class PaymentService {
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
         // verify auction belongs to user
-        if (auction.getCurrentBidderID() != user.getId()) {
+        System.out.println(auction.getCurrentBidderID());
+        System.out.println(user.getId());
+        System.out.println(auction.isOver());
+        System.out.println(auction.getEndTime().isBefore(Instant.now()));
+
+        if (auction.getCurrentBidderID() != user.getId() || !auction.isOver()
+                || auction.getEndTime().isAfter(Instant.now())) {
             return null;
+        } else {
+
+            Payment payment = Payment.create(user.getId(), auction.getId(), auction.getAuctionType().name(),
+                    auction.getCurrentBid(), auction.isExpeditedShipping(), auction.getExpeditedShippingCost(),
+                    shipDays);
+            paymentRepository.save(payment);
+
+            // notify users that payment has been confirmed and bid is over
+            // Find previous bidders and notify all.
+            List<Bid> prevBidders = bidRepository.findByAuctionId(auction.getId());
+            List<User> prevUsers = prevBidders.stream()
+                    .map(Bid::getUser) // Extracts the User from each Bid
+                    .collect(Collectors.toList());
+
+            for (User u : prevUsers) {
+
+                if (u.getId().equals(auction.getCurrentBidderID())) {
+                    notifService.notify(u, String.format("You have successfully purchased %s with $ %f",
+                            auction.getItemName(), auction.getCurrentBid()));
+                } else {
+                    notifService.notify(u, String.format("Auction %s has been completed and purchased for $ %f",
+                            auction.getItemName(), auction.getCurrentBid()));
+                }
+                
+
+            }
+
+            return payment;
         }
 
         // verify auction is currently over
         // if auction is not over, or the auctions end time has not yet passed, error
-        if (!auction.isOver() || auction.getEndTime().isBefore(Instant.now())) {
-            return null;
-        }
-
-        Payment payment = Payment.create(user.getId(), auction.getId(), auction.getAuctionType().name(),
-                auction.getCurrentBid(), auction.isExpeditedShipping(), auction.getExpeditedShippingCost(), shipDays);
-        paymentRepository.save(payment);
-
-        // notify users that payment has been confirmed and bid is over
-        // Find previous bidders and notify all.
-        List<Bid> prevBidders = bidRepository.findByAuctionId(auction.getId());
-        List<User> prevUsers = prevBidders.stream()
-                .map(Bid::getUser) // Extracts the User from each Bid
-                .collect(Collectors.toList());
-
-        for (User u : prevUsers) {
-
-            if (u.getId().equals(auction.getCurrentBidderID())) {
-                notifService.notify(u, String.format("You have successfully purchased %s with $ %f",
-                        auction.getCurrentBid(), auction.getItemName()));
-            } else {
-                notifService.notify(u, String.format("Auction %s has been completed and purchased for $ %f",
-                        auction.getCurrentBid(), auction.getItemName()));
-            }
-
-        }
-
-        return payment;
+        // if (!auction.isOver() || auction.getEndTime().isBefore(Instant.now())) {
+        // return null;
+        // }
 
     }
 
