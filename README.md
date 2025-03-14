@@ -38,17 +38,16 @@ INSERT INTO users (username, email, password, first_name, last_name, address, po
 VALUES ('bobsmith1', 'bob.smith1@example.com', 'passWord3211', 'Bob', 'Smith', '125 Maple Rd', '11221', 'USA', 'Star City');
 
 
--- Insert 2 FORWARD auctions
-INSERT INTO auctions (owner_id, item_name, description, lowest_bid, bid_increment, auction_type, expedited_shipping_cost, current_bid, expedited_shipping, over, start_time, end_time)
+INSERT INTO auctions (owner_id, item_name, description, lowest_bid, bid_increment, auction_type, expedited_shipping_cost, current_bid, expedited_shipping, over, start_time, end_time, current_bidderid)
 VALUES 
-  (1, 'Vintage Watch', 'A watch!', 100.0, 50, 'FORWARD', 15.0, 500, false, false, NOW(), NOW() + interval '1 day'),
-  (2, 'Antique Clock', 'An old clock.', 120.0, 40, 'FORWARD', 20.0, 450, false, false, NOW(), NOW() + interval '1 day');
+  (1, 'Vintage Watch', 'A watch!', 100.0, 50, 'FORWARD', 15.0, 500, false, false, NOW(), NOW() + interval '1 day', 0),
+  (2, 'Antique Clock', 'An old clock.', 120.0, 40, 'FORWARD', 20.0, 450, false, false, NOW(), NOW() + interval '1 day', 0);
 
 -- Insert 2 DUTCH auctions
-INSERT INTO auctions (owner_id, item_name, description, lowest_bid, bid_increment, auction_type, expedited_shipping_cost, current_bid, expedited_shipping, over, start_time, end_time)
+INSERT INTO auctions (owner_id, item_name, description, lowest_bid, bid_increment, auction_type, expedited_shipping_cost, current_bid, expedited_shipping, over, start_time, end_time, current_bidderid)
 VALUES 
-  (3, 'Modern Smartphone', 'Phone!', 200.0, 25, 'DUTCH', 10.0, 250, false, false, NOW(), NOW() + interval '1 day'),
-  (4, 'Luxury Car', 'Fast Car!', 5000.0, 500, 'DUTCH', 50.0, 5500, false, false, NOW(), NOW() + interval '1 day');
+  (3, 'Modern Smartphone', 'Phone!', 200.0, 25, 'DUTCH', 10.0, 250, false, false, NOW(), NOW() + interval '1 day', 0),
+  (4, 'Luxury Car', 'Fast Car!', 5000.0, 500, 'DUTCH', 50.0, 5500, false, false, NOW(), NOW() + interval '1 day', 0);
 
 ```
 ## 4. Running the Commands
