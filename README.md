@@ -17,10 +17,10 @@ Create a database with the name "webid" in pgAdmin4.
 
 ## 3. Running the application
 
-Before running the application, add your postgres username and password (username should be "postgres" and the password should be the same from earlier) in the ```.env``` file.
+Before running the application, add your postgres username and password (username should be "postgres" and the password should be the same from earlier) into a ```.env``` file.
 Run maven clean and install.
 Then run the application. If your database is properly connected then your database should be populated with all of the tables.
-Go back to pgAdmin4, right click on the table and click on "Query tool". Copy and paste this SQL script below to create some auctions and users (there is an sql file you can download as well). 
+Go back to pgAdmin4, right click on the table and click on "Query tool". Copy and paste this SQL script below to create some auctions and users (there is an sql file you can download with the script as well). 
 
 ```
 -- Insert sample users into the users table
@@ -52,5 +52,6 @@ VALUES
 
 ```
 ## 4. Running the Commands
-We implemented JWT authentication in this project so when you run the commands you must pass in the genereted JWT token into the ```Bearer``` after logging in.
+We implemented JWT authentication in this project so when you run the commands you must pass in your current JWT token into the ```Bearer``` header.
+You can get this token from the response body after successfully logging in. Copy and paste it into the header for each command.
 
