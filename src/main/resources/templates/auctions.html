@@ -142,7 +142,6 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-    /* Two-column layout for forward section */
     .forward-container {
       display: flex;
       flex-wrap: wrap;
@@ -402,8 +401,6 @@
           if (!selectedAuction) return;
 
           const bidAmount = document.getElementById("faBidAmount").value;
-
-          // Retrieve the JWT token from localStorage
           const token = localStorage.getItem("jwtToken");
           if (!token) {
             alert("User is not logged in.");
@@ -416,7 +413,7 @@
           fetch(auctionUrl, {
             method: "GET",
             headers: {
-              "Authorization": `Bearer ${token}`, // Fixed string interpolation
+              "Authorization": `Bearer ${token}`, 
             },
           })
             .then((response) => {
