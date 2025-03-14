@@ -74,13 +74,7 @@ public class PaymentService {
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
         // verify auction belongs to user
-        System.out.println(auction.getCurrentBidderID());
-        System.out.println(user.getId());
-        System.out.println(auction.isOver());
-        System.out.println(auction.getEndTime().isBefore(Instant.now()));
-
-        if (auction.getCurrentBidderID() != user.getId() || !auction.isOver()
-                || auction.getEndTime().isAfter(Instant.now())) {
+        if (auction.getCurrentBidderID() != user.getId() || !auction.isOver()) {
             return null;
         } else {
 
