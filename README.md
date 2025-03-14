@@ -47,7 +47,7 @@ VALUES
 INSERT INTO auctions (owner_id, item_name, description, lowest_bid, bid_increment, auction_type, expedited_shipping_cost, current_bid, expedited_shipping, over, start_time, end_time, current_bidderid)
 VALUES 
   (3, 'Modern Smartphone', 'Phone!', 200.0, 25, 'DUTCH', 10.0, 250, false, false, NOW(), NOW() + interval '1 day', 0),
-  (4, 'Luxury Car', 'Fast Car!', 5000.0, 500, 'DUTCH', 50.0, 5500, false, false, NOW(), NOW() + interval '1 day', 0);
+  (4, 'Luxury Car', 'Fast Car!', 5000.0, 500, 'DUTCH', 50.0, 5500, false, false, NOW(), NOW() + interval '1 day', 5);
 
 ```
 ## 4. Running the Commands
