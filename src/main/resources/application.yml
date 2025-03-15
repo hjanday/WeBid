@@ -3,7 +3,6 @@ spring:
     url: ${SPRING_DATASOURCE_URLL}
     username: ${SPRING_DATASOURCE_USER}
     password: ${SPRING_DATASOURCE_PASS}
-    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
