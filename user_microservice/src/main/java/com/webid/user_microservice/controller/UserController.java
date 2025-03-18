@@ -1,15 +1,16 @@
 package com.webid.user_microservice.controller;
 
+// refactor imports to align with ms model
+import com.webid.user_microservice.model.User;
+import com.webid.user_microservice.repository.UserRepository;
+import com.webid.webid.service.JwtService;
+import com.webid.webid.security.CurrentUser;
+import com.webid.webid.service.NotificationService;
+import com.webid.webid.service.UserService;
+
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.webid.webid.model.User;
-import com.webid.webid.repository.UserRepository;
-import com.webid.webid.security.CurrentUser;
-import com.webid.webid.service.JwtService;
-import com.webid.webid.service.NotificationService;
-import com.webid.webid.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
