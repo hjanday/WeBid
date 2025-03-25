@@ -52,13 +52,6 @@ public class AuctionService {
 
     // Create a new auction
     public Auction createAuction(Auction auction, User user) throws AccessDeniedException {
-        // Authentication authentication =
-        // SecurityContextHolder.getContext().getAuthentication();
-
-        // String username = authentication.getName();
-
-        // User user = userRepository.findByEmail(username)
-        // .orElseThrow(() -> new RuntimeException("User not found"));
 
         auction.setOwner(user);
         auction.setStartTime(Instant.now());
@@ -70,13 +63,6 @@ public class AuctionService {
 
     // Delete an auction
     public void deleteAuction(Long id, User user) {
-        // Authentication authentication =
-        // SecurityContextHolder.getContext().getAuthentication();
-
-        // String username = authentication.getName();
-
-        // User user = userRepository.findByEmail(username)
-        // .orElseThrow(() -> new RuntimeException("User not found"));
 
         Auction auction = auctionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
@@ -89,11 +75,6 @@ public class AuctionService {
         }
 
     }
-
-    // // Find auctions by status (example method)
-    // public List<Auction> getAuctionsByStatus(String status) {
-    // return auctionRepository.findByStatus(status);
-    // }
 
     // Auction completed
     public boolean confirmBid(Auction foundAuction, User user) {
@@ -111,12 +92,6 @@ public class AuctionService {
 
     // dutch updates
     public Auction updateDutch(long auctionID, User user) {
-        // Authentication authentication =
-        // SecurityContextHolder.getContext().getAuthentication();
-        // String username = authentication.getName();
-
-        // User user = userRepository.findByEmail(username).orElseThrow(() -> new
-        // RuntimeException("User not found"));
 
         // get auction
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
@@ -152,12 +127,6 @@ public class AuctionService {
 
     // Dutch Completes
     public Auction completeDutch(long auctionID, User user) {
-        // Authentication authentication =
-        // SecurityContextHolder.getContext().getAuthentication();
-        // String username = authentication.getName();
-
-        // User user = userRepository.findByEmail(username).orElseThrow(() -> new
-        // RuntimeException("User not found"));
 
         // get auction and user for userID
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);

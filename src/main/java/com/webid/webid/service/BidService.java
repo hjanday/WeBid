@@ -28,8 +28,6 @@ public class BidService {
 
     public Bid placeBid(Long auctionId, double amount, User user) {
 
-
-
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
 
@@ -66,7 +64,6 @@ public class BidService {
             List<User> prevUsers = prevBidders.stream()
                     .map(Bid::getUser) // Extracts the User from each Bid
                     .collect(Collectors.toList());
-
 
             for (User u : prevUsers) {
 
