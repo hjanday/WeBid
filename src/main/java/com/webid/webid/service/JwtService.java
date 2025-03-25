@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.jvnet.hk2.annotations.Service;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.webid.webid.model.User;
-
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;

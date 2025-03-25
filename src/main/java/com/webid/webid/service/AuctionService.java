@@ -1,28 +1,19 @@
 package com.webid.webid.service;
 
-import com.webid.webid.config.AppConfig;
 import com.webid.webid.exceptions.ResourceAlreadyExistsException;
 import com.webid.webid.model.Auction;
 import com.webid.webid.model.User;
-import com.webid.webid.model.Bid;
 import com.webid.webid.repository.AuctionRepository;
-import com.webid.webid.repository.BidRepository;
-import com.webid.webid.repository.UserRepository;
 
 import lombok.AllArgsConstructor;
 
-import org.springframework.security.access.method.P;
-import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
 import java.time.Instant;
-import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,9 +22,7 @@ import java.util.Optional;
 public class AuctionService {
 
     @Autowired
-    private UserRepository userRepository;
     private AuctionRepository auctionRepository;
-    private BidRepository bidRepository;
     // private NotificationService notifService;
 
     // Get all auctions
