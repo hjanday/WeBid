@@ -1,7 +1,6 @@
 package com.webid.webid.security;
 
 import com.webid.webid.model.User;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

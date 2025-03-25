@@ -3,7 +3,6 @@ package com.webid.webid.exceptions;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
 import org.springframework.dao.DataIntegrityViolationException;

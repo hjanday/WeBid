@@ -10,7 +10,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.webid.webid.model.User;
 import com.webid.webid.service.JwtService;
 import com.webid.webid.service.LogoutService;
 
