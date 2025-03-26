@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.jvnet.hk2.annotations.Service;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.webid.webid.model.User;
-
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,21 +36,18 @@ public class JwtService {
 
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
-    }   
-
-    public String generateToken(
-        Map<String, Object> extraClaims,
-        UserDetails userDetails
-    ) {
-        return buildToken(extraClaims, userDetails, jwtTTL);
     }
 
+    public String generateToken(
+            Map<String, Object> extraClaims,
+            UserDetails userDetails) {
+        return buildToken(extraClaims, userDetails, jwtTTL);
+    }
 
     private String buildToken(
             Map<String, Object> extraClaims,
             UserDetails userDetails,
-            long expiration
-    ) {
+            long expiration) {
         // User user = (User) userDetails;
         return Jwts
                 .builder()
@@ -79,11 +74,11 @@ public class JwtService {
 
     private Claims extractAllClaims(String token) {
         return Jwts
-            .parserBuilder()
-            .setSigningKey(getSignInKey())
-            .build()
-            .parseClaimsJws(token)
-            .getBody();
+                .parserBuilder()
+                .setSigningKey(getSignInKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private Key getSignInKey() {
