@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,9 +71,9 @@ public class BidService {
 
             // Find previous bidders and notify all.
             List<Bid> prevBidders = bidRepository.findByAuctionId(auction.getId());
-            List<User> prevUsers = prevBidders.stream()
+            Set<User> prevUsers = prevBidders.stream()
                     .map(Bid::getUser) // Extracts the User from each Bid
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toSet()); // Collects into a Set to ensure uniqueness
 
             for (User u : prevUsers) {
                 System.out.println();

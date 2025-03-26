@@ -26,12 +26,11 @@ public class BidController {
             @RequestParam double bidAmount) {
         try {
             Bid bid = bidService.placeBid(auctionId, bidAmount, currentUser);
-            return ResponseEntity.ok("Bid placed successfully");
-            // ResponseEntity.ok(bid) <--- if we want to return the entity of the bid
+            return ResponseEntity.ok(bid);
             // instead.
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e);
+                    .body("Error: " + e.getMessage());
         }
 
         // if (bid == null) {

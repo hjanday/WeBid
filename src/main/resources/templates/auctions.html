@@ -391,37 +391,45 @@
             },
           })
             .then((response) => {
-              return response.json().then((data) => {
-                if (!response.ok) {
-                  throw new Error(data.message || "An unknown error occurred");
-                }
-                return data;
-              });
+              if (!response.ok) {
+                // If response is not OK, handle the error
+                return response.text().then((text) => {
+                  throw new Error(text); // The error message will be in the body
+                });
+              } else {
+                // If the response is OK, parse the JSON response (which will contain the bid details)
+                return response.json();
+              }
             })
-            .then((updatedAuction) => {
-              let auc = updatedAuction.auction;
-              alert(
-                `Bid placed successfully! Server response: ${JSON.stringify(
-                  updatedAuction
-                )}`
-              );
+            .then((data) => {
+              // If the response was successful, handle the bid data
+              if (data && data.id) {
+                // Assuming 'data' is a Bid object returned by the backend
+                alert(
+                  `Bid placed successfully! Server response: ${JSON.stringify(
+                    data
+                  )}`
+                );
 
-              // Update UI with new bid information
-              const newCurrentBid =
-                auc.currentBid != null && auc.currentBid !== ""
-                  ? "$" + auc.currentBid.toFixed(2)
-                  : "No Bid Yet";
-              document.getElementById("faCurrentPrice").textContent =
-                "Current Price: " + newCurrentBid;
-              document.getElementById("faHighestBidder").textContent =
-                "Highest Bidder: " + (auc.currentBidderID || "Unknown");
+                // Update UI with new bid information
+                const auc = data.auction;
+                const newCurrentBid =
+                  auc.currentBid != null && auc.currentBid !== ""
+                    ? "$" + auc.currentBid.toFixed(2)
+                    : "No Bid Yet";
+                document.getElementById("faCurrentPrice").textContent =
+                  "Current Price: " + newCurrentBid;
+                document.getElementById("faHighestBidder").textContent =
+                  "Highest Bidder: " + (auc.currentBidderID || "Unknown");
 
-              if (calculateRemainingTime(auc.endTime) === "Expired") {
-                alert("Auction is over! Please pay for your bid!");
-                window.location.href = "/paynow";
+                if (calculateRemainingTime(auc.endTime) === "Expired") {
+                  alert("Auction is over! Please pay for your bid!");
+                  window.location.href = "/paynow";
+                }
               }
             })
             .catch((error) => {
+              // In case of error (from response body or other issues)
               alert(`Bid failed: ${error.message}`);
             });
         });
