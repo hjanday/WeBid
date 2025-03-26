@@ -1,4 +1,4 @@
-package com.webid.webid.model;
+package com.webid.paymentservice.model;
 
 
 import jakarta.persistence.Column;
@@ -8,12 +8,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-
+@NoArgsConstructor
 @Table(name = "payment")
 public class Payment {
     @Id
@@ -36,9 +37,6 @@ public class Payment {
     @Column(nullable = false)
     private double totalCost;
     private int shippingDays;
-
-    public Payment() {
-    }
 
     private Payment(Long userID, Long auctionID, String auctionType, double itemPrice, boolean expeditedShipping,
             double expeditedShippingCost, int shippingDays) {

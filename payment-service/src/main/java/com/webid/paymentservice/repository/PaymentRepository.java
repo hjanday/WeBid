@@ -1,6 +1,6 @@
-package com.webid.webid.repository;
+package com.webid.paymentservice.repository;
 
-import com.webid.webid.model.Payment;
+import com.webid.paymentservice.model.Payment;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
