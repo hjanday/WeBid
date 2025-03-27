@@ -3,6 +3,7 @@ package com.webid.webid.service;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.webid.webid.model.User;
+import com.webid.webid.model.Bid;
 import com.webid.webid.model.Notification;
 import com.webid.webid.repository.UserRepository;
+import com.webid.webid.repository.BidRepository;
 import com.webid.webid.repository.NotificationRepository;
 
 @Service
@@ -19,6 +22,9 @@ public class NotificationService implements Observer {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BidRepository bidRepository;
 
     @Autowired
     private NotificationRepository notificationRepository;
@@ -37,6 +43,7 @@ public class NotificationService implements Observer {
         userRepository.save(user);
     }
 
+    // returns the user's most recent notification
     public String getNotification() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
@@ -54,4 +61,18 @@ public class NotificationService implements Observer {
                 .collect(Collectors.toList());
     }
 
+    // sends a notification to users when auction is ended. note that this requres
+    // both auction and bids.
+    public void notifyEnded(long auctionID) {
+        // Find previous bidders and notify all.
+        List<Bid> prevBidders = bidRepository.findByAuctionId(auctionID);
+        Set<User> prevUsers = prevBidders.stream()
+                .map(Bid::getUser) // Extracts the User from each Bid
+                .collect(Collectors.toSet()); // Collects into a Set to ensure uniqueness
+
+        for (User u : prevUsers) {
+            notify(u, String.format("Auction %s has come to an end.",
+                    bidRepository.findByAuctionId(auctionID).getFirst().getAuction().getItemName()));
+        }
+    }
 }
