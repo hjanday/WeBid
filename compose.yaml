@@ -1,9 +1,30 @@
 services:
-  postgres:
-    image: 'postgres:latest'
-    environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+  app:
+    image: webid-app
     ports:
-      - '5432'
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USER}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASS}
+      JWT_SECRET: ${JWT_SECRET_KEY}
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASS}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

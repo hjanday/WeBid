@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class WebidApplication {
 
 	public static void main(String[] args) {
+		
 		SpringApplication.run(WebidApplication.class, args);
 	}
 
