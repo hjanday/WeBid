@@ -1,6 +1,10 @@
 package com.webid.webid.service;
 
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,6 +45,13 @@ public class NotificationService implements Observer {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return user.getNotif();
+    }
+
+    // returns a list of user notifications
+    public List<String> getUserNotifications(User user) {
+        return notificationRepository.findByUserIdOrderByIdDesc(user.getId()).stream()
+                .map(Notification::getMessage)
+                .collect(Collectors.toList());
     }
 
 }
