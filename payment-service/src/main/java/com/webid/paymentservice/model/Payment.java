@@ -38,7 +38,7 @@ public class Payment {
     private double totalCost;
     private int shippingDays;
 
-    private Payment(Long userID, Long auctionID, String auctionType, double itemPrice, boolean expeditedShipping,
+    public Payment(Long userID, Long auctionID, String auctionType, double itemPrice, boolean expeditedShipping,
             double expeditedShippingCost, int shippingDays) {
         this.userID = userID;
         this.auctionID = auctionID;
@@ -52,11 +52,11 @@ public class Payment {
 
     }
 
-    public static Payment create(Long userID, Long auctionID, String auctionType, double itemPrice,
-            boolean expeditedShipping,
-            double expeditedShippingCost, int shippingDays) {
-        return new Payment(userID, auctionID, auctionType, itemPrice, expeditedShipping, expeditedShippingCost,
-                shippingDays);
-    }
+    // public static Payment create(Long userID, Long auctionID, String auctionType, double itemPrice,
+    //         boolean expeditedShipping,
+    //         double expeditedShippingCost, int shippingDays) {
+    //     return new Payment(userID, auctionID, auctionType, itemPrice, expeditedShipping, expeditedShippingCost,
+    //             shippingDays);
+    // }
 
 }

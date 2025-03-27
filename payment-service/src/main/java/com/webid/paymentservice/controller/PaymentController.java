@@ -1,5 +1,20 @@
 package com.webid.paymentservice.controller;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.webid.paymentservice.service.PaymentService;
+
+@RestController
+@RequestMapping("api/payments")
+public class PaymentController {
+    private final PaymentService paymentService;
+
+    public PaymentController(PaymentService paymentService) {
+            this.paymentService = paymentService;
+    }
+}
+
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.http.ResponseEntity;
 // import org.springframework.web.bind.annotation.*;

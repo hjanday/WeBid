@@ -1,5 +1,20 @@
 package com.webid.paymentservice.service;
 
+import com.webid.paymentservice.model.Payment;
+import com.webid.paymentservice.repository.PaymentRepository;
+
+public class PaymentService {
+    private final PaymentRepository paymentRepository;
+
+    public PaymentService(PaymentRepository paymentRepository) {
+        this.paymentRepository = paymentRepository;
+    }
+
+    public Payment makePayment(Payment payment) {
+            return payment;
+    }
+}
+
 // import java.time.Instant;
 // import java.util.List;
 // import java.util.Optional;
@@ -11,13 +26,13 @@ package com.webid.paymentservice.service;
 // import org.springframework.security.core.context.SecurityContextHolder;
 // import org.springframework.stereotype.Service;
 
-// // import com.webid.webid.model.Auction;
+// // import com.webid.payment.model.Auction;
 // // import com.webid.webid.model.Bid;
-// // import com.webid.webid.model.Payment;
-// // import com.webid.webid.model.User;
+// import com.webid.paymentservice.model.Payment;
+// import com.webid.webid.model.User;
 // // import com.webid.webid.repository.AuctionRepository;
 // // import com.webid.webid.repository.BidRepository;
-// // import com.webid.webid.repository.PaymentRepository;
+// import com.webid.paymentservice.repository.PaymentRepository;
 // // import com.webid.webid.repository.UserRepository;
 
 // import lombok.AllArgsConstructor;

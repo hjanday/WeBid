@@ -26,7 +26,6 @@ public class SecurityConfig {
         this.authProvider = authProvider;
     }
 
-    // /auth/**
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http

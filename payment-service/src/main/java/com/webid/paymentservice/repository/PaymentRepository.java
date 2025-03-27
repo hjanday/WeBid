@@ -15,7 +15,7 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     // Optional: You can define custom query methods as needed
 
-    @Query("SELECT p FROM Payment p WHERE p.auctionID = :auctionID")
-    Optional<Payment> findByAuctionId(@Param("auctionID") Long auctionID);
+    // @Query("SELECT p FROM Payment p WHERE p.auctionID = :auctionID")
+    // Optional<Payment> findByAuctionId(@Param("auctionID") Long auctionID);
     // List<Auction> findByStatus(String status);
 }
