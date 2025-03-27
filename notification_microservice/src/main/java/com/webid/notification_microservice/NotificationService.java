@@ -2,45 +2,91 @@ package com.webid.notification_microservice;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import com.webid.webid.model.User;
-import com.webid.webid.model.Notification;
-import com.webid.webid.repository.UserRepository;
-import com.webid.webid.repository.NotificationRepository;
+import com.webid.notification_microservice.Notification;
+import com.webid.notification_microservice.NotificationRepository;
+import com.webid.notification_microservice.dto.AuctionDTO;
 
 @Service
-public class NotificationService implements Observer {
+public class NotificationService {
+
+    private final NotificationRepository notificationRepository;
+    private final RestTemplate restTemplate;
 
     @Autowired
-    private UserRepository userRepository;
+    public NotificationService(NotificationRepository notificationRepository, RestTemplate restTemplate) {
+        this.notificationRepository = notificationRepository;
+        this.restTemplate = restTemplate;
+    }
 
-    @Autowired
-    private NotificationRepository notificationRepository;
+    // Create a notification for a user
+    public void notify(Long userId, String message, String type) {
+        // First verify user exists by calling user service
+        try {
+            restTemplate.getForObject(
+                "http://user-service:8080/api/users/{userId}",
+                Object.class,
+                userId
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("User not found: " + userId);
+        }
 
-    @Override
-    public void notify(User user, String message) {
+        // Create notification
         Notification notification = new Notification();
-        notification.setUser(user);
+        notification.setUserId(userId);
         notification.setMessage(message);
-
-        // Save notification in notification DB
+        notification.setTimestamp(LocalDateTime.now());
         notificationRepository.save(notification);
-
-        // set most recent notification to be the user's current notification
-        user.setNotif(message);
-        userRepository.save(user);
     }
 
-    public String getNotification() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        return user.getNotif();
+    // Get notifications for a user
+    public List<String> getUserNotifications(Long userId) {
+        return notificationRepository.findByUserIdOrderByIdDesc(userId).stream()
+                .map(Notification::getMessage)
+                .collect(Collectors.toList());
     }
 
+    // Notify users when an auction ends
+    public void notifyAuctionEnded(Long auctionId) {
+        try {
+            // Get auction details from auction service
+            AuctionDTO auction = restTemplate.getForObject(
+                "http://auction-service:8081/api/auctions/{auctionId}",
+                AuctionDTO.class,
+                auctionId
+            );
+
+            if (auction == null) {
+                throw new RuntimeException("Auction not found: " + auctionId);
+            }
+
+            // Get bidders from auction service
+            List<Long> bidderIds = restTemplate.exchange(
+                "http://auction-service:8081/api/auctions/{auctionId}/bidders",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<Long>>() {},
+                auctionId
+            ).getBody();
+
+            // Notify each bidder
+            if (bidderIds != null) {
+                bidderIds.forEach(userId -> 
+                    notify(userId, 
+                        String.format("Auction for %s has ended.", auction.getItemName()),
+                        "AUCTION_END"
+                    )
+                );
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to process auction end notification: " + e.getMessage());
+        }
+    }
 }
