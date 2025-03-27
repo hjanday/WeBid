@@ -10,10 +10,10 @@
         <relativePath>../pom.xml</relativePath> <!-- Points to root pom.xml -->
     </parent>
     
-    <artifactId>payment-service</artifactId>
+    <artifactId>notification-service</artifactId>
     <packaging>war</packaging>
-    <name>Payment Service</name>
-    <description>Handles payment transactions</description>
+    <name>notification-service</name>
+    <description>handles notification service</description>
 
     <dependencies>
         <!-- Spring Boot dependencies -->

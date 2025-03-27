@@ -1,4 +1,4 @@
-package com.webid.webid.service;
+package com.webid.notification_microservice;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;

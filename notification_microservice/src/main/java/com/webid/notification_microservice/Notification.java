@@ -1,4 +1,4 @@
-package com.webid.webid.model;
+package com.webid.notification_microservice;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,4 +1,4 @@
-package com.webid.webid.repository;
+package com.webid.notification_microservice;
 
 import com.webid.webid.model.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;

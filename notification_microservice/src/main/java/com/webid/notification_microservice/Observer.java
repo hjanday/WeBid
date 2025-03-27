@@ -1,4 +1,4 @@
-package com.webid.webid.service;
+package com.webid.notification_microservice;
 
 import com.webid.webid.model.User;
 
