@@ -1,5 +1,6 @@
 package com.webid.notification_microservice;
 
+import com.webid.user_microservice.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
