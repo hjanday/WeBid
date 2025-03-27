@@ -2,6 +2,7 @@ package com.webid.notification_microservice;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -19,6 +20,12 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final RestTemplate restTemplate;
 
+    @Value("${user.service.url}")
+    private String userServiceUrl;
+
+    @Value("${auction.service.url}")
+    private String auctionServiceUrl;
+
     @Autowired
     public NotificationService(NotificationRepository notificationRepository, RestTemplate restTemplate) {
         this.notificationRepository = notificationRepository;
@@ -30,7 +37,7 @@ public class NotificationService {
         // First verify user exists by calling user service
         try {
             restTemplate.getForObject(
-                "http://user-service:8080/api/users/{userId}",
+                userServiceUrl + "/api/users/{userId}",
                 Object.class,
                 userId
             );
@@ -58,7 +65,7 @@ public class NotificationService {
         try {
             // Get auction details from auction service
             AuctionDTO auction = restTemplate.getForObject(
-                "http://auction-service:8081/api/auctions/{auctionId}",
+                auctionServiceUrl + "/api/auctions/{auctionId}",
                 AuctionDTO.class,
                 auctionId
             );
@@ -69,7 +76,7 @@ public class NotificationService {
 
             // Get bidders from auction service
             List<Long> bidderIds = restTemplate.exchange(
-                "http://auction-service:8081/api/auctions/{auctionId}/bidders",
+                auctionServiceUrl + "/api/auctions/{auctionId}/bidders",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<Long>>() {},
