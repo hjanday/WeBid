@@ -18,21 +18,27 @@ import com.webid.webid.service.BidService;
 @RequestMapping("/api/bid")
 public class BidController {
 
-
     @Autowired
     private BidService bidService;
 
     @PostMapping("/{auctionId}")
-    public ResponseEntity<Object> placeBid(@CurrentUser User currentUser, @PathVariable long auctionId, @RequestParam double bidAmount) {
-
-        Bid bid = bidService.placeBid(auctionId, bidAmount, currentUser);
-
-        if (bid == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("Bid could not be placed ... please check bid amounts and users");
-        } else {
+    public ResponseEntity<Object> placeBid(@CurrentUser User currentUser, @PathVariable long auctionId,
+            @RequestParam double bidAmount) {
+        try {
+            Bid bid = bidService.placeBid(auctionId, bidAmount, currentUser);
             return ResponseEntity.ok(bid);
+            // instead.
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error: " + e.getMessage());
         }
+
+        // if (bid == null) {
+        // return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        // .body("Bid could not be placed ... please check bid amounts and users");
+        // } else {
+        // return ResponseEntity.ok(bid);
+        // }
 
     }
 
