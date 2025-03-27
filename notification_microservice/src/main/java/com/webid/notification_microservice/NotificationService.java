@@ -15,7 +15,7 @@ import com.webid.notification_microservice.NotificationRepository;
 import com.webid.notification_microservice.dto.AuctionDTO;
 
 @Service
-public class NotificationService {
+public class NotificationService implements Observer {
 
     private final NotificationRepository notificationRepository;
     private final RestTemplate restTemplate;
@@ -32,8 +32,8 @@ public class NotificationService {
         this.restTemplate = restTemplate;
     }
 
-    // Create a notification for a user
-    public void notify(Long userId, String message, String type) {
+    @Override
+    public void notify(Long userId, String message) {
         // First verify user exists by calling user service
         try {
             restTemplate.getForObject(
@@ -87,8 +87,7 @@ public class NotificationService {
             if (bidderIds != null) {
                 bidderIds.forEach(userId -> 
                     notify(userId, 
-                        String.format("Auction for %s has ended.", auction.getItemName()),
-                        "AUCTION_END"
+                        String.format("Auction for %s has ended.", auction.getItemName())
                     )
                 );
             }
