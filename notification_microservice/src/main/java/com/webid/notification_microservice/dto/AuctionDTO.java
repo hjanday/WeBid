@@ -6,8 +6,6 @@ import lombok.Data;
 public class AuctionDTO {
     private Long id;
     private String itemName;
-    private Long sellerId;
-    private Double currentPrice;
-    private Double startingPrice;
-    private String status;
+    private Double currentBid;
+    private Long currentBidderID;
 } 

@@ -20,10 +20,10 @@ public class NotificationService implements Observer {
     private final NotificationRepository notificationRepository;
     private final RestTemplate restTemplate;
 
-    @Value("${user.service.url}")
+    @Value("${user.service.url:http://localhost:8080}")
     private String userServiceUrl;
 
-    @Value("${auction.service.url}")
+    @Value("${auction.service.url:http://localhost:8081}")
     private String auctionServiceUrl;
 
     @Autowired
