@@ -206,8 +206,8 @@ document
         })
     ])
     .then(([auctionData, userData]) => {
-        if (auctionData.ownerId !== userData.id) {
-            alert("You are not the owner of this auction.");
+        if (auctionData.currentBidderID !== userData.id) {
+            alert("You are not the winner of this auction.");
             return;
         }
     
