@@ -16,7 +16,7 @@ import com.webid.webid.model.Notification;
 import com.webid.webid.repository.UserRepository;
 import com.webid.webid.repository.BidRepository;
 import com.webid.webid.repository.NotificationRepository;
-import com.webid.webid.client.NotificationClient;
+
 
 @Service
 public class NotificationService implements Observer {
@@ -30,8 +30,6 @@ public class NotificationService implements Observer {
     @Autowired
     private NotificationRepository notificationRepository;
 
-    @Autowired
-    private NotificationClient notificationClient;
 
     @Override
     public void notify(User user, String message) {
@@ -46,7 +44,7 @@ public class NotificationService implements Observer {
         userRepository.save(user);
 
         // Send notification to microservice
-        notificationClient.notifyUser(user.getId(), message);
+        //notificationClient.notifyUser(user.getId(), message);
     }
 
     // returns the user's most recent notification
@@ -81,6 +79,6 @@ public class NotificationService implements Observer {
         }
 
         // Notify microservice about auction end
-        notificationClient.notifyAuctionEnded(auctionID);
+        //notificationClient.notifyAuctionEnded(auctionID);
     }
 }
