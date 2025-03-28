@@ -4,6 +4,7 @@ import com.webid.webid.dto.LoginUserDTO;
 import com.webid.webid.dto.RegisterUserDTO;
 import com.webid.webid.exceptions.ResourceAlreadyExistsException;
 import com.webid.webid.exceptions.ResourceNotFoundException;
+import com.webid.webid.model.RoleEnum;
 import com.webid.webid.model.User;
 import com.webid.webid.repository.UserRepository;
 
@@ -13,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,9 +58,10 @@ public class AuthService {
 			newUser.setPostalCode(input.getPostalCode());
 			newUser.setCountry(input.getCountry());
 			newUser.setCity(input.getCity());
+			newUser.setRoles(List.of(RoleEnum.ROLE_USER));
 
 			return userRepository.save(newUser);
-			// If anything else errors - catch it
+			
 		} catch (DataIntegrityViolationException ex) {
 			throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
 		}

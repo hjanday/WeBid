@@ -12,12 +12,12 @@ public class HomeController {
         return "landing";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/auth/login")
     public String login() {
         return "sign_in"; 
     }
 
-    @GetMapping("/register")
+    @GetMapping("/auth/register")
     public String register() {
         return "sign_up"; 
     }

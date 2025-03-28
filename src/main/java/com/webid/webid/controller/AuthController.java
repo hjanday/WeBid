@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.webid.webid.dto.LoginUserDTO;
 import com.webid.webid.dto.RegisterUserDTO;
 import com.webid.webid.dto.UpdatePasswordRequestDTO;
+import com.webid.webid.model.RoleEnum;
 import com.webid.webid.model.User;
 import com.webid.webid.responses.LoginResponse;
 import com.webid.webid.service.AuthService;
@@ -16,6 +17,7 @@ import com.webid.webid.service.JwtService;
 import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -38,14 +40,22 @@ public class AuthController {
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> login(@RequestBody LoginUserDTO user) {
 		User authenticatedUser = authService.signIn(user);
-		String jwtToken = jwtService.generateToken(authenticatedUser);
-		LoginResponse response = new LoginResponse(jwtToken, jwtService.getJwtTTL());
+
+		Map<String, Object> claims = new HashMap<>();
+    	claims.put("roles", authenticatedUser.getRoles()); 
+
+		System.out.println("User roles before token generation: " + authenticatedUser.getRoles());
+
+		String jwtToken = jwtService.generateToken(claims, authenticatedUser);
+		LoginResponse response = new LoginResponse(jwtToken, jwtService.getJwtTTL(), authenticatedUser.getRoles());
+		
 		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping("/register")
 	public ResponseEntity<?> register(@RequestBody RegisterUserDTO newUser) {
 		User registeredUser = authService.signUp(newUser);
+		
 		return ResponseEntity.ok(registeredUser);
 	}
 
