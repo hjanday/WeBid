@@ -2,7 +2,7 @@ package com.webid.webid.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HomeController {
@@ -14,45 +14,47 @@ public class HomeController {
 
     @GetMapping("/login")
     public String login() {
-        return "sign_in"; 
+        return "sign_in";
     }
 
     @GetMapping("/register")
     public String register() {
-        return "sign_up"; 
+        return "sign_up";
     }
 
     @GetMapping("/forgotpassword")
     public String forgotpassword() {
-        return "forgot_password"; 
+        return "forgot_password";
     }
 
     @GetMapping("/auctions")
     public String auctions() {
-        return "auctions"; 
+        return "auctions";
     }
 
     @GetMapping("/createauction")
     public String createauction() {
-        return "create_auction"; 
+        return "create_auction";
     }
+
     @GetMapping("/paynow")
     public String paynow() {
         return "paynow";
     }
+
     @GetMapping("/payment")
     public String payment() {
         return "payment";
     }
+
     @GetMapping("/reciept")
-    public String reciept(){
+    public String reciept() {
         return "reciept";
     }
 
-    
-    
-
-
-
+    @GetMapping("/profile")
+    public String getMethodName() {
+        return "profile";
+    }
 
 }

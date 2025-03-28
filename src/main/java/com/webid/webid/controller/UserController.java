@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/users")
 public class UserController {
 
-
     private final UserRepository userRepository;
     private final NotificationService notificationService;
 
@@ -42,7 +41,6 @@ public class UserController {
     public Optional<User> getUserInfo(@PathVariable Long userID) {
         return this.userRepository.findById(userID);
     }
-    
 
     @GetMapping("/notify")
     public String getNotif() {
@@ -53,11 +51,16 @@ public class UserController {
     public User addUser(@RequestBody User user) {
         return this.userRepository.save(user);
     }
+
     @GetMapping("/currentuser")
-    public User getCurrentUser(@CurrentUser User currentUser){
-        return currentUser;
+    public ResponseEntity<User> getCurrentUser(@CurrentUser User currentUser) {
+        System.out.println(currentUser);
+        if (currentUser == null) {
+            System.out.println("User is null! Authentication failed.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(currentUser);
     }
-    
 
     @PostMapping("/findusername")
     ResponseEntity<User> queryUsername(@RequestBody String username) {
