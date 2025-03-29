@@ -68,9 +68,17 @@
             return response.json();
         })
         .then(data => {
+            console.log(data);
+            var userRole = data.roles[0]
             alert("Login successful! Token: " + data.token);
             localStorage.clear()
             localStorage.setItem("jwtToken", data.token);
+
+            // check for admin
+            if (userRole === "ROLE_ADMIN") {
+                window.location.replace("/admin/dashboard");
+                return;
+            }
             window.location.replace("/auth/auctions");
         })
         .catch(error => {

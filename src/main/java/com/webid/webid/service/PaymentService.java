@@ -36,7 +36,7 @@ public class PaymentService {
     /**
      * Creates a new Payment record.
      */
-    public Payment createPayment(Long userID, Long itemID, String auctionType, double itemPrice,
+    public Payment createPayment(User currentUser, Long userID, Long itemID, String auctionType, double itemPrice,
             boolean expeditedShipping, double expeditedShippingCost, int shippingDays) {
         Payment payment = Payment.create(userID, itemID, auctionType, itemPrice, expeditedShipping,
                 expeditedShippingCost, shippingDays);
@@ -46,23 +46,23 @@ public class PaymentService {
     /**
      * Retrieves all Payment records.
      */
-    public List<Payment> getAllPayments() {
+    public List<Payment> getAllPayments(User currentUser) {
         return paymentRepository.findAll();
     }
 
     /**
      * Retrieves a Payment record by its ID.
      */
-    public Payment getPaymentById(Long id) {
+    public Payment getPaymentById(User currentUser, Long id) {
         return paymentRepository.findById(id).orElse(null);
     }
 
-    public Optional<Payment> getPaymentByAuctionId(long auctionId) {
+    public Optional<Payment> getPaymentByAuctionId(User currentUser, long auctionId) {
 
         return paymentRepository.findByAuctionId(auctionId);
     }
 
-    public Payment makePayment(long auctionId, int shipDays) {
+    public Payment makePayment(User currentUser, long auctionId, int shipDays) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         String username = authentication.getName();

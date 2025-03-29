@@ -22,6 +22,7 @@ import com.webid.webid.service.LogoutService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -40,21 +41,36 @@ public class JwtAuthFilter extends OncePerRequestFilter{
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         
+        String token = null;
         String authHeader = request.getHeader("Authorization");
-
+    
+        // First, try to get the token from the Authorization header
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            String username = jwtService.extractUsername(token);
-
+            token = authHeader.substring(7);
+        }
+        // If not found in the header, check the cookies
+        if (token == null && request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("jwtToken".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        
+        // Proceed if we have a token
+        if (token != null) {
+            // Check if the token is blacklisted
             if (logoutService.isTokenBlacklisted(token)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.getWriter().write("Token has been invalidated. Please log in again.");
                 return;
             }
-
+    
+            String username = jwtService.extractUsername(token);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User user = (User) this.userDetailsService.loadUserByUsername(username);
-
+    
                 if (jwtService.isTokenValid(token, user)) {
                     List<RoleEnum> roles = jwtService.extractRoles(token); 
                     Collection<? extends GrantedAuthority> authorities = roles.stream()
@@ -62,13 +78,12 @@ public class JwtAuthFilter extends OncePerRequestFilter{
                             .collect(Collectors.toList());
                     
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
-            
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
         }
-
+        
         filterChain.doFilter(request, response);
     }
-}
+}    

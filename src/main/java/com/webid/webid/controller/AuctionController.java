@@ -42,20 +42,20 @@ public class AuctionController {
 
     // Get all auctions
     @GetMapping
-    public List<Auction> getAllAuctions() {
-        return auctionService.getAllAuctions();
+    public List<Auction> getAllAuctions(@CurrentUser User currentUser) {
+        return auctionService.getAllAuctions(currentUser);
     }
 
     // Get an auction by ID
     @GetMapping("/{id}")
-    public Optional<Auction> getAuctionById(@PathVariable Long id) {
-        return auctionService.getAuctionById(id);
+    public Optional<Auction> getAuctionById(@CurrentUser User currentUser, @PathVariable Long id) {
+        return auctionService.getAuctionById(currentUser, id);
     }
 
     // Get auctions by item name queries
     @GetMapping("/search")
-    public List<Auction> getAuctionByItemName(@RequestParam String itemName) {
-        return auctionService.findAuctionByItemName(itemName);
+    public List<Auction> getAuctionByItemName(@CurrentUser User currentUser, @RequestParam String itemName) {
+        return auctionService.findAuctionByItemName(currentUser, itemName);
     }
 
     // Edits the expedited shipping of an auction to be true

@@ -26,16 +26,16 @@ public class AuctionService {
     // private NotificationService notifService;
 
     // Get all auctions
-    public List<Auction> getAllAuctions() {
+    public List<Auction> getAllAuctions(User user) {
         return auctionRepository.findAll();
     }
 
     // Get auction by ID
-    public Optional<Auction> getAuctionById(Long id) {
+    public Optional<Auction> getAuctionById(User user, Long id) {
         return auctionRepository.findById(id);
     }
 
-    public List<Auction> findAuctionByItemName(String itemName) {
+    public List<Auction> findAuctionByItemName(User user, String itemName) {
         if (auctionRepository.findByItemName(itemName).isEmpty()) {
             throw new ResourceAlreadyExistsException("No auctions found");
         }

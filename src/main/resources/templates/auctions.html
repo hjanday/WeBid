@@ -492,7 +492,7 @@
                 return new Error(response);
               }
               alert("Dutch auction completed successfully!");
-              window.location.replace(`checkout/paynow?auctionId=${selectedAuction.id}`);
+              window.location.replace(`/checkout/paynow?auctionId=${selectedAuction.id}`);
               return response;
             })
             .catch((error) => {
@@ -512,7 +512,7 @@
 
           fetch(url, {
             method: "GET",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("jwtToken")}` },
           })
             .then((response) => {
               if (!response.ok) {

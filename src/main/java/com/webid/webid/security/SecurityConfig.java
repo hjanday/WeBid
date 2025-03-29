@@ -36,14 +36,16 @@ public class SecurityConfig {
                 // allow requests for users and admins
                     .requestMatchers("/","/auth/**").permitAll()
                     .requestMatchers("/","/authentication/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+                    .requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("ROLE_ADMIN")
                     // add all the other routes to request matchers for user access?
-                    .requestMatchers("/", "/api/auctions/**").hasRole("USER")
-                    .requestMatchers("/", "/api/bid/**").hasRole("USER")
-                    .requestMatchers("/", "/api/notification/**").hasRole("USER")
-                    .requestMatchers("/", "/api/payments/**").hasRole("USER")
-                    .requestMatchers("/", "/checkout/**").hasRole("USER")
-                    .requestMatchers("/", "/admin/**").hasRole("ADMIN")
+                    .requestMatchers("/", "/api/auctions/**").permitAll()
+                    .requestMatchers("/", "/api/bid/**").hasAuthority("ROLE_USER")
+                    .requestMatchers("/", "/api/notification/**").hasAuthority("ROLE_USER")
+                    .requestMatchers("/", "/api/payments/**").hasAuthority("ROLE_USER")
+                    .requestMatchers("/", "/checkout/**").hasAuthority("ROLE_USER")
+                    // change to permitall for testing 
+                    .requestMatchers("/", "/admin/**").hasAuthority("ROLE_ADMIN")
+                    // add all the other routes to request matchers for user access?
                     
                     .anyRequest().authenticated()
                 )

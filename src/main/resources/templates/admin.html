@@ -87,6 +87,13 @@
       #dataContainer {
         margin-top: 1rem;
       }
+      /* Message styling */
+      .message {
+        text-align: center;
+        margin: 1rem 0;
+        color: green;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
@@ -108,17 +115,34 @@
 
     <!-- Container to display users or auctions -->
     <div id="dataContainer"></div>
+    <!-- Container to display messages -->
+    <div id="messageContainer"></div>
 
     <script>
-      // Get references to buttons and container
+      // Get references to buttons and containers
       const showUsersBtn = document.getElementById('showUsersBtn');
       const showAuctionsBtn = document.getElementById('showAuctionsBtn');
       const hideDataBtn = document.getElementById('hideDataBtn');
       const dataContainer = document.getElementById('dataContainer');
+      const messageContainer = document.getElementById('messageContainer');
+      const token = localStorage.getItem("jwtToken");
+
+      // Utility function to show messages
+      function showMessage(text) {
+        messageContainer.innerHTML = `<p class="message">${text}</p>`;
+        setTimeout(() => {
+          messageContainer.innerHTML = "";
+        }, 3000);
+      }
 
       // Function to fetch and display users
       function showUsers() {
-        fetch('http://localhost:8080/api/users')
+        fetch('http://localhost:8080/api/users', {
+          method: 'GET',
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        })
           .then(response => {
             if (!response.ok) {
               throw new Error('Failed to fetch users.');
@@ -140,7 +164,7 @@
             users.forEach(user => {
               tableHTML += `
                 <tr id="user-${user.id}">
-                  <td>${user.name}</td>
+                  <td>${user.username}</td>
                   <td>${user.email}</td>
                   <td>
                     <button class="danger-btn" onclick="deleteUser(${user.id})">Delete</button>
@@ -159,10 +183,13 @@
           });
       }
 
-      // Function to delete a user (adjust endpoint if needed)
+      // Function to delete a user
       function deleteUser(userId) {
         fetch(`http://localhost:8080/api/users/${userId}`, {
-          method: 'DELETE'
+          method: 'DELETE', 
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
         })
           .then(response => {
             if (!response.ok) {
@@ -170,7 +197,10 @@
             }
             // Remove the user row from the table on success
             const row = document.getElementById(`user-${userId}`);
-            if (row) row.remove();
+            if (row) {
+              row.remove();
+            }
+            showMessage("User deleted successfully.");
           })
           .catch(error => {
             alert(error.message);
@@ -179,7 +209,12 @@
 
       // Function to fetch and display auctions
       function showAuctions() {
-        fetch('http://localhost:8080/api/auctions')
+        fetch('http://localhost:8080/api/auctions', {
+          method: 'GET',
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        })
           .then(response => {
             if (!response.ok) {
               throw new Error('Failed to fetch auctions.');
@@ -195,6 +230,7 @@
                     <th>Current Bid</th>
                     <th>Auction Type</th>
                     <th>Remaining Time</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -219,11 +255,14 @@
                 remainingTime = 'Now';
               }
               tableHTML += `
-                <tr>
+                <tr id="auction-${auction.id}">
                   <td>${auction.itemName || ''}</td>
                   <td>${auction.currentBid ? '$' + auction.currentBid : 'No Bid Yet'}</td>
                   <td>${auction.auctionType || ''}</td>
                   <td>${remainingTime}</td>
+                  <td>
+                    <button class="danger-btn" onclick="deleteAuction(${auction.id})">Delete</button>
+                  </td>
                 </tr>
               `;
             });
@@ -235,6 +274,31 @@
           })
           .catch(error => {
             dataContainer.innerHTML = `<p style="color:red;">${error.message}</p>`;
+          });
+      }
+
+      // Function to delete an auction
+      function deleteAuction(auctionId) {
+        fetch(`http://localhost:8080/api/auctions/${auctionId}`, {
+          method: 'DELETE',
+          headers: {
+            "Authorization": `Bearer ${token}`
+          }
+        })
+          .then(response => {
+            console.log(response);
+            if (!response.ok) {
+              throw new Error('Failed to delete auction.');
+            }
+            // Remove the auction row from the table on success
+            const row = document.getElementById(`auction-${auctionId}`);
+            if (row) {
+              row.remove();
+            }
+            showMessage("Auction deleted successfully.");
+          })
+          .catch(error => {
+            alert(error.message);
           });
       }
 

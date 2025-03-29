@@ -11,7 +11,7 @@ import com.webid.webid.model.User;
 import com.webid.webid.responses.LoginResponse;
 import com.webid.webid.service.AuthService;
 import com.webid.webid.service.JwtService;
-
+import jakarta.servlet.http.Cookie;
 
 
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/auth")
@@ -38,7 +38,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<LoginResponse> login(@RequestBody LoginUserDTO user) {
+	public ResponseEntity<LoginResponse> login(@RequestBody LoginUserDTO user, HttpServletResponse response) {
 		User authenticatedUser = authService.signIn(user);
 
 		Map<String, Object> claims = new HashMap<>();
@@ -47,9 +47,19 @@ public class AuthController {
 		System.out.println("User roles before token generation: " + authenticatedUser.getRoles());
 
 		String jwtToken = jwtService.generateToken(claims, authenticatedUser);
-		LoginResponse response = new LoginResponse(jwtToken, jwtService.getJwtTTL(), authenticatedUser.getRoles());
-		
-		return ResponseEntity.ok(response);
+
+		  // Create a cookie with the token
+		  Cookie cookie = new Cookie("jwtToken", jwtToken);
+		  cookie.setPath("/"); // cookie is available to all paths in your domain
+		  cookie.setHttpOnly(true); // prevents JavaScript access to the cookie
+		  cookie.setSecure(true); // ensure this is true if you use HTTPS
+		  cookie.setMaxAge((int) jwtService.getJwtTTL()); // ttl in seconds
+		  
+
+		LoginResponse login_response = new LoginResponse(jwtToken, jwtService.getJwtTTL(), authenticatedUser.getRoles());
+		// add cookie to servlet response
+		response.addCookie(cookie);
+		return ResponseEntity.ok(login_response);
 	}
 
 	@PostMapping("/register")
