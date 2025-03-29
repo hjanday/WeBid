@@ -33,8 +33,18 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
+                // allow requests for users and admins
                     .requestMatchers("/","/auth/**").permitAll()
+                    .requestMatchers("/","/authentication/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/users").hasRole("ADMIN")
+                    // add all the other routes to request matchers for user access?
+                    .requestMatchers("/", "/api/auctions/**").hasRole("USER")
+                    .requestMatchers("/", "/api/bid/**").hasRole("USER")
+                    .requestMatchers("/", "/api/notification/**").hasRole("USER")
+                    .requestMatchers("/", "/api/payments/**").hasRole("USER")
+                    .requestMatchers("/", "/checkout/**").hasRole("USER")
+                    .requestMatchers("/", "/admin/**").hasRole("ADMIN")
+                    
                     .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

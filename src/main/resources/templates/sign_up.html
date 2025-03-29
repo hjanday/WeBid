@@ -109,13 +109,13 @@
         })
         .then(data => {
             alert("Registration successful!");
-            window.location.href = "/login";
+            window.location.href = "/authentication/login";
         })
         .catch(error => {
             alert("Registration failed: " + error.message);
         });
     });
   </script>
-  <p style="text-align:center;">Already have an account? <a href="/login">Login</a></p>
+  <p style="text-align:center;">Already have an account? <a href="/authentication/login">Login</a></p>
 </body>
 </html>

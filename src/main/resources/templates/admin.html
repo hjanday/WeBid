@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard - Data Management</title>
+    <style>
+      /* Reset and basic styling */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        background-color: #f9f9f9;
+        font-family: Arial, sans-serif;
+        padding: 1rem;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+      }
+      header .logo {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+      header nav a {
+        text-decoration: none;
+        color: #fff;
+        background-color: #007bff;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        margin-left: 0.5rem;
+      }
+      header nav a:hover {
+        background-color: #0056b3;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+      }
+      /* Button styling */
+      .action-btn {
+        padding: 0.75rem 1rem;
+        background-color: #28a745;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 0.5rem;
+      }
+      .action-btn:hover {
+        background-color: #218838;
+      }
+      .danger-btn {
+        padding: 0.5rem 0.75rem;
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .danger-btn:hover {
+        background-color: #c82333;
+      }
+      /* Table styling */
+      table {
+        width: 100%;
+        max-width: 800px;
+        margin: 1rem auto;
+        border-collapse: collapse;
+      }
+      thead tr {
+        background-color: #eee;
+      }
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 0.75rem;
+        text-align: left;
+      }
+      tr:hover {
+        background-color: #f0f0f0;
+      }
+      /* Container for data display */
+      #dataContainer {
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">WeBid Admin</div>
+      <nav>
+        <a href="/logout">Logout</a>
+      </nav>
+    </header>
+
+    <h1>Data Management</h1>
+    
+    <!-- Control Buttons -->
+    <div style="text-align: center;">
+      <button class="action-btn" id="showUsersBtn">Show Users</button>
+      <button class="action-btn" id="showAuctionsBtn">Show Auctions</button>
+      <button class="action-btn" id="hideDataBtn">Hide Data</button>
+    </div>
+
+    <!-- Container to display users or auctions -->
+    <div id="dataContainer"></div>
+
+    <script>
+      // Get references to buttons and container
+      const showUsersBtn = document.getElementById('showUsersBtn');
+      const showAuctionsBtn = document.getElementById('showAuctionsBtn');
+      const hideDataBtn = document.getElementById('hideDataBtn');
+      const dataContainer = document.getElementById('dataContainer');
+
+      // Function to fetch and display users
+      function showUsers() {
+        fetch('http://localhost:8080/api/users')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch users.');
+            }
+            return response.json();
+          })
+          .then(users => {
+            let tableHTML = `
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+            `;
+            users.forEach(user => {
+              tableHTML += `
+                <tr id="user-${user.id}">
+                  <td>${user.name}</td>
+                  <td>${user.email}</td>
+                  <td>
+                    <button class="danger-btn" onclick="deleteUser(${user.id})">Delete</button>
+                  </td>
+                </tr>
+              `;
+            });
+            tableHTML += `
+                </tbody>
+              </table>
+            `;
+            dataContainer.innerHTML = tableHTML;
+          })
+          .catch(error => {
+            dataContainer.innerHTML = `<p style="color:red;">${error.message}</p>`;
+          });
+      }
+
+      // Function to delete a user (adjust endpoint if needed)
+      function deleteUser(userId) {
+        fetch(`http://localhost:8080/api/users/${userId}`, {
+          method: 'DELETE'
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to delete user.');
+            }
+            // Remove the user row from the table on success
+            const row = document.getElementById(`user-${userId}`);
+            if (row) row.remove();
+          })
+          .catch(error => {
+            alert(error.message);
+          });
+      }
+
+      // Function to fetch and display auctions
+      function showAuctions() {
+        fetch('http://localhost:8080/api/auctions')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to fetch auctions.');
+            }
+            return response.json();
+          })
+          .then(auctions => {
+            let tableHTML = `
+              <table>
+                <thead>
+                  <tr>
+                    <th>Item Name</th>
+                    <th>Current Bid</th>
+                    <th>Auction Type</th>
+                    <th>Remaining Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+            `;
+            auctions.forEach(auction => {
+              let remainingTime = '';
+              if (auction.auctionType && auction.auctionType.toLowerCase() === 'forward' && auction.endTime) {
+                const now = new Date();
+                const end = new Date(auction.endTime);
+                let diff = end - now;
+                if (diff <= 0) {
+                  remainingTime = 'Expired';
+                } else {
+                  const hours = Math.floor(diff / (1000 * 60 * 60));
+                  diff -= hours * (1000 * 60 * 60);
+                  const minutes = Math.floor(diff / (1000 * 60));
+                  diff -= minutes * (1000 * 60);
+                  const seconds = Math.floor(diff / 1000);
+                  remainingTime = `${hours}h ${minutes}m ${seconds}s`;
+                }
+              } else if (auction.auctionType && auction.auctionType.toLowerCase() === 'dutch') {
+                remainingTime = 'Now';
+              }
+              tableHTML += `
+                <tr>
+                  <td>${auction.itemName || ''}</td>
+                  <td>${auction.currentBid ? '$' + auction.currentBid : 'No Bid Yet'}</td>
+                  <td>${auction.auctionType || ''}</td>
+                  <td>${remainingTime}</td>
+                </tr>
+              `;
+            });
+            tableHTML += `
+                </tbody>
+              </table>
+            `;
+            dataContainer.innerHTML = tableHTML;
+          })
+          .catch(error => {
+            dataContainer.innerHTML = `<p style="color:red;">${error.message}</p>`;
+          });
+      }
+
+      // Function to hide any displayed data
+      function hideData() {
+        dataContainer.innerHTML = '';
+      }
+
+      // Event listeners for buttons
+      showUsersBtn.addEventListener('click', showUsers);
+      showAuctionsBtn.addEventListener('click', showAuctions);
+      hideDataBtn.addEventListener('click', hideData);
+    </script>
+  </body>
+</html>

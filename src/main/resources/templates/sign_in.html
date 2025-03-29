@@ -71,7 +71,7 @@
             alert("Login successful! Token: " + data.token);
             localStorage.clear()
             localStorage.setItem("jwtToken", data.token);
-            window.location.href = "/auctions";
+            window.location.href = "auth/auctions";
         })
         .catch(error => {
             alert("Login failed: " + error.message);
@@ -79,7 +79,7 @@
     });
   </script>
 
-  <p style="text-align:center;">Don't have an account? <a href="/register">Sign Up</a></p>
-  <p style ="text-align: center;">Forgot your password? <a href="/forgotpassword">Reset your password</a></p>
+  <p style="text-align:center;">Don't have an account? <a href="/authentication/register">Sign Up</a></p>
+  <p style ="text-align: center;">Forgot your password? <a href="/authentication/forgotpassword">Reset your password</a></p>
 </body>
 </html>

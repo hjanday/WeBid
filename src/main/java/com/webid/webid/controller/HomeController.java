@@ -12,47 +12,47 @@ public class HomeController {
         return "landing";
     }
 
-    @GetMapping("/auth/login")
+    @GetMapping("/authentication/login")
     public String login() {
         return "sign_in"; 
     }
 
-    @GetMapping("/auth/register")
+    @GetMapping("/authentication/register")
     public String register() {
         return "sign_up"; 
     }
 
-    @GetMapping("/forgotpassword")
+    @GetMapping("/authentication/forgotpassword")
     public String forgotpassword() {
         return "forgot_password"; 
     }
 
-    @GetMapping("/auctions")
+    @GetMapping("auth/auctions")
     public String auctions() {
         return "auctions"; 
     }
 
-    @GetMapping("/createauction")
+    @GetMapping("auth/createauction")
     public String createauction() {
         return "create_auction"; 
     }
-    @GetMapping("/paynow")
+    @GetMapping("checkout/paynow")
     public String paynow() {
         return "paynow";
     }
-    @GetMapping("/payment")
+    @GetMapping("checkout/payment")
     public String payment() {
         return "payment";
     }
-    @GetMapping("/reciept")
+    @GetMapping("checkout/reciept")
     public String reciept(){
         return "reciept";
     }
 
+    @GetMapping("admin/dashboard")
+    public String admin() {
+        return "admin"; 
+    }
     
-    
-
-
-
 
 }

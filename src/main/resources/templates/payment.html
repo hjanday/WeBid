@@ -287,7 +287,7 @@
                 .then((paymentResults) => {
                   alert("Thank you for your payment!");
                   console.log("Payment success");
-                  window.location.href = `/reciept?auctionId=${auctionID}`;
+                  window.location.href = `checkout/reciept?auctionId=${auctionID}`;
                 })
                 .catch((error) => {
                   console.error("Error during payment:", error);

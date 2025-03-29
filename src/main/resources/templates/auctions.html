@@ -212,6 +212,7 @@
       <nav>
         <a href="#" onclick="logout()">Logout</a>
         <a href="/createauction">Create Auction</a>
+        <a href="/admin">Admin</a>
       </nav>
     </header>
 
@@ -424,7 +425,7 @@
 
                 if (calculateRemainingTime(auc.endTime) === "Expired") {
                   alert("Auction is over! Please pay for your bid!");
-                  window.location.href = "/paynow";
+                  window.location.href = "checkout/paynow";
                 }
               }
             })
@@ -463,7 +464,7 @@
             })
             .then((auctionData) => {
               // Redirect to the payment page with auction ID as a URL parameter
-              window.location.href = `/paynow?auctionId=${selectedAuction.id}`;
+              window.location.href = `checkout/paynow?auctionId=${selectedAuction.id}`;
             })
             .catch((error) => {
               console.error("Error fetching auction data:", error);
@@ -491,7 +492,7 @@
                 return new Error(response);
               }
               alert("Dutch auction completed successfully!");
-              window.location.href = `/paynow?auctionId=${selectedAuction.id}`;
+              window.location.href = `checkout/paynow?auctionId=${selectedAuction.id}`;
               return response;
             })
             .catch((error) => {

@@ -220,7 +220,7 @@
 
         const total = winningPrice + shippingCost;
         alert(`Total cost is $${total.toFixed(2)} (including shipping).`);
-        window.location.href = `/payment?total=${total.toFixed(2)}&auctionId=${auctionID}`;
+        window.location.href = `checkout/payment?total=${total.toFixed(2)}&auctionId=${auctionID}`;
         
       });
   </script>
