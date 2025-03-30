@@ -11,7 +11,10 @@ import com.webid.webid.repository.UserRepository;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
+    
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
+    }
     // Get auction by ID
     public Optional<User> getUserbyEmail(String email) {
         String cleanEmail = email.replaceAll("^\"|\"$", "").trim();

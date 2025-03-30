@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,12 +26,14 @@ public class UserController {
 
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final UserService userService;
 
     public UserController(UserRepository userRepository,
             NotificationService notificationService,
             JwtService jwtService, UserService userService) {
         this.userRepository = userRepository;
         this.notificationService = notificationService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -47,6 +50,11 @@ public class UserController {
     @GetMapping("/notify")
     public String getNotif() {
         return notificationService.getNotification();
+    }
+    
+    @DeleteMapping("/{userID}")
+    public void deleteUser(@PathVariable long userID) {
+        userService.deleteUser(userID);
     }
 
     @PostMapping
