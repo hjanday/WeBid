@@ -463,6 +463,14 @@
               return response.json();
             })
             .then((auctionData) => {
+              if (
+          auctionData.auctionType &&
+          auctionData.auctionType.toLowerCase() === "forward" &&
+          calculateRemainingTime(auctionData.endTime) !== "Expired"
+        ) {
+          alert("Auction is still active. Payment is allowed only after the auction has expired.");
+          return;
+        }
               // Redirect to the payment page with auction ID as a URL parameter
               window.location.replace(`/checkout/paynow?auctionId=${selectedAuction.id}`);
             })
