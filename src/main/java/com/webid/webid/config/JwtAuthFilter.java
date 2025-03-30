@@ -48,6 +48,7 @@ public class JwtAuthFilter extends OncePerRequestFilter{
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
         }
+
         // If not found in the header, check the cookies
         if (token == null && request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
@@ -58,8 +59,7 @@ public class JwtAuthFilter extends OncePerRequestFilter{
             }
         }
         
-        // Proceed if we have a token
-        if (token != null) {
+            if (token != null) {
             // Check if the token is blacklisted
             if (logoutService.isTokenBlacklisted(token)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -81,9 +81,9 @@ public class JwtAuthFilter extends OncePerRequestFilter{
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
-            }
+            
         }
-        
+    }
         filterChain.doFilter(request, response);
     }
 }    

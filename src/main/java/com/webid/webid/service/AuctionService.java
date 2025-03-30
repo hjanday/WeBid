@@ -2,6 +2,7 @@ package com.webid.webid.service;
 
 import com.webid.webid.exceptions.ResourceAlreadyExistsException;
 import com.webid.webid.model.Auction;
+import com.webid.webid.model.RoleEnum;
 import com.webid.webid.model.User;
 import com.webid.webid.repository.AuctionRepository;
 
@@ -67,7 +68,7 @@ public class AuctionService {
         Auction auction = auctionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
 
-        if (auction.getOwner().getId().equals(user.getId())) {
+        if (auction.getOwner().getId().equals(user.getId()) || user.getRoles().get(0) == RoleEnum.ROLE_ADMIN) {
 
             // User should not be able to delete an active auciton.
 
