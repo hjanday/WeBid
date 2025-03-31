@@ -63,17 +63,18 @@ public class PaymentService {
     }
 
     public Payment makePayment(User currentUser, long auctionId, int shipDays) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Authentication authentication =
+        // SecurityContextHolder.getContext().getAuthentication();
 
-        String username = authentication.getName();
+        // String username = authentication.getName();
 
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        // User user = userRepository.findByEmail(username)
+        // .orElseThrow(() -> new RuntimeException("User not found"));
 
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
         // verify auction belongs to user
-        if (auction.getCurrentBidderID() != user.getId() || !auction.isOver()
+        if (auction.getCurrentBidderID() != currentUser.getId()
                 || auction.getEndTime().isAfter(Instant.now())) {
             return null;
         } else {
@@ -82,6 +83,10 @@ public class PaymentService {
                     auction.getCurrentBid(), auction.isExpeditedShipping(), auction.getExpeditedShippingCost(),
                     shipDays);
             paymentRepository.save(payment);
+
+            // after payment is made, complete the auction
+            auction.completeAuction();
+            auctionRepository.save(auction);
 
             // notify users that payment has been confirmed and bid is over
             // Find previous bidders and notify all.

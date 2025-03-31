@@ -44,7 +44,8 @@ public class PaymentController {
 
     // Check payment status
     @GetMapping("/status/{paymentId}")
-    public ResponseEntity<Map<String, String>> getPaymentStatus(@CurrentUser User currentUser, @PathVariable String paymentId) {
+    public ResponseEntity<Map<String, String>> getPaymentStatus(@CurrentUser User currentUser,
+            @PathVariable String paymentId) {
         String status = paymentStatus.getOrDefault(paymentId, "Not Found");
 
         Map<String, String> response = new HashMap<>();
