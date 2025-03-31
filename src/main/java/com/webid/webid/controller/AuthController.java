@@ -53,7 +53,7 @@ public class AuthController {
 		  cookie.setPath("/"); // cookie is available to all paths in your domain
 		  cookie.setHttpOnly(true); // prevents JavaScript access to the cookie
 		  cookie.setSecure(true); // ensure this is true if you use HTTPS
-		  cookie.setMaxAge((int)jwtService.getJwtTTL()); // ttl in seconds
+		  cookie.setMaxAge(3600); // ttl in seconds
 
 		LoginResponse login_response = new LoginResponse(jwtToken, jwtService.getJwtTTL(), authenticatedUser.getRoles());
 		// add cookie to servlet response
