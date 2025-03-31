@@ -25,7 +25,6 @@
       padding: 20px;
     }
     header {
-      max-width: 600px;
       margin: 0 auto 20px auto;
       display: flex;
       justify-content: space-between;
@@ -81,19 +80,18 @@
       background-color: #0056b3;
     }
   </style>
+    <header>
+      <div class="logo"><a href="/auth/auctions">WeBid</a></div>      
+      <div class="nav-buttons">
+        <a href="#" onclick="logout()">Logout</a>
+        <a href="/auth/auctions">View Auctions</a>
+      </div>
+    </header>
 </head>
 <script src="/logout.js"></script>
 <script src="/refreshToken.js"></script>
 <body>
   
-  <header>
-    <div class="logo">WeBid</div>
-    <div class="nav-buttons">
-      <a href="#" onclick="logout()">Logout</a>
-      <a href="/auth/auctions">View Auctions</a>
-    </div>
-  </header>
-
   <div class="container">
     <h1>Create Auction</h1>
     <form id="auctionForm">

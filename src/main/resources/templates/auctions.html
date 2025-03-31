@@ -9,7 +9,7 @@
   <script src="/refreshToken.js"></script>
   <body>
     <header>
-      <div class="logo">WeBid</div>
+      <div class="logo"><a href="/auth/auctions">WeBid</a></div>      
       <nav>
         <a href="#" onclick="logout()">Logout</a>
         <a href="/auth/createauction">Create Auction</a>
@@ -60,6 +60,7 @@
             step="0.01"
             id="faBidAmount"
             placeholder="Enter your bid amount"
+            required
           />
           <button id="faPlaceBidButton">Place Bid</button>
           <button id="payNowButton">Pay Now</button>

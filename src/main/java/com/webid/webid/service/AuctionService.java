@@ -149,6 +149,8 @@ public class AuctionService {
             auction.setCurrentBidderID(user.getId());
             auction.completeAuction();
             auctionRepository.save(auction);
+            notifService.notify(user, String.format("You have successfully purchased %s for $%.2f",
+            auction.getItemName(), auction.getCurrentBid()));
             return auction;
         } else {
             throw new IllegalArgumentException("You are the owner of the auction and cannot complete it.");

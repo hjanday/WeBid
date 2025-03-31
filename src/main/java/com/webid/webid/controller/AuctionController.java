@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,7 +49,14 @@ public class AuctionController {
     // Get auctions by item name queries
     @GetMapping("/search")
     public List<Auction> getAuctionByItemName(@CurrentUser User currentUser, @RequestParam String itemName) {
-        return auctionService.findAuctionByItemName(currentUser, itemName);
+        List<Auction> temp = auctionService.findAuctionByItemName(currentUser, itemName);
+        List<Auction> temp2 = new ArrayList<>();
+        for(Auction i: temp){
+            if(!i.isOver()){
+                temp2.add(i);
+            }
+        }
+        return temp2;
     }
 
     // Edits the expedited shipping of an auction to be true

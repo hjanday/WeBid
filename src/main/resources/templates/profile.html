@@ -9,16 +9,17 @@
   <link rel="stylesheet" href="/profile.css" />
   <script src="/logout.js"></script>
   <script src="/refreshToken.js"></script>
-  <body>
-    <header>
-      <div class="logo">WeBid</div>
-      <nav>
-        <a href="#" onclick="logout()">Logout</a>
-        <a href="/auth/auctions">View Auction</a>
-        <a href="/authentication/forgotpassword">Forgot your password?</a>
+  <header>
+    <div class="logo"><a href="/auth/auctions">WeBid</a></div>      
+    <nav>
+      <a href="#" onclick="logout()">Logout</a>
+      <a href="/auth/auctions">View Auction</a>
+      <a href="/authentication/forgotpassword">Forgot your password?</a>
 
-      </nav>
-    </header>
+    </nav>
+  </header>
+  <body>
+
     <div class="profile-content">
       <h1>Profile Information:</h1>
       <div class="profile-item">
@@ -55,7 +56,8 @@
       </div>
     </div>
     <div class="notifications">
-      <h1>Notifications:</h2>
+      <h1>Notifications:</h1>
+      <button id="clearNotificationsBtn">Clear All</button>
       <ul id="notificationList"></ul>
     </div>
 

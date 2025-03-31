@@ -1,8 +1,9 @@
+const token = localStorage.getItem("jwtToken"); // Assuming token is stored in local storage
+
 document.addEventListener("DOMContentLoaded", () => {
 
     // Obtaining Profile information
     const userUrl = "http://localhost:8080/api/users/currentuser";
-    const token = localStorage.getItem("jwtToken"); // Assuming token is stored in local storage
 
     fetch(userUrl, {
         method: "GET",
@@ -64,5 +65,35 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch(error => {
         console.error("Error fetching notifications:", error);
         notifList.innerHTML = "User has no notifications ...";
+    });
+});
+
+// deleting notifications
+document.getElementById("clearNotificationsBtn").addEventListener("click", () => {
+    const token = localStorage.getItem("jwtToken");
+    const notifUrl = "http://localhost:8080/api/notification/deleteAll";
+
+    fetch(notifUrl, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(errorMessage => { 
+                throw new Error(errorMessage || "Failed to delete notifications"); 
+            });
+        }
+        return response.text(); // Expecting plain text response
+    })
+    .then(message => {
+        alert(message); // Displays "Notifications successfully deleted"
+        document.getElementById("notificationList").innerHTML = "<li>User has no notifications ...</li>"; // Properly updates UI
+    })
+    .catch(error => {
+        console.error("Error deleting notifications:", error);
+        alert(error.message);
     });
 });

@@ -80,36 +80,48 @@ document.getElementById("auctionSection").style.display = "block";
 // edit dutch
 document
 .getElementById("editDutchBtn")
-.addEventListener("click", function () {
+  .addEventListener("click", function () {
     if (!selectedAuction) return;
+    
     var editDutchUrl = `/api/auctions/dutch/${selectedAuction.id}`;
+
     fetch(editDutchUrl, {
-    method: "PUT",
-    headers: {
+      method: "PUT",
+      headers: {
         Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
-    },
-    }).then((response) => {
-    if (!response.ok) {
-        alert("You are not authorized to edit this auction!");
-        return response.text().then((text) => {
-        throw new Error(text);
-        });
-    }
-    alert("Dutch auction decremented successfully!");
+        "Content-Type": "application/json",
+      },
     })
-    .then((data) => {
-        // Update UI with new auction information
-        const newCurrentBid =
-        data.currentBid != null && data.currentBid !== ""
-            ? "$" + data.currentBid.toFixed(2)
-            : "No Bid Yet";
-        document.getElementById("faCurrentPrice").textContent =
-            "Current Price: " + newCurrentBid;
+    .then(response => {
+      if (!response.ok) {
+        return response.text().then(text => {
+          throw new Error(text); // Extract error message for alert
+        });
+      }
+      return response.json(); // <-- Parse response JSON properly
+    })
+    .then(data => {
+      alert("Dutch auction decremented successfully!");
+      
+      // Ensure data is available before updating UI
+      if (!data || !data.currentBid) {
+        throw new Error("Invalid response data");
+      }
+
+      // Update UI with new auction information
+      const newCurrentBid =
+        data.currentBid !== null && data.currentBid !== ""
+          ? "$" + data.currentBid.toFixed(2)
+          : "No Bid Yet";
+
+      document.getElementById("faCurrentPrice").textContent =
+        "Current Price: " + newCurrentBid;
     })
     .catch(error => {
-        console.error("Request failed: ", error);
+      console.error("Request failed: ", error);
+      alert("Error: " + error.message);
     });
-});
+  });
 
 // place bid
 document
@@ -117,6 +129,10 @@ document
 .addEventListener("click", function () {
     if (!selectedAuction) return;
     const bidAmount = document.getElementById("faBidAmount").value;
+    if (bidAmount === ""){
+        alert("Please enter a value")
+        return;
+    }
 
     const token = localStorage.getItem("jwtToken");
     if (!token) {
@@ -135,6 +151,7 @@ document
         if (!response.ok) {
         // If response is not OK, handle the error
         return response.text().then((text) => {
+            console.log(text);
             throw new Error(text); // The error message will be in the body
         });
         } else {
@@ -165,7 +182,7 @@ document
 
         if (calculateRemainingTime(auc.endTime) === "Expired") {
             alert("Auction is over! Please pay for your bid!");
-            window.location.href = "/paynow";
+            window.location.href = "/checkout/paynow";
         }
         }
     })
@@ -233,7 +250,7 @@ document
         }
     
         // Redirect to the payment page with auction ID as a URL parameter
-        window.location.href = `/paynow?auctionId=${selectedAuction.id}`;
+        window.location.href = `/checkout/paynow?auctionId=${selectedAuction.id}`;
     })
     .catch(error => {
         console.error("Error fetching data:", error);
@@ -264,7 +281,7 @@ document
               });
         }
         alert("Dutch auction completed successfully!");
-        window.location.href = `/paynow?auctionId=${selectedAuction.id}`;
+        window.location.href = `/checkout/paynow?auctionId=${selectedAuction.id}`;
         return response;
     })
     .catch((error) => {
