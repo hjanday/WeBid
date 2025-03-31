@@ -38,7 +38,7 @@ public class PaymentService {
      */
     public Payment createPayment(User currentUser, Long userID, Long itemID, String auctionType, double itemPrice,
             boolean expeditedShipping, double expeditedShippingCost, int shippingDays) {
-        Payment payment = Payment.create(userID, itemID, auctionType, itemPrice, expeditedShipping,
+        Payment payment = Payment.create(currentUser, itemID, auctionType, itemPrice, expeditedShipping,
                 expeditedShippingCost, shippingDays);
         return paymentRepository.save(payment);
     }
@@ -78,7 +78,7 @@ public class PaymentService {
             return null;
         } else {
 
-            Payment payment = Payment.create(user.getId(), auction.getId(), auction.getAuctionType().name(),
+            Payment payment = Payment.create(currentUser, auction.getId(), auction.getAuctionType().name(),
                     auction.getCurrentBid(), auction.isExpeditedShipping(), auction.getExpeditedShippingCost(),
                     shipDays);
             paymentRepository.save(payment);
