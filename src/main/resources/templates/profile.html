@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="profile.css" />
+  </head>
+  <script src="/logout.js"></script>
+  <body>
+    <header>
+      <div class="logo">WeBid</div>
+      <nav>
+        <a href="#" onclick="logout()">Logout</a>
+        <a href="/createauction">Create Auction</a>
+      </nav>
+    </header>
+    <div class="profile-content">
+      <h1>Profile Information:</h1>
+      <div class="profile-item">
+        <h2>User Email:</h2>
+        <h2 id="userEmail"></h2>
+      </div>
+      <div class="profile-item">
+        <h3>UserID:</h3>
+        <h3 id="userid"></h3>
+      </div>
+    </div>
+    <div class="notifications">
+      <h1>Notifications:</h2>
+      <ul id="notificationList"></ul>
+    </div>
+
+    <script src="/profile.js"></script>
+  </body>
+</html>

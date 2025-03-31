@@ -2,6 +2,7 @@ package com.webid.webid.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -10,6 +11,8 @@ import com.webid.webid.security.CurrentUser;
 import com.webid.webid.service.NotificationService;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/api/notification")
@@ -31,4 +34,15 @@ public class NotificationController {
 
         return ResponseEntity.ok(notifications);
     }
+
+    @PostMapping("completed/{auctionID}")
+    public ResponseEntity<Object> completedAuction(@PathVariable long auctionID) {
+        try {
+            notificationService.notifyEnded(auctionID);
+            return ResponseEntity.ok("Notifications have been sent regarding the ending of the auction.");
+        } catch (Error e) {
+            return ResponseEntity.badRequest().body("An error occured: " + e.getMessage());
+        }
+    }
+
 }

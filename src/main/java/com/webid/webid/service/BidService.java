@@ -69,6 +69,10 @@ public class BidService {
             auction.setCurrentBidderID(user.getId());
             auctionRepository.save(auction);
 
+            // Notify the owner of the auction
+            notifService.notify(auction.getOwner(), String.format("A new bid of $%.2f has been placed on %s",
+                    auction.getCurrentBid(), auction.getItemName()));
+
             // Find previous bidders and notify all.
             List<Bid> prevBidders = bidRepository.findByAuctionId(auction.getId());
             Set<User> prevUsers = prevBidders.stream()

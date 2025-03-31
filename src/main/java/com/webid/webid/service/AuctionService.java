@@ -24,7 +24,7 @@ public class AuctionService {
 
     @Autowired
     private AuctionRepository auctionRepository;
-    // private NotificationService notifService;
+    private NotificationService notifService;
 
     // Get all auctions
     public List<Auction> getAllAuctions(User user) {
@@ -58,6 +58,8 @@ public class AuctionService {
         auction.setStartTime(Instant.now());
         auction.setEndTime(Instant.now().plus(24, ChronoUnit.HOURS));
 
+        // send notification to user that they have created a notification
+        notifService.notify(user, "You have successfully created the auction: " + auction.getItemName());
         return auctionRepository.save(auction);
 
     }
