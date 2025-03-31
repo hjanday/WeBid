@@ -17,8 +17,15 @@ document.addEventListener("DOMContentLoaded", () => {
         return response.json();
     })
     .then(userData => {
-        document.getElementById("userEmail").textContent = userData.username;
+        document.getElementById("userEmail").textContent = userData.email;
         document.getElementById("userid").textContent = userData.id;
+        document.getElementById("firstName").textContent = userData.firstName;
+        document.getElementById("lastName").textContent = userData.lastName;
+        document.getElementById("city").textContent = userData.city;
+        document.getElementById("country").textContent = userData.country;
+        document.getElementById("postalCode").textContent = userData.postalCode;
+        document.getElementById("address").textContent = userData.address;
+
     })
     .catch(error => {
         console.error("Error fetching user data:", error);

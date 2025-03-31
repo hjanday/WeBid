@@ -27,32 +27,32 @@ public class HomeController {
         return "forgot_password";
     }
 
-    @GetMapping("auth/auctions")
+    @GetMapping("/auth/auctions")
     public String auctions() {
         return "auctions";
     }
 
-    @GetMapping("auth/createauction")
+    @GetMapping("/auth/createauction")
     public String createauction() {
         return "create_auction";
     }
 
-    @GetMapping("checkout/paynow")
+    @GetMapping("/checkout/paynow")
     public String paynow() {
         return "paynow";
     }
 
-    @GetMapping("checkout/payment")
+    @GetMapping("/checkout/payment")
     public String payment() {
         return "payment";
     }
 
-    @GetMapping("checkout/reciept")
+    @GetMapping("/checkout/reciept")
     public String reciept() {
         return "reciept";
     }
 
-    @GetMapping("admin/dashboard")
+    @GetMapping("/admin/dashboard")
     public String admin() {
         return "admin";
     }
