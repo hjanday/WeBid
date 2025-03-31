@@ -206,6 +206,16 @@ document
         })
     ])
     .then(([auctionData, userData]) => {
+        // check if auction is expired and is the correct type
+        if (
+            auctionData.auctionType &&
+            auctionData.auctionType.toLowerCase() === "forward" &&
+            calculateRemainingTime(auctionData.endTime) !== "Expired"
+          ) {
+            alert("Auction is still active. Payment is allowed only after the auction has expired.");
+            return;
+          }
+
         if (auctionData.currentBidderID !== userData.id) {
             alert("You are not the winner of this auction.");
             return;
