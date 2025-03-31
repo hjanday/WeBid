@@ -1,21 +1,11 @@
 package com.webid.paymentservice.repository;
 
-import com.webid.paymentservice.model.Payment;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-
-import java.util.Optional;
+import com.webid.paymentservice.model.Payment;
 
 @Repository
-public interface PaymentRepository extends JpaRepository<Payment, Long> {
-
-    // Optional: You can define custom query methods as needed
-
-    // @Query("SELECT p FROM Payment p WHERE p.auctionID = :auctionID")
-    // Optional<Payment> findByAuctionId(@Param("auctionID") Long auctionID);
-    // List<Auction> findByStatus(String status);
+public interface PaymentRepository extends JpaRepository<Payment, Integer>{
+    Payment findByAuctionID(int auctionID);
 }

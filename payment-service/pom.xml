@@ -33,10 +33,10 @@
         </dependency>
 
         <!-- Database (PostgreSQL) -->
-        <!-- <dependency>
+        <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-        </dependency> -->
+        </dependency>
 
         <!-- Lombok (for reducing boilerplate code) -->
         <dependency>
