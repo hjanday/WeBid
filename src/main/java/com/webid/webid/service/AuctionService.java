@@ -151,7 +151,7 @@ public class AuctionService {
             auctionRepository.save(auction);
             return auction;
         } else {
-            throw new IllegalArgumentException("Auction could not be found.");
+            throw new IllegalArgumentException("You are the owner of the auction and cannot complete it.");
         }
     }
 

@@ -98,15 +98,6 @@ document
     alert("Dutch auction decremented successfully!");
     })
     .then((data) => {
-        // If the response was successful, handle the bid data
-        if (data && data.id) {
-        // Assuming 'data' is a Bid object returned by the backend
-        alert(
-            `Bid placed successfully! Server response: ${JSON.stringify(
-            data
-            )}`
-        );
-
         // Update UI with new auction information
         const newCurrentBid =
         data.currentBid != null && data.currentBid !== ""
@@ -114,12 +105,9 @@ document
             : "No Bid Yet";
         document.getElementById("faCurrentPrice").textContent =
             "Current Price: " + newCurrentBid;
-        document.getElementById("faHighestBidder").textContent =
-            "Highest Bidder: " + (auc.currentBidderID || "Unknown");
-        }
     })
     .catch(error => {
-        console.error("Request failed:", error);
+        console.error("Request failed: ", error);
     });
 });
 
@@ -271,7 +259,9 @@ document
     .then((response) => {
         console.log(response);
         if (!response.ok) {
-            throw new Error(response);
+            return response.text().then(text => {
+                throw new Error(text);  // Extract error message from backend
+              });
         }
         alert("Dutch auction completed successfully!");
         window.location.href = `/paynow?auctionId=${selectedAuction.id}`;
