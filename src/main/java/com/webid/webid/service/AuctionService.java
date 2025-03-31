@@ -99,13 +99,13 @@ public class AuctionService {
         // get auction
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
         if (!existingAuction.isPresent()) {
-            return null;
+            throw new IllegalArgumentException("Auction does not exist.");
         }
         Auction auction = existingAuction.get();
 
         // verify dutch typing
         if (!auction.getAuctionType().name().equals("DUTCH")) {
-            return null;
+            throw new IllegalArgumentException("Auction is not of dutch type.");
         }
 
         // only owner may update the auction
@@ -125,7 +125,9 @@ public class AuctionService {
                 return auction;
             }
         }
-        return null;
+
+        // throw error message if auction couldn't be returned
+        throw new IllegalArgumentException("Only the owner can edit a dutch auction");
     }
 
     // Dutch Completes
@@ -134,13 +136,13 @@ public class AuctionService {
         // get auction and user for userID
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
         if (!existingAuction.isPresent()) {
-            return null;
+            throw new IllegalArgumentException("Auction does not exist.");
         }
         Auction auction = existingAuction.get();
 
         // verify dutch typing
         if (!auction.getAuctionType().name().equals("DUTCH")) {
-            return null;
+            throw new IllegalArgumentException("Auction is not of dutch type.");
         }
         // only non owner may complete the auction
         if (!auction.getOwner().getId().equals(user.getId())) {
@@ -148,8 +150,9 @@ public class AuctionService {
             auction.completeAuction();
             auctionRepository.save(auction);
             return auction;
+        } else {
+            throw new IllegalArgumentException("Auction could not be found.");
         }
-        return null;
     }
 
     public void setExpeditedShipping(long auctionID, boolean expShip, User user) {
