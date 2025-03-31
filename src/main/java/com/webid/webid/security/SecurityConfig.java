@@ -43,7 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/api/notification/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/", "/api/payments/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/", "/checkout/**").hasAuthority("ROLE_USER")
-                        .requestMatchers("/", "/profile").hasAuthority("ROLE_USER")
+                        .requestMatchers("/", "/profile/**").hasAuthority("ROLE_USER")
                         // change to permitall for testing
                         .requestMatchers("/", "/admin/**").hasAuthority("ROLE_ADMIN")
                         // add all the other routes to request matchers for user access?
