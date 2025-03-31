@@ -57,4 +57,8 @@ public class HomeController {
         return "admin";
     }
 
+    @GetMapping("/profile")
+    public String profile() {
+        return "profile";
+    }
 }
