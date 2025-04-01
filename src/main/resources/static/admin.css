@@ -19,11 +19,16 @@ header {
 }
 
 header .logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  text-align: center; 
 }
 
+header .logo p {
+  margin-top: 0.5rem; 
+  font-size: 1rem;
+}
 header nav a {
   text-decoration: none;
   color: #fff;

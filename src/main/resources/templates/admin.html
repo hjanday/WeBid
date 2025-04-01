@@ -4,16 +4,19 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="/admin.css" />
     <title>WeBid Dashboard</title>
+    <header>
+      <div class="logo">
+        <a href="/admin/dashboard">
+          <img src="/logo.png" alt="WeBid Logo" />
+        </a>
+        <p>Admin</p>
+      </div>
+    </header>
   </head>
   <body>
-    <header>
-      <script src="/logout.js"></script>
-      <script src="/refreshToken.js"></script>
-      <div class="logo"><a href="">WeBid Admin</a></div>
-      <nav>
-        <a href="#" onclick="logout()">Logout</a>
-      </nav>
-    </header>
+    <nav>
+      <a href="#" onclick="logout()">Logout</a>
+    </nav>
     <h1>WeBid Admin Management Page</h1>
 
     <!-- Control Buttons -->
