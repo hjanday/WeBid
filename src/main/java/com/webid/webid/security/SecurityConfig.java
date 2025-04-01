@@ -2,6 +2,7 @@ package com.webid.webid.security;
 
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -34,6 +35,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // allow requests for users and admins
+                        // .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/*.css", "/*.js").permitAll()
                         .requestMatchers("/", "/auth/**").permitAll()
                         .requestMatchers("/", "/authentication/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("ROLE_ADMIN")

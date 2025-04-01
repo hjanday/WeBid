@@ -4,6 +4,8 @@ spring:
     username: ${SPRING_DATASOURCE_USER}
     password: ${SPRING_DATASOURCE_PASS}
 
+
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -26,3 +28,4 @@ server:
     include-message: always
     include-binding-errors: always
   port: 8080
+
