@@ -1,69 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Create Auction</title>
-  <link rel="stylesheet" href="/createauction.css">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Create Auction</title>
+    <link rel="stylesheet" href="/createauction.css" />
     <header>
-      <div class="logo"><a href="/auth/auctions">WeBid</a></div>      
+      <div class="logo">
+        <a href="/auth/auctions">
+          <img src="/logo.png" alt="WeBid Logo" />
+        </a>
+      </div>
       <div class="nav-buttons">
         <a href="#" onclick="logout()">Logout</a>
         <a href="/auth/auctions">View Auctions</a>
       </div>
     </header>
-</head>
-<script src="/logout.js"></script>
-<script src="/refreshToken.js"></script>
-<body>
-  
-  <div class="container">
-    <h1>Create Auction</h1>
-    <form id="auctionForm">
-      <div class="form-group">
-        <label for="auctionType">Auction Type *</label>
-        <select id="auctionType" name="auctionType" required>
-          <option value="FORWARD">FORWARD</option>
-          <option value="DUTCH">DUTCH</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="itemName">Item Name *</label>
-        <input type="text" id="itemName" name="itemName" required>
-      </div>
-      <div class="form-group">
-        <label for="description">Description *</label>
-        <textarea id="description" name="description" rows="3" required></textarea>
-      </div>
+  </head>
+  <script src="/logout.js"></script>
+  <script src="/refreshToken.js"></script>
+  <body>
+    <div class="container">
+      <h1>Create Auction</h1>
+      <form id="auctionForm">
+        <div class="form-group">
+          <label for="auctionType">Auction Type *</label>
+          <select id="auctionType" name="auctionType" required>
+            <option value="FORWARD">FORWARD</option>
+            <option value="DUTCH">DUTCH</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="itemName">Item Name *</label>
+          <input type="text" id="itemName" name="itemName" required />
+        </div>
+        <div class="form-group">
+          <label for="description">Description *</label>
+          <textarea
+            id="description"
+            name="description"
+            rows="3"
+            required
+          ></textarea>
+        </div>
 
-      <div class="form-group" id="lowestBidGroup">
-        <label for="lowestBid">Lowest Bid *</label>
-        <input type="number" step="0.01" id="lowestBid" name="lowestBid" required>
-      </div>
+        <div class="form-group" id="lowestBidGroup">
+          <label for="lowestBid">Lowest Bid *</label>
+          <input
+            type="number"
+            step="0.01"
+            id="lowestBid"
+            name="lowestBid"
+            required
+          />
+        </div>
 
-      <div class="form-group">
-        <label for="bidIncrement">Bid Increment *</label>
-        <input type="number" step="0.01" id="bidIncrement" name="bidIncrement" required>
-      </div>
-      
-      <div class="form-group" id="currentBidGroup" style="display: none;">
-        <label for="currentBid">Current Bid *</label>
-        <input type="number" step="0.01" id="currentBid" name="currentBid">
-      </div>
+        <div class="form-group">
+          <label for="bidIncrement">Bid Increment *</label>
+          <input
+            type="number"
+            step="0.01"
+            id="bidIncrement"
+            name="bidIncrement"
+            required
+          />
+        </div>
 
-      <div class="form-group">
-        <label for="expeditedShippingCost">Expedited Shipping Cost *</label>
-        <input type="number" step="0.01" id="expeditedShippingCost" name="expeditedShippingCost" required>
-      </div>
-      <!-- <div class="form-group">
+        <div class="form-group" id="currentBidGroup" style="display: none">
+          <label for="currentBid">Current Bid *</label>
+          <input type="number" step="0.01" id="currentBid" name="currentBid" />
+        </div>
+
+        <div class="form-group">
+          <label for="expeditedShippingCost">Expedited Shipping Cost *</label>
+          <input
+            type="number"
+            step="0.01"
+            id="expeditedShippingCost"
+            name="expeditedShippingCost"
+            required
+          />
+        </div>
+        <!-- <div class="form-group">
         <label>
           <input type="checkbox" id="expeditedShipping" name="expeditedShipping">
           Expedited Shipping?
         </label>
       </div> -->
-      <button type="submit">Create Auction</button>
-    </form>
-    <script src="/createAuction.js"></script>
-  </div>
-  
-</body>
+        <button type="submit">Create Auction</button>
+      </form>
+      <script src="/createAuction.js"></script>
+    </div>
+  </body>
 </html>

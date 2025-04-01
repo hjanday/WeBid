@@ -1,63 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Auction Ended – Pay Now</title> 
+  <head>
+    <meta charset="UTF-8" />
+    <title>Auction Ended – Pay Now</title>
 
     <header>
       <link rel="stylesheet" href="/paynow.css" />
-      <div class="logo"><a href="/auth/auctions">WeBid</a></div>      
+      <div class="logo">
+        <a href="/auth/auctions">
+          <img src="/logo.png" alt="WeBid Logo" />
+        </a>
+      </div>
     </header>
-</head>
-<body>
-  <script src="/refreshToken.js"></script>
+  </head>
+  <body>
+    <script src="/refreshToken.js"></script>
 
+    <div class="container">
+      <h1>Bidding Ended!</h1>
 
-  
-  <div class="container">
-    <h1>Bidding Ended!</h1>
+      <div class="item-description">
+        <p>
+          <strong>Item Name:</strong>
+          <span id="itemName">Loading...</span>
+        </p>
+        <p>
+          <strong>Item Description:</strong>
+          <span id="itemDesc">Loading...</span>
+        </p>
+        <p class="price-info">
+          Winning Price: $<span id="winningPrice">0</span>
+        </p>
+        <p class="price-info">
+          Highest Bidder: <span id="highestBidder">???</span>
+        </p>
+      </div>
 
- 
-    <div class="item-description">
-      <p>
-        <strong>Item Name:</strong>
-        <span id="itemName">Loading...</span>
-      </p>
-      <p>
-        <strong>Item Description:</strong>
-        <span id="itemDesc">Loading...</span>
-      </p>
-      <p class="price-info">
-        Winning Price: $<span id="winningPrice">0</span>
-      </p>
-      <p class="price-info">
-        Highest Bidder: <span id="highestBidder">???</span>
-      </p>
+      <div class="shipping-options">
+        <p><strong>Shipping Options:</strong></p>
+        <label>
+          <input
+            type="radio"
+            name="shippingOption"
+            value="0"
+            amount="0"
+            checked
+          />
+          Standard Shipping - Free
+        </label>
+        <label>
+          <input type="radio" name="shippingOption" value="1" amount="0" />
+          <span id="expship_label">Express Shipping - $?</span>
+        </label>
+        <span id="radioSelected">No additional fees!</span>
+      </div>
+
+      <button class="pay-now-btn" id="payNowButton">Pay Now</button>
+      <script src="/paynow.js"></script>
     </div>
-
-    
-    <div class="shipping-options">
-      <p><strong>Shipping Options:</strong></p>
-      <label>
-        <input
-          type="radio"
-          name="shippingOption"
-          value="0"
-          amount="0"
-          checked
-        />
-        Standard Shipping - Free
-      </label>
-      <label>
-        <input type="radio" name="shippingOption" value="1" amount="0" />
-        <span id="expship_label">Express Shipping - $?</span>
-      </label>
-      <span id="radioSelected">No additional fees!</span>
-    </div>
-
-    
-    <button class="pay-now-btn" id="payNowButton">Pay Now</button>
-    <script src="/paynow.js"></script>
-  </div>
-</body>
+  </body>
 </html>

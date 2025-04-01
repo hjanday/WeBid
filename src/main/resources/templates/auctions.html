@@ -9,7 +9,11 @@
   <script src="/refreshToken.js"></script>
   <body>
     <header>
-      <div class="logo"><a href="/auth/auctions">WeBid</a></div>      
+      <div class="logo">
+        <a href="/auth/auctions">
+          <img src="/logo.png" alt="WeBid Logo" />
+        </a>
+      </div>
       <nav>
         <a href="#" onclick="logout()">Logout</a>
         <a href="/auth/createauction">Create Auction</a>
@@ -43,7 +47,7 @@
     <button id="bidNowButton">Bid Now</button>
 
     <div id="auctionSection">
-      <h2>Screen for Bidding on Auctions</h2>
+      <h2>Bidding on Auction:</h2>
       <div class="forward-container">
         <div class="forward-left">
           <h3 id="faItemName"></h3>
@@ -62,10 +66,14 @@
             placeholder="Enter your bid amount"
             required
           />
-          <button id="faPlaceBidButton">Place Bid</button>
-          <button id="payNowButton">Pay Now</button>
-          <button id="buyNowButton">Buy Now</button>
-          <button id="editDutchBtn">Edit Dutch Auction</button>
+          <div class="fwdButtons">
+            <button id="faPlaceBidButton">Place Bid</button>
+            <button id="payNowButton">Pay Now</button>
+          </div>
+          <div class="dthButtons">
+            <button id="buyNowButton">Buy Now</button>
+            <button id="editDutchBtn">Edit Dutch Auction</button>
+          </div>
         </div>
       </div>
     </div>

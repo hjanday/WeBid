@@ -53,12 +53,13 @@ document.addEventListener("DOMContentLoaded", () => {
         notifList.innerHTML = ""; // Clear existing notifications
 
         if (notifications.length === 0) {
-            notifList.innerHTML = "<li>No notifications</li>";
+            notifList.innerHTML = "No notifications";
         } else {
             notifications.forEach(notif => {
-                const li = document.createElement("li");
-                li.textContent = notif;
-                notifList.appendChild(li);
+                const notifItem = document.createElement("p"); 
+                notifItem.textContent = notif;
+                notifItem.classList.add("notification-item");
+                notifList.appendChild(notifItem);
             });
         }
     })

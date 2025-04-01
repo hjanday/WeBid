@@ -30,6 +30,7 @@ function showauctionSection(auction) {
     document.getElementById("buyNowButton").style.display = "none";
     document.getElementById("faPlaceBidButton").style.display = "block";
     document.getElementById("payNowButton").style.display = "block";
+    document.getElementById("editDutchBtn").style.display = "none";
     document.getElementById("faItemName").textContent =
         auction.itemName || "";
     document.getElementById("faDescription").textContent =

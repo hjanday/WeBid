@@ -10,16 +10,18 @@
   <script src="/logout.js"></script>
   <script src="/refreshToken.js"></script>
   <header>
-    <div class="logo"><a href="/auth/auctions">WeBid</a></div>      
+    <div class="logo">
+      <a href="/auth/auctions">
+        <img src="/logo.png" alt="WeBid Logo" />
+      </a>
+    </div>
     <nav>
       <a href="#" onclick="logout()">Logout</a>
       <a href="/auth/auctions">View Auction</a>
       <a href="/authentication/forgotpassword">Forgot your password?</a>
-
     </nav>
   </header>
   <body>
-
     <div class="profile-content">
       <h1>Profile Information:</h1>
       <div class="profile-item">
@@ -56,9 +58,10 @@
       </div>
     </div>
     <div class="notifications">
-      <h1>Notifications:</h1>
-      <button id="clearNotificationsBtn">Clear All</button>
-      <ul id="notificationList"></ul>
+      <h1>
+        Notifications: <button id="clearNotificationsBtn">Clear All</button>
+      </h1>
+      <div id="notificationList"></div>
     </div>
 
     <script src="/profile.js"></script>

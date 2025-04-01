@@ -1,67 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>WeBid – Payment Page</title>
-  <link rel="stylesheet" href="/payment.css" />
+  <head>
+    <meta charset="UTF-8" />
+    <title>WeBid – Payment Page</title>
+    <link rel="stylesheet" href="/payment.css" />
     <header>
-      <div class="logo"><a href="/auth/auctions">WeBid</a></div>      
-    </header>
-</head>
-<body>
-  <script src="/refreshToken.js"></script>
-
-
-  <div class="flex-container">
-  
-    <div class="left-col">
-      <h2>User Information</h2>
-      <div class="info-block">
-        <p><strong>First Name:</strong> <span id="firstName">Loading...</span></p>
-        <p><strong>Last Name:</strong> <span id="lastName">Loading...</span></p>
-        <p><strong>Email:</strong> <span id="email">Loading...</span></p>
-        <p><strong>Country:</strong> <span id="country">Loading...</span></p>
-        <p><strong>City:</strong> <span id="city">Loading...</span></p>
-        <p><strong>Postal Code:</strong> <span id="postalCode">Loading...</span></p>
+      <div class="logo">
+        <a href="/auth/auctions">
+          <img src="/logo.png" alt="WeBid Logo" />
+        </a>
       </div>
-      <hr/>
-      <h2>Payment Summary</h2>
-      <p class="price-info">Total Due: $<span id="totalAmount">0</span></p>
+    </header>
+  </head>
+  <body>
+    <script src="/refreshToken.js"></script>
+
+    <div class="flex-container">
+      <div class="left-col">
+        <h2>User Information</h2>
+        <div class="info-block">
+          <p>
+            <strong>First Name:</strong> <span id="firstName">Loading...</span>
+          </p>
+          <p>
+            <strong>Last Name:</strong> <span id="lastName">Loading...</span>
+          </p>
+          <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+          <p><strong>Country:</strong> <span id="country">Loading...</span></p>
+          <p><strong>City:</strong> <span id="city">Loading...</span></p>
+          <p>
+            <strong>Postal Code:</strong>
+            <span id="postalCode">Loading...</span>
+          </p>
+        </div>
+        <hr />
+        <h2>Payment Summary</h2>
+        <p class="price-info">Total Due: $<span id="totalAmount">0</span></p>
+      </div>
+
+      <div class="right-col">
+        <h2>Payment Details</h2>
+        <form id="paymentForm">
+          <div class="form-group">
+            <label for="cardHolder">Cardholder Name*</label>
+            <input type="text" id="cardHolder" required />
+          </div>
+          <div class="form-group">
+            <label for="cardNumber">Card Number*</label>
+            <input type="text" id="cardNumber" required />
+          </div>
+          <div class="form-group">
+            <label for="expDate">Expiration Date (MM/YY)*</label>
+            <input type="text" id="expDate" required />
+          </div>
+          <div class="form-group">
+            <label for="cvv">CVV*</label>
+            <input type="text" id="cvv" required />
+          </div>
+
+          <div class="terms-container">
+            <label for="termsCheck">
+              <input type="checkbox" id="termsCheck" required />
+              I agree to WeBid's Auction Terms and Conditions
+            </label>
+          </div>
+
+          <button class="pay-now-btn" type="submit">Pay Now</button>
+        </form>
+        <script src="/payment.js"></script>
+      </div>
     </div>
-
- 
-    <div class="right-col">
-      <h2>Payment Details</h2>
-      <form id="paymentForm">
-        <div class="form-group">
-          <label for="cardHolder">Cardholder Name*</label>
-          <input type="text" id="cardHolder" required />
-        </div>
-        <div class="form-group">
-          <label for="cardNumber">Card Number*</label>
-          <input type="text" id="cardNumber" required />
-        </div>
-        <div class="form-group">
-          <label for="expDate">Expiration Date (MM/YY)*</label>
-          <input type="text" id="expDate" required />
-        </div>
-        <div class="form-group">
-          <label for="cvv">CVV*</label>
-          <input type="text" id="cvv" required />
-        </div>
-
-        
-        <div class="terms-container">
-          <label for="termsCheck">
-            <input type="checkbox" id="termsCheck" required />
-            I agree to WeBid's Auction Terms and Conditions
-          </label>
-        </div>
-
-        <button class="pay-now-btn" type="submit">Pay Now</button>
-      </form>
-      <script src="/payment.js"></script>
-    </div>
-  </div>
-</body>
+  </body>
 </html>

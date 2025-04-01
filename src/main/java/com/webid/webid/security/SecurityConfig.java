@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // allow requests for users and admins
                         // .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/*.css", "/*.js").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/*.css", "/*.js", "/logo.png").permitAll()
                         .requestMatchers("/", "/auth/**").permitAll()
                         .requestMatchers("/", "/authentication/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("ROLE_ADMIN")
