@@ -123,6 +123,8 @@ public class AuctionService {
                 }
                 auctionRepository.save(auction);
                 return auction;
+            } else {
+                throw new IllegalArgumentException("Auction cannot go lower.");
             }
         }
 
@@ -147,10 +149,10 @@ public class AuctionService {
         // only non owner may complete the auction
         if (!auction.getOwner().getId().equals(user.getId())) {
             auction.setCurrentBidderID(user.getId());
-            auction.completeAuction();
             auctionRepository.save(auction);
+            // send the notification to the user that immediately bought the auction
             notifService.notify(user, String.format("You have successfully purchased %s for $%.2f",
-            auction.getItemName(), auction.getCurrentBid()));
+                    auction.getItemName(), auction.getCurrentBid()));
             return auction;
         } else {
             throw new IllegalArgumentException("You are the owner of the auction and cannot complete it.");

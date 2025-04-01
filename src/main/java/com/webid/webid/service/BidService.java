@@ -96,7 +96,13 @@ public class BidService {
 
             return bid;
         } else {
-            throw new IllegalArgumentException("The bid could not be created ... ");
+            if (amount <= auction.getCurrentBid()) {
+                throw new IllegalArgumentException("You must enter a higher bid.");
+            } else if (amount < auction.getCurrentBid() + auction.getBidIncrement()) {
+                throw new IllegalArgumentException("You must enter a bid higher than the increment.");
+            } else {
+                throw new IllegalArgumentException("The bid could not be created ... ");
+            }
         }
     }
 

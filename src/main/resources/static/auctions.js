@@ -30,11 +30,14 @@ function showauctionSection(auction) {
     document.getElementById("buyNowButton").style.display = "none";
     document.getElementById("faPlaceBidButton").style.display = "block";
     document.getElementById("payNowButton").style.display = "block";
+    document.getElementById("faBidAmount").style.display = "block";
     document.getElementById("editDutchBtn").style.display = "none";
     document.getElementById("faItemName").textContent =
         auction.itemName || "";
     document.getElementById("faDescription").textContent =
         "Description: " + (auction.description || "N/A");
+        document.getElementById("bidIncrement").textContent =
+        "Bid Increment: $" + (auction.bidIncrement || "N/A");
     document.getElementById("faShippingPrice").textContent =
         "Shipping Price: $" + auction.expeditedShippingCost; // Adjust if needed
 
@@ -65,6 +68,8 @@ document.getElementById("editDutchBtn").style.display = "block";
 document.getElementById("faItemName").textContent =
     auction.itemName || "";
 document.getElementById("faDescription").textContent =
+document.getElementById("bidIncrement").textContent =
+    "Bid Increment: $" + (auction.bidIncrement || "N/A");
     "Description: " + (auction.description || "N/A");
 document.getElementById("faShippingPrice").textContent =
     "Shipping Price: $" + auction.expeditedShippingCost; // Adjust if needed
