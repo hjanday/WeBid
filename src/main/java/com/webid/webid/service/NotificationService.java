@@ -1,6 +1,7 @@
 package com.webid.webid.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class NotificationService implements Observer {
 
     @Autowired
     private NotificationRepository notificationRepository;
+
     private User getUserFromApiByEmail(String email) {
         try{
             String url = "http://localhost:8080/api/users/email/" + email;
@@ -37,33 +39,47 @@ public class NotificationService implements Observer {
         }catch(Error e){
             throw new RuntimeException("User not found");
         }
-        
     }
+    private User getUserFromApiByID(Long id) {
+        String url = "http://localhost:8080/api/users/" + id;
+        try {
+            User user = restTemplate.getForObject(url, User.class);
+            if (user == null) {
+                throw new RuntimeException("User not found");
+            }
+            return user;
+        } catch (RestClientException e) {
+            throw new RuntimeException("User not found", e);
+        }
+    }
+
     private List<Bid> getAuctionByID(Long id) {
-        try{
+        try {
             String url = "http://localhost:8080/api/Bid/find/" + id;
             ResponseEntity<List<Bid>> response = restTemplate.exchange(
-            url,
-            HttpMethod.GET,
-            null,
-            new ParameterizedTypeReference<List<Bid>>() {});
-        return response.getBody();
-        }catch(Error e){
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<Bid>>() {
+                    });
+            return response.getBody();
+        } catch (Error e) {
             throw new RuntimeException("Auction not found");
         }
-        
+
     }
+
     @Override
-    public void notify(User user, String message) {
+    public void notify(Long Id, String message) {
         Notification notification = new Notification();
-        notification.setUser(user);
+        notification.setUser(getUserFromApiByID(Id));
         notification.setMessage(message);
 
         // Save notification in notification DB
         notificationRepository.save(notification);
 
         // set most recent notification to be the user's current notification
-        user.setNotif(message);
+        getUserFromApiByID(Id).setNotif(message);
     }
 
     // returns the user's most recent notification
@@ -93,13 +109,15 @@ public class NotificationService implements Observer {
                 .collect(Collectors.toSet()); // Collects into a Set to ensure uniqueness
 
         for (User u : prevUsers) {
-            notify(u, String.format("Auction %s has come to an end.",
-                   getAuctionByID(auctionID).getFirst().getAuction().getItemName()));
+            notify(u.getId(), String.format("Auction %s has come to an end.",
+                    getAuctionByID(auctionID).getFirst().getAuction().getItemName()));
         }
     }
+
     // deletes user notifications
     @Transactional
-    public void deleteNotifications(User user){
+    public void deleteNotifications(User user) {
         notificationRepository.deleteByUserId(user.getId());
     }
 }
+

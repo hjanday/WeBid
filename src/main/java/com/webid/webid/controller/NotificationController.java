@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webid.webid.model.User;
@@ -35,8 +36,11 @@ public class NotificationController {
 
         return ResponseEntity.ok(notifications);
     }
-
-    @PostMapping("completed/{auctionID}")
+    @PostMapping("/notify")
+    public void notify(@RequestBody Long id,@RequestBody String notif){
+        notificationService.notify(id,notif);
+    }
+    @PostMapping("/completed/{auctionID}")
     public ResponseEntity<Object> completedAuction(@PathVariable long auctionID) {
         try {
             notificationService.notifyEnded(auctionID);
@@ -45,7 +49,7 @@ public class NotificationController {
             return ResponseEntity.badRequest().body("An error occured: " + e.getMessage());
         }
     }
-    @DeleteMapping("deleteAll")
+    @DeleteMapping("/deleteAll")
     public ResponseEntity<Object> deleteAuctions(@CurrentUser User currentUser) {
         try {
             notificationService.deleteNotifications(currentUser);

@@ -43,7 +43,10 @@ public class SecurityConfig {
                         // add all the other routes to request matchers for user access?
                         .requestMatchers("/", "/api/auctions/**").permitAll()
                         .requestMatchers("/", "/api/bid/**").hasAuthority("ROLE_USER")
-                        .requestMatchers("/", "/api/notification/**").hasAuthority("ROLE_USER")
+                        .requestMatchers(HttpMethod.POST, "/api/notification/notify").permitAll()
+
+                        .requestMatchers("/", "/api/notification/**").permitAll()
+
                         .requestMatchers("/", "/api/payments/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/", "/checkout/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/", "/profile/**").hasAuthority("ROLE_USER")

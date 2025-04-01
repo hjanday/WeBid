@@ -59,7 +59,7 @@ public class AuctionService {
         auction.setEndTime(Instant.now().plus(24, ChronoUnit.HOURS));
 
         // send notification to user that they have created a notification
-        notifService.notify(user, "You have successfully created the auction: " + auction.getItemName());
+        // notifService.notify(user, "You have successfully created the auction: " + auction.getItemName());
         return auctionRepository.save(auction);
 
     }
@@ -149,8 +149,8 @@ public class AuctionService {
             auction.setCurrentBidderID(user.getId());
             auction.completeAuction();
             auctionRepository.save(auction);
-            notifService.notify(user, String.format("You have successfully purchased %s for $%.2f",
-            auction.getItemName(), auction.getCurrentBid()));
+            // notifService.notify(user, String.format("You have successfully purchased %s for $%.2f",
+            // auction.getItemName(), auction.getCurrentBid()));
             return auction;
         } else {
             throw new IllegalArgumentException("You are the owner of the auction and cannot complete it.");

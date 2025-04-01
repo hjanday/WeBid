@@ -6,10 +6,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.webid.webid.model.Auction;
 import com.webid.webid.model.Bid;
@@ -32,10 +34,18 @@ public class PaymentService {
     private UserRepository userRepository;
     private BidRepository bidRepository;
     private NotificationService notifService;
-
+    private RestTemplate restTemplate;
     /**
      * Creates a new Payment record.
      */
+    private void notifyUser(User user, String notif) {
+
+        String url = "http://localhost:8080/api/notification/notify" + notif;
+   
+
+        restTemplate.postForLocation(url, user);
+
+    }
     public Payment createPayment(User currentUser, Long userID, Long itemID, String auctionType, double itemPrice,
             boolean expeditedShipping, double expeditedShippingCost, int shippingDays) {
         Payment payment = Payment.create(currentUser, itemID, auctionType, itemPrice, expeditedShipping,
@@ -94,19 +104,19 @@ public class PaymentService {
             List<User> prevUsers = prevBidders.stream()
                     .map(Bid::getUser) // Extracts the User from each Bid
                     .collect(Collectors.toList());
-
             for (User u : prevUsers) {
 
                 if (u.getId().equals(auction.getCurrentBidderID())) {
-                    notifService.notify(u, String.format("You have successfully purchased %s with $ %f",
-                            auction.getItemName(), auction.getCurrentBid()));
+                    notifyUser(u, String.format("You have successfully purchased %s with $%.2f"));
                 } else {
-                    notifService.notify(u, String.format("Auction %s has been completed and purchased for $ %f",
-                            auction.getItemName(), auction.getCurrentBid()));
+                    notifyUser(u, String.format("Auction %s has been completed and purchased for $%.2f",
+                    auction.getItemName(), auction.getCurrentBid()));;
                 }
 
             }
-
+            User owner = auction.getOwner();
+            System.out.println("\n\n\n\n\n"+owner.getEmail()+"\n\n\n\n\n\n\n\n");
+            notifyUser(owner, String.format("Your item %s has been purchased for  $%.2f",auction.getItemName(), auction.getCurrentBid()));
             return payment;
         }
 

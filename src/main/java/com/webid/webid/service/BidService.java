@@ -72,8 +72,8 @@ public class BidService {
             auctionRepository.save(auction);
 
             // Notify the owner of the auction
-            notifService.notify(auction.getOwner(), String.format("A new bid of $%.2f has been placed on %s",
-                    auction.getCurrentBid(), auction.getItemName()));
+            // notifService.notify(auction.getOwner(), String.format("A new bid of $%.2f has been placed on %s",
+            //         auction.getCurrentBid(), auction.getItemName()));
 
             // Find previous bidders and notify all.
             List<Bid> prevBidders = bidRepository.findByAuctionId(auction.getId());
@@ -86,13 +86,13 @@ public class BidService {
                 System.out.println(u);
                 System.out.println();
 
-                if (u.getId().equals(auction.getCurrentBidderID())) {
-                    notifService.notify(u, String.format("You have successfully placed a $%.2f bid on %s",
-                            auction.getCurrentBid(), auction.getItemName()));
-                } else {
-                    notifService.notify(u, String.format("A new bid of $%.2f has been placed on %s",
-                            auction.getCurrentBid(), auction.getItemName()));
-                }
+                // if (u.getId().equals(auction.getCurrentBidderID())) {
+                //     notifService.notify(u, String.format("You have successfully placed a $%.2f bid on %s",
+                //             auction.getCurrentBid(), auction.getItemName()));
+                // } else {
+                //     notifService.notify(u, String.format("A new bid of $%.2f has been placed on %s",
+                //             auction.getCurrentBid(), auction.getItemName()));
+                // }
 
             }
 
