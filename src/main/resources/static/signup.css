@@ -3,6 +3,9 @@ body {
     margin: 20px;
     background-color: #383838;
   }
+  header{
+    text-align: center;
+  }
   form {
     max-width: 500px;
     margin: 0 auto;
