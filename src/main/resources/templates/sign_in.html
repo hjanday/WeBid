@@ -3,38 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Login</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background-color: #f9f9f9;
-    }
-    form {
-      max-width: 300px;
-      margin: 0 auto;
-      padding: 15px;
-      border: 1px solid #ccc;
-      background: #fff;
-    }
-    label, input {
-      display: block;
-      width: 100%;
-      margin-bottom: 10px;
-    }
-    input {
-      padding: 8px;
-    }
-    button {
-      padding: 10px;
-      background: #007bff;
-      color: #fff;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-  </style>
+  <link rel="stylesheet" href="/signin.css">
       <header>
         <div class="logo"><a>WeBid</a></div>      
       </header>
@@ -50,45 +19,7 @@
     <br>
     <button type="submit">Login</button>
   </form>
-  <script>
-    document.getElementById("login_form").addEventListener("submit", function(event) {
-        event.preventDefault(); 
-        // get email/pw from form
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-       // login endpoint
-        fetch("/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ email: email, password: password })
-        })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => { throw new Error(text); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data);
-            var userRole = data.roles[0]
-            alert("Login successful! Token: " + data.token);
-            localStorage.clear()
-            localStorage.setItem("jwtToken", data.token);
-
-            // check for admin
-            if (userRole === "ROLE_ADMIN") {
-                window.location.replace("/admin/dashboard");
-                return;
-            }
-            window.location.replace("/auth/auctions");
-        })
-        .catch(error => {
-            alert("Login failed: " + error.message);
-        });
-    });
-  </script>
+  <script src="/signin.js"></script>
 
   <p style="text-align:center;">Don't have an account? <a href="/authentication/register">Sign Up</a></p>
   <p style ="text-align: center;">Forgot your password? <a href="/authentication/forgotpassword">Reset your password</a></p>
