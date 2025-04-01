@@ -47,9 +47,9 @@ public class HomeController {
         return "payment";
     }
 
-    @GetMapping("/checkout/reciept")
-    public String reciept() {
-        return "reciept";
+    @GetMapping("/checkout/receipt")
+    public String receipt() {
+        return "receipt";
     }
 
     @GetMapping("/admin/dashboard")
