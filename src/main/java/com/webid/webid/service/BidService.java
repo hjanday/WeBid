@@ -26,7 +26,9 @@ public class BidService {
     private AuctionRepository auctionRepository;
     private AuctionService auctionService;
     private NotificationService notifService;
-
+    public List<Bid>getAuctionById(Long ID){
+        return bidRepository.findByAuctionId(ID);
+    }
     public Bid placeBid(Long auctionId, double amount, User user) {
 
         Auction auction = auctionRepository.findById(auctionId)
