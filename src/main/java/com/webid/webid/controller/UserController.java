@@ -23,26 +23,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/users")
 public class UserController {
 
-    private final UserRepository userRepository;
     private final NotificationService notificationService;
     private final UserService userService;
 
-    public UserController(UserRepository userRepository,
+    public UserController(
             NotificationService notificationService,
             JwtService jwtService, UserService userService) {
-        this.userRepository = userRepository;
         this.notificationService = notificationService;
         this.userService = userService;
     }
 
     @GetMapping
     public Iterable<User> findAllUsers() {
-        return this.userRepository.findAll();
+        return this.userService.getAllUsers();
     }
 
     @GetMapping("/{userID}")
     public Optional<User> getUserInfo(@PathVariable Long userID) {
-        return this.userRepository.findById(userID);
+        return this.userService.getUserById(userID);
     }
 
     @GetMapping("/notify")
@@ -57,7 +55,7 @@ public class UserController {
 
     @PostMapping
     public User addUser(@RequestBody User user) {
-        return this.userRepository.save(user);
+        return this.userService.saveUser(user);
     }
 
     @GetMapping("/currentuser")
@@ -72,13 +70,13 @@ public class UserController {
 
     @PostMapping("/findusername")
     ResponseEntity<User> queryUsername(@RequestBody String username) {
-        return this.userRepository.findByUsername(username).map(ResponseEntity::ok)
+        return this.userService.getUserbyUsername(username).map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
     @PostMapping("/findemail")
     ResponseEntity<User> queryEmail(@RequestBody String email) {
-        return this.userRepository.findByEmail(email).map(ResponseEntity::ok)
+        return this.userService.getUserbyEmail(email).map(ResponseEntity::ok)
                 .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 
