@@ -170,9 +170,7 @@ document
         if (data && data.id) {
         // Assuming 'data' is a Bid object returned by the backend
         alert(
-            `Bid placed successfully! Server response: ${JSON.stringify(
-            data
-            )}`
+            `Bid placed successfully!`
         );
 
         // Update UI with new bid information
