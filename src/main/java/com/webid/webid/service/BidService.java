@@ -80,10 +80,6 @@ public class BidService {
                     .collect(Collectors.toSet()); // Collects into a Set to ensure uniqueness
 
             for (User u : prevUsers) {
-                System.out.println();
-                System.out.println(u);
-                System.out.println();
-
                 if (u.getId().equals(auction.getCurrentBidderID())) {
                     notifService.notify(u, String.format("You have successfully placed a $%.2f bid on %s",
                             auction.getCurrentBid(), auction.getItemName()));
