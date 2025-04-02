@@ -47,7 +47,7 @@ public class UserController {
     public String getNotif() {
         return notificationService.getNotification();
     }
-    
+
     @DeleteMapping("/{userID}")
     public void deleteUser(@PathVariable long userID) {
         userService.deleteUser(userID);
@@ -67,17 +67,4 @@ public class UserController {
         }
         return ResponseEntity.ok(currentUser);
     }
-
-    @PostMapping("/findusername")
-    ResponseEntity<User> queryUsername(@RequestBody String username) {
-        return this.userService.getUserbyUsername(username).map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
-    @PostMapping("/findemail")
-    ResponseEntity<User> queryEmail(@RequestBody String email) {
-        return this.userService.getUserbyEmail(email).map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
 }
