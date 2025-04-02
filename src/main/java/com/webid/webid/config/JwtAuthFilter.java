@@ -51,7 +51,9 @@ public class JwtAuthFilter extends OncePerRequestFilter{
 
         // If not found in the header, check the cookies
         if (token == null && request.getCookies() != null) {
+            
             for (Cookie cookie : request.getCookies()) {
+                
                 if ("jwtToken".equals(cookie.getName())) {
                     token = cookie.getValue();
                     break;
@@ -59,7 +61,8 @@ public class JwtAuthFilter extends OncePerRequestFilter{
             }
         }
         
-            if (token != null) {
+        if (token != null) {
+            
             // Check if the token is blacklisted
             if (logoutService.isTokenBlacklisted(token)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -68,22 +71,31 @@ public class JwtAuthFilter extends OncePerRequestFilter{
             }
     
             String username = jwtService.extractUsername(token);
+            
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 User user = (User) this.userDetailsService.loadUserByUsername(username);
     
                 if (jwtService.isTokenValid(token, user)) {
+                    
+                    // Extract the roles from the token
                     List<RoleEnum> roles = jwtService.extractRoles(token); 
+                    
+                    // Map roles to granted authority
                     Collection<? extends GrantedAuthority> authorities = roles.stream()
                             .map(role -> new SimpleGrantedAuthority(role.name()))
                             .collect(Collectors.toList());
                     
+                    // Create token
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    
+                    // Set the authentication in the security context
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             
+            }
         }
-    }
+
         filterChain.doFilter(request, response);
     }
 }    

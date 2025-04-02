@@ -10,9 +10,12 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+// Custom argument resolver that allows controller methods to access the currently
+// authenticated user using @CurrentUser annotation. 
 @Component
 public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolver {
 
+    // Check if controller method is annoted with @CurrentUser
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
         return parameter.getParameterAnnotation(CurrentUser.class) != null
@@ -23,6 +26,7 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
     public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
                                   NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
 
+        // Retrieve the authentication object from the SecurityContextHolder
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof User) {
             return auth.getPrincipal();

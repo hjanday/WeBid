@@ -37,8 +37,10 @@ public class AuthService {
 
 	public User signIn(LoginUserDTO input) throws AuthenticationException {
 		try {
+			// Authenticate the user
 			authManager.authenticate(new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword()));
 
+			// find the user by email and return it
 			return userRepository.findByEmail(input.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
 		}
 		catch (BadCredentialsException e) {
@@ -58,7 +60,10 @@ public class AuthService {
 		}
 
 		try {
+			// Create new user
 			User newUser = new User();
+			
+			// Set user attributes
 			newUser.setFirstName(input.getFirstName());
 			newUser.setLastName(input.getLastName());
 			newUser.setEmail(input.getEmail());
@@ -79,10 +84,12 @@ public class AuthService {
 
 	public void updatePassword(String userEmail, String newPw) {
 		Optional<User> u = userRepository.findByEmail(userEmail);
+		
 		// Check if record does not exist and throw exception
 		if (u.equals(Optional.empty())) {
 			throw new ResourceNotFoundException("Record with email: " + userEmail + " not found.");
 		}
+		
 		try {
 			String encodedPassword = passwordEncoder.encode(newPw);
 			userRepository.updatePasswordByEmail(userEmail, encodedPassword);

@@ -29,17 +29,18 @@ public class SecurityConfig {
         this.authProvider = authProvider;
     }
 
+    // Configure securtiy settings for authentication and authorization
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()) // disable csrf for to use stateless JWT
                 .authorizeHttpRequests(auth -> auth
                         // allow requests for users and admins
-                        // .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/*.css", "/*.js", "/logo.png").permitAll()
                         .requestMatchers("/", "/auth/**").permitAll()
                         .requestMatchers("/", "/authentication/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/users").hasAuthority("ROLE_ADMIN")
+                        
                         // add all the other routes to request matchers for user access?
                         .requestMatchers("/", "/api/auctions/**").permitAll()
                         .requestMatchers("/", "/api/bid/**").hasAuthority("ROLE_USER")
@@ -47,10 +48,11 @@ public class SecurityConfig {
                         .requestMatchers("/", "/api/payments/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/", "/checkout/**").hasAuthority("ROLE_USER")
                         .requestMatchers("/", "/profile/**").hasAuthority("ROLE_USER")
+                        
                         // change to permitall for testing
                         .requestMatchers("/", "/admin/**").hasAuthority("ROLE_ADMIN")
+                        
                         // add all the other routes to request matchers for user access?
-
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authProvider)
@@ -59,6 +61,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // Configure cors policies
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
