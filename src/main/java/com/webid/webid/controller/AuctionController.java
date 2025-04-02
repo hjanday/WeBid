@@ -8,14 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/auctions")
@@ -23,7 +18,6 @@ public class AuctionController {
 
     @Autowired
     private AuctionService auctionService;
-
 
     // Create auction
     @PostMapping("/create")
@@ -42,20 +36,27 @@ public class AuctionController {
 
     // Get all auctions
     @GetMapping
-    public List<Auction> getAllAuctions() {
-        return auctionService.getAllAuctions();
+    public List<Auction> getAllAuctions(@CurrentUser User currentUser) {
+        return auctionService.getAllAuctions(currentUser);
     }
 
     // Get an auction by ID
     @GetMapping("/{id}")
-    public Optional<Auction> getAuctionById(@PathVariable Long id) {
-        return auctionService.getAuctionById(id);
+    public Optional<Auction> getAuctionById(@CurrentUser User currentUser, @PathVariable Long id) {
+        return auctionService.getAuctionById(currentUser, id);
     }
 
     // Get auctions by item name queries
     @GetMapping("/search")
-    public List<Auction> getAuctionByItemName(@RequestParam String itemName) {
-        return auctionService.findAuctionByItemName(itemName);
+    public List<Auction> getAuctionByItemName(@CurrentUser User currentUser, @RequestParam String itemName) {
+        List<Auction> temp = auctionService.findAuctionByItemName(currentUser, itemName);
+        List<Auction> temp2 = new ArrayList<>();
+        for(Auction i: temp){
+            if(!i.isOver()){
+                temp2.add(i);
+            }
+        }
+        return temp2;
     }
 
     // Edits the expedited shipping of an auction to be true
@@ -66,31 +67,26 @@ public class AuctionController {
         return ResponseEntity.ok().body("Expedited shipping has been set to: " + expShip);
     }
 
-
-
     // edits a Dutch auction
     @PutMapping("dutch/{auctionId}")
     public ResponseEntity<Object> decrementDutch(@CurrentUser User currentUser, @PathVariable Long auctionId) {
         // Retrieve the auction by its ID
-        Auction auction = auctionService.updateDutch(auctionId, currentUser);
-        if (auction == null) {
-            return ResponseEntity.badRequest().body("Dutch auction cannot be updated");
-        } else {
-            return ResponseEntity.ok("Dutch auction successfully decremented");
+        try {
+            Auction auction = auctionService.updateDutch(auctionId, currentUser);
+            return ResponseEntity.ok(auction);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-
 
     // Complete a dutch auction
     @PutMapping("complete/{auctionId}")
     public ResponseEntity<Object> updateDutch(@CurrentUser User currentUser, @PathVariable long auctionId) {
-        Auction auction = auctionService.completeDutch(auctionId, currentUser);
-        if (auction == null) {
-            return ResponseEntity.badRequest().body("Dutch auction cannot be completed");
-        } else {
-            return ResponseEntity.ok("Dutch auction successfully completed");
+        try {
+            Auction auction = auctionService.completeDutch(auctionId, currentUser);
+            return ResponseEntity.ok(auction);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
 }

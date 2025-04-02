@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,53 +23,48 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/users")
 public class UserController {
 
-
-    private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final UserService userService;
 
-    public UserController(UserRepository userRepository,
+    public UserController(
             NotificationService notificationService,
             JwtService jwtService, UserService userService) {
-        this.userRepository = userRepository;
         this.notificationService = notificationService;
+        this.userService = userService;
     }
 
     @GetMapping
     public Iterable<User> findAllUsers() {
-        return this.userRepository.findAll();
+        return this.userService.getAllUsers();
     }
 
     @GetMapping("/{userID}")
     public Optional<User> getUserInfo(@PathVariable Long userID) {
-        return this.userRepository.findById(userID);
+        return this.userService.getUserById(userID);
     }
-    
 
     @GetMapping("/notify")
     public String getNotif() {
         return notificationService.getNotification();
     }
 
+    @DeleteMapping("/{userID}")
+    public void deleteUser(@PathVariable long userID) {
+        userService.deleteUser(userID);
+    }
+
     @PostMapping
     public User addUser(@RequestBody User user) {
-        return this.userRepository.save(user);
+        return this.userService.saveUser(user);
     }
+
     @GetMapping("/currentuser")
-    public User getCurrentUser(@CurrentUser User currentUser){
-        return currentUser;
+    public ResponseEntity<User> getCurrentUser(@CurrentUser User currentUser) {
+        System.out.println(currentUser);
+        if (currentUser == null) {
+            System.out.println("User is null! Authentication failed.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return ResponseEntity.ok(currentUser);
     }
-    
-
-    @PostMapping("/findusername")
-    ResponseEntity<User> queryUsername(@RequestBody String username) {
-        return this.userRepository.findByUsername(username).map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
-    @PostMapping("/findemail")
-    ResponseEntity<User> queryEmail(@RequestBody String email) {
-        return this.userRepository.findByEmail(email).map(ResponseEntity::ok)
-                .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
-    }
-
 }

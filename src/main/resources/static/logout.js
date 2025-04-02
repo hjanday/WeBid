@@ -11,7 +11,7 @@ window.logout = async function () {
         localStorage.removeItem('jwtToken');
         sessionStorage.clear();
 
-        window.location.href = '/login';
+        window.location.replace('/authentication/login');
     } catch (error) {
         console.error('Logout failed:', error);
         alert('Error logging out. Please try again.');

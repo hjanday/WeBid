@@ -23,7 +23,7 @@ public interface AuctionRepository extends JpaRepository<Auction, Long> {
     List<Auction> findByEndTimeBeforeAndNotifiedFalse(LocalDateTime now);
 
     @Transactional
-    @Query("SELECT a FROM Auction a WHERE a.itemName LIKE CONCAT('%', :itemName, '%')")
+    @Query("SELECT a FROM Auction a WHERE LOWER(a.itemName) LIKE LOWER(CONCAT('%', :itemName, '%'))")    
     List<Auction> findByItemName(@Param("itemName") String itemName);
     
 

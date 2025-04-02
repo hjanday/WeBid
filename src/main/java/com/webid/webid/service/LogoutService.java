@@ -9,12 +9,12 @@ import org.jvnet.hk2.annotations.Service;
 public class LogoutService {
     private final Set<String> blacklistedTokens = new HashSet<>();
 
+    // Add blacklisted token into list
     public void blacklistToken(String token) {
         blacklistedTokens.add(token);
     }
 
-    // Persistance of blacklisted tokens in database?
-
+    // Check if the token is blacklisted
     public boolean isTokenBlacklisted(String token) {
         return blacklistedTokens.contains(token);
     }

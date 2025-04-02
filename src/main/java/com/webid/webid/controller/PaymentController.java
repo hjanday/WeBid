@@ -5,7 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.webid.webid.model.Payment;
-
+import com.webid.webid.model.User;
+import com.webid.webid.security.CurrentUser;
 import com.webid.webid.service.PaymentService;
 
 import java.util.HashMap;
@@ -23,10 +24,10 @@ public class PaymentController {
 
     // Simulate a payment process
     @PostMapping("/{auctionID}/{shipDays}/pay")
-    public ResponseEntity<Object> makePayment(@PathVariable Long auctionID,
+    public ResponseEntity<Object> makePayment(@CurrentUser User currentUser, @PathVariable Long auctionID,
             @PathVariable int shipDays) {
 
-        Payment payment = paymentService.makePayment(auctionID, shipDays);
+        Payment payment = paymentService.makePayment(currentUser, auctionID, shipDays);
         if (payment == null) {
             return ResponseEntity.badRequest().body("Payment could not be added for various reasons.");
         } else {
@@ -37,13 +38,14 @@ public class PaymentController {
 
     // Get a payment by ID
     @GetMapping("/{auctionId}")
-    public Optional<Payment> getPaymentByAuctionId(@PathVariable Long auctionId) {
-        return paymentService.getPaymentByAuctionId(auctionId);
+    public Optional<Payment> getPaymentByAuctionId(@CurrentUser User currentUser, @PathVariable Long auctionId) {
+        return paymentService.getPaymentByAuctionId(currentUser, auctionId);
     }
 
     // Check payment status
     @GetMapping("/status/{paymentId}")
-    public ResponseEntity<Map<String, String>> getPaymentStatus(@PathVariable String paymentId) {
+    public ResponseEntity<Map<String, String>> getPaymentStatus(@CurrentUser User currentUser,
+            @PathVariable String paymentId) {
         String status = paymentStatus.getOrDefault(paymentId, "Not Found");
 
         Map<String, String> response = new HashMap<>();

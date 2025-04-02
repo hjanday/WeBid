@@ -1,0 +1,140 @@
+/* Basic Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #383838; 
+  font-family: Arial, sans-serif;
+  color: #fff; 
+  padding: 1rem;
+}
+
+/* Header */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #6cddff; 
+}
+
+/* Flex Container */
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Left Column */
+.left-col {
+  flex: 1 1 450px;
+  background-color: #444; 
+  border: 1px solid #666; 
+  border-radius: 6px;
+  padding: 1.5rem;
+  min-width: 300px;
+}
+
+.left-col h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #6cddff; 
+}
+
+.info-block {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #ddd; 
+}
+
+.info-block p {
+  margin: 0.4rem 0;
+  color: #bbb; 
+}
+
+.price-info {
+  font-weight: bold;
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  color: #fff;
+}
+
+/* Right Column */
+.right-col {
+  flex: 1 1 450px;
+  background-color: #444; 
+  border: 1px solid #666; 
+  border-radius: 6px;
+  padding: 1.5rem;
+  min-width: 300px;
+}
+
+.right-col h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #6cddff; 
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.4rem;
+  color: #ddd; 
+}
+
+.form-group input[type="text"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #666; 
+  border-radius: 4px;
+  background-color: #cecece; 
+  color: black;
+}
+
+/* Terms and Conditions */
+.terms-container {
+  margin: 1rem 0;
+}
+
+.terms-container label {
+  font-weight: normal;
+  display: inline-flex;
+  align-items: center;
+  color: #bbb; 
+}
+
+.terms-container input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+/* Pay Now Button */
+.pay-now-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.pay-now-btn:hover {
+  background-color: #218838;
+}

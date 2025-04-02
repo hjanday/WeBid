@@ -3,6 +3,7 @@ package com.webid.webid.service;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,9 @@ public class PaymentService {
     /**
      * Creates a new Payment record.
      */
-    public Payment createPayment(Long userID, Long itemID, String auctionType, double itemPrice,
+    public Payment createPayment(User currentUser, Long userID, Long itemID, String auctionType, double itemPrice,
             boolean expeditedShipping, double expeditedShippingCost, int shippingDays) {
-        Payment payment = Payment.create(userID, itemID, auctionType, itemPrice, expeditedShipping,
+        Payment payment = Payment.create(currentUser, itemID, auctionType, itemPrice, expeditedShipping,
                 expeditedShippingCost, shippingDays);
         return paymentRepository.save(payment);
     }
@@ -46,57 +47,60 @@ public class PaymentService {
     /**
      * Retrieves all Payment records.
      */
-    public List<Payment> getAllPayments() {
+    public List<Payment> getAllPayments(User currentUser) {
         return paymentRepository.findAll();
     }
 
     /**
      * Retrieves a Payment record by its ID.
      */
-    public Payment getPaymentById(Long id) {
+    public Payment getPaymentById(User currentUser, Long id) {
         return paymentRepository.findById(id).orElse(null);
     }
 
-    public Optional<Payment> getPaymentByAuctionId(long auctionId) {
+    public Optional<Payment> getPaymentByAuctionId(User currentUser, long auctionId) {
 
         return paymentRepository.findByAuctionId(auctionId);
     }
 
-    public Payment makePayment(long auctionId, int shipDays) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        String username = authentication.getName();
-
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+    public Payment makePayment(User currentUser, long auctionId, int shipDays) {
         Auction auction = auctionRepository.findById(auctionId)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
         // verify auction belongs to user
-        if (auction.getCurrentBidderID() != user.getId() || !auction.isOver()
+        if (auction.getCurrentBidderID() != currentUser.getId()
                 || auction.getEndTime().isAfter(Instant.now())) {
             return null;
         } else {
 
-            Payment payment = Payment.create(user.getId(), auction.getId(), auction.getAuctionType().name(),
+            Payment payment = Payment.create(currentUser, auction.getId(), auction.getAuctionType().name(),
                     auction.getCurrentBid(), auction.isExpeditedShipping(), auction.getExpeditedShippingCost(),
                     shipDays);
             paymentRepository.save(payment);
 
-            // notify users that payment has been confirmed and bid is over
-            // Find previous bidders and notify all.
-            List<Bid> prevBidders = bidRepository.findByAuctionId(auction.getId());
-            List<User> prevUsers = prevBidders.stream()
-                    .map(Bid::getUser) // Extracts the User from each Bid
-                    .collect(Collectors.toList());
+            // after payment is made, complete the auction
+            auction.completeAuction();
+            auctionRepository.save(auction);
 
+            // notify users that payment has been confirmed and bid is over
+            // Find previous bidders and notify all, for dutch auctions this would be empty
+            List<Bid> prevBidders = bidRepository.findByAuctionId(auction.getId());
+            Set<User> prevUsers = prevBidders.stream()
+                    .map(Bid::getUser)
+                    .collect(Collectors.toSet());
+
+            // notify the owner that the item has been purchased
+            notifService.notify(auction.getOwner(), String.format("Your auction %s has been purchased for $%.2f",
+                    auction.getItemName(), auction.getCurrentBid()));
+
+            // notify all previous bidders and winner (only goes into this with forward
+            // auction since bid would exist)
             for (User u : prevUsers) {
 
                 if (u.getId().equals(auction.getCurrentBidderID())) {
-                    notifService.notify(u, String.format("You have successfully purchased %s with $ %f",
+                    notifService.notify(u, String.format("You have successfully purchased %s with $%.2f",
                             auction.getItemName(), auction.getCurrentBid()));
                 } else {
-                    notifService.notify(u, String.format("Auction %s has been completed and purchased for $ %f",
+                    notifService.notify(u, String.format("Auction %s has been completed and purchased for $%.2f",
                             auction.getItemName(), auction.getCurrentBid()));
                 }
 
@@ -104,13 +108,5 @@ public class PaymentService {
 
             return payment;
         }
-
-        // verify auction is currently over
-        // if auction is not over, or the auctions end time has not yet passed, error
-        // if (!auction.isOver() || auction.getEndTime().isBefore(Instant.now())) {
-        // return null;
-        // }
-
     }
-
 }

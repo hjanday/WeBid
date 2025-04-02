@@ -1,300 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>WeBid – Payment Page</title>
-  <style>
-    
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      background-color: #f9f9f9;
-      font-family: Arial, sans-serif;
-      padding: 1rem;
-    }
-
-   
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 2rem;
-    }
-    .logo {
-      font-size: 1.8rem;
-      font-weight: bold;
-    }
-
-    
-    .flex-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-  
-    .left-col {
-      flex: 1 1 450px;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 1.5rem;
-      min-width: 300px;
-    }
-    .left-col h2 {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    .info-block {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-    .info-block p {
-      margin: 0.4rem 0;
-    }
-    .price-info {
-      font-weight: bold;
-      margin-top: 1rem;
-      font-size: 1.5rem;
-    }
-
-    
-    .right-col {
-      flex: 1 1 450px;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      padding: 1.5rem;
-      min-width: 300px;
-    }
-    .right-col h2 {
-      text-align: center;
-      margin-bottom: 1rem;
-    }
-    .form-group {
-      margin-bottom: 1rem;
-    }
-    .form-group label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 0.4rem;
-    }
-    .form-group input[type="text"] {
-      width: 100%;
-      padding: 0.5rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    /* Terms and Conditions */
-    .terms-container {
-      margin: 1rem 0;
-    }
-    .terms-container label {
-      font-weight: normal;
-      display: inline-flex;
-      align-items: center;
-    }
-    .terms-container input[type="checkbox"] {
-      margin-right: 0.5rem;
-    }
-
-    /* Pay Now Button */
-    .pay-now-btn {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      background-color: #28a745;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1rem;
-    }
-    .pay-now-btn:hover {
-      background-color: #218838;
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <div class="logo">WeBid</div>
-  </header>
-
-  <div class="flex-container">
-  
-    <div class="left-col">
-      <h2>User Information</h2>
-      <div class="info-block">
-        <p><strong>First Name:</strong> <span id="firstName">Loading...</span></p>
-        <p><strong>Last Name:</strong> <span id="lastName">Loading...</span></p>
-        <p><strong>Email:</strong> <span id="email">Loading...</span></p>
-        <p><strong>Country:</strong> <span id="country">Loading...</span></p>
-        <p><strong>City:</strong> <span id="city">Loading...</span></p>
-        <p><strong>Postal Code:</strong> <span id="postalCode">Loading...</span></p>
+  <head>
+    <meta charset="UTF-8" />
+    <title>WeBid – Payment Page</title>
+    <link rel="stylesheet" href="/payment.css" />
+    <header>
+      <div class="logo">
+        <a href="/auth/auctions">
+          <img src="/logo.png" alt="WeBid Logo" />
+        </a>
       </div>
-      <hr/>
-      <h2>Payment Summary</h2>
-      <p class="price-info">Total Due: $<span id="totalAmount">0</span></p>
+    </header>
+  </head>
+  <body>
+    <script src="/refreshToken.js"></script>
+
+    <div class="flex-container">
+      <div class="left-col">
+        <h2>User Information</h2>
+        <div class="info-block">
+          <p>
+            <strong>First Name:</strong> <span id="firstName">Loading...</span>
+          </p>
+          <p>
+            <strong>Last Name:</strong> <span id="lastName">Loading...</span>
+          </p>
+          <p><strong>Email:</strong> <span id="email">Loading...</span></p>
+          <p><strong>Country:</strong> <span id="country">Loading...</span></p>
+          <p><strong>City:</strong> <span id="city">Loading...</span></p>
+          <p>
+            <strong>Postal Code:</strong>
+            <span id="postalCode">Loading...</span>
+          </p>
+        </div>
+        <hr />
+        <h2>Payment Summary</h2>
+        <p class="price-info">Total Due: $<span id="totalAmount">0</span></p>
+      </div>
+
+      <div class="right-col">
+        <h2>Payment Details</h2>
+        <form id="paymentForm">
+          <div class="form-group">
+            <label for="cardHolder">Cardholder Name*</label>
+            <input type="text" id="cardHolder" required />
+          </div>
+          <div class="form-group">
+            <label for="cardNumber">Card Number*</label>
+            <input type="text" id="cardNumber" required />
+          </div>
+          <div class="form-group">
+            <label for="expDate">Expiration Date (MM/YY)*</label>
+            <input type="text" id="expDate" required />
+          </div>
+          <div class="form-group">
+            <label for="cvv">CVV*</label>
+            <input type="text" id="cvv" required />
+          </div>
+
+          <div class="terms-container">
+            <label for="termsCheck">
+              <input type="checkbox" id="termsCheck" required />
+              I agree to WeBid's Auction Terms and Conditions
+            </label>
+          </div>
+
+          <button class="pay-now-btn" type="submit">Pay Now</button>
+        </form>
+        <script src="/payment.js"></script>
+      </div>
     </div>
-
- 
-    <div class="right-col">
-      <h2>Payment Details</h2>
-      <form id="paymentForm">
-        <div class="form-group">
-          <label for="cardHolder">Cardholder Name*</label>
-          <input type="text" id="cardHolder" required />
-        </div>
-        <div class="form-group">
-          <label for="cardNumber">Card Number*</label>
-          <input type="text" id="cardNumber" required />
-        </div>
-        <div class="form-group">
-          <label for="expDate">Expiration Date (MM/YY)*</label>
-          <input type="text" id="expDate" required />
-        </div>
-        <div class="form-group">
-          <label for="cvv">CVV*</label>
-          <input type="text" id="cvv" required />
-        </div>
-
-        
-        <div class="terms-container">
-          <label for="termsCheck">
-            <input type="checkbox" id="termsCheck" required />
-            I agree to WeBid's Auction Terms and Conditions
-          </label>
-        </div>
-
-        <button class="pay-now-btn" type="submit">Pay Now</button>
-      </form>
-    </div>
-  </div>
-
-  <script>
-    // Grab query params
-    const queryParams = new URLSearchParams(window.location.search);
-    const total = queryParams.get("total");   // e.g. 123.45
-    const auctionID = queryParams.get("auctionId"); // e.g. 42
-    const token = localStorage.getItem("jwtToken");
-    document.getElementById("totalAmount").textContent = total || "0";
- 
-    fetch(`http://localhost:8080/api/auctions/${auctionID}`) // GET /api/auctions/{auctionID}
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch auction info");
-        }
-        return response.json();
-})
-.then(usrData => {
-  console.log("Auction data:", usrData.currentBidderID);
-  let userId = usrData.currentBidderID;
-  if (!token) {
-    alert("User not logged in!");
-  } else if (userId) {
-    const userUrl = `http://localhost:8080/api/users/${userId}`;
-    fetch(userUrl, {
-      method: "GET"
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch user info");
-        }
-        return response.json();
-      })
-      .then(userData => {
-        console.log("User data:", userData);
-
-        document.getElementById("firstName").textContent = userData.firstName || "N/A";
-        document.getElementById("lastName").textContent = userData.lastName || "N/A";
-        document.getElementById("email").textContent = userData.email || "N/A";
-
-        
-        document.getElementById("country").textContent = userData.country || "N/A";
-        document.getElementById("city").textContent = userData.city || "N/A";
-        document.getElementById("postalCode").textContent = userData.postalCode || "N/A";
-      })
-      .catch(err => {
-        console.error("Error fetching user info:", err);
-      
-        document.getElementById("firstName").textContent = "Unknown";
-        document.getElementById("lastName").textContent = "Unknown";
-        document.getElementById("email").textContent = "Unknown";
-
-        document.getElementById("country").textContent = "Unknown";
-        document.getElementById("city").textContent = "Unknown";
-        document.getElementById("postalCode").textContent = "Unknown";
-      });
-  } else {
-    // if no userID param 
-    document.getElementById("firstName").textContent = "Unknown";
-    document.getElementById("lastName").textContent = "Unknown";
-    document.getElementById("email").textContent = "Unknown";
-
-    document.getElementById("country").textContent = "Unknown";
-    document.getElementById("city").textContent = "Unknown";
-    document.getElementById("postalCode").textContent = "Unknown";
-  }
-})
-.catch(err => {
-  console.error("Error fetching auction info:", err);
-});
-
-    document.getElementById("paymentForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      // payment details
-      const cardHolder = document.getElementById("cardHolder").value.trim();
-      const cardNumber = document.getElementById("cardNumber").value.trim();
-      const expDate = document.getElementById("expDate").value.trim();
-      const cvv = document.getElementById("cvv").value.trim();
-      const totalDue = parseFloat(document.getElementById("totalAmount").textContent) || 0;
-
-      if (!token) {
-        alert("Token not found. Please login.");
-        return;
-      }
-
-      const paymentUrl = `http://localhost:8080/api/payments/${auctionID}/10/pay`;
-
-    
-      const paymentData = {
-        cardHolder,
-        cardNumber,
-        expDate,
-        cvv,
-        totalDue
-      };
-
-    fetch(paymentUrl, {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  "Authorization": `Bearer ${token}`
-                },
-              })
-                .then((paymentResponse) => {
-                  console.log(paymentResponse);
-                })
-                .then((paymentResults) => {
-                  alert("Thank you for your payment!");
-                  console.log("Payment success");
-                  window.location.href = `/reciept?auctionId=${auctionID}`;
-                })
-                .catch((error) => {
-                  console.error("Error during payment:", error);
-                  alert(`Payment failed: ${error.message}`);
-            
-    });
-});
-  </script>
-</body>
+  </body>
 </html>

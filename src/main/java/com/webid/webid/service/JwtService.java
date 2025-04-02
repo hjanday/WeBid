@@ -8,13 +8,19 @@ import io.jsonwebtoken.security.Keys;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.jvnet.hk2.annotations.Service;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.webid.webid.model.RoleEnum;
+import com.webid.webid.model.User;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -34,34 +40,37 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(User user) {
+        Map<String, Object> extraClaims = new HashMap<>();
+
+        extraClaims.put("roles", user.getRoles().stream().map(Enum::name).toList());
+        return buildToken(extraClaims, user, jwtTTL);
     }
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails) {
-        return buildToken(extraClaims, userDetails, jwtTTL);
+            User user) {
+        return buildToken(extraClaims, user, jwtTTL);
     }
 
     private String buildToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails,
+            User user,
             long expiration) {
-        // User user = (User) userDetails;
+
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
-                .setSubject(userDetails.getUsername())
+                .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public boolean isTokenValid(String token, User user) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        return (username.equals(user.getUsername())) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
@@ -70,6 +79,13 @@ public class JwtService {
 
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<RoleEnum> extractRoles(String token) {
+        Claims claims = extractAllClaims(token);
+        List<String> rolesAsString = claims.get("roles", List.class);
+        return rolesAsString.stream().map(RoleEnum::valueOf).toList();
     }
 
     private Claims extractAllClaims(String token) {

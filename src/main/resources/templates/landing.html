@@ -1,18 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <title>Home</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
-        .container { max-width: 400px; margin: auto; }
-        button { display: block; width: 100%; margin: 10px 0; padding: 10px; font-size: 16px; }
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding: 50px;
+        background-color: #383838;
+      }
+      .container {
+        max-width: 400px;
+        margin: auto;
+      }
+      button {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      h1 {
+        color: #6cddff;
+      }
     </style>
-</head>
-<body>
+    <header>
+      <div class="logo">
+        <a href="/">
+          <img src="/logo.png" alt="WeBid Logo" />
+        </a>
+      </div>
+    </header>
+  </head>
+  <body>
     <div class="container">
-        <h1>Welcome</h1>
-        <button onclick="window.location.href='/login'">Sign In</button>
-        <button onclick="window.location.href='/register'">Sign Up</button>
+      <h1>Welcome to WeBid</h1>
+      <button onclick="window.location.href='/authentication/login'">
+        Sign In
+      </button>
+      <button onclick="window.location.href='/authentication/register'">
+        Sign Up
+      </button>
     </div>
-</body>
+  </body>
 </html>

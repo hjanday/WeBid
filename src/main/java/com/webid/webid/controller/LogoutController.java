@@ -1,6 +1,10 @@
 package com.webid.webid.controller;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.ws.rs.core.Response;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +22,26 @@ public class LogoutController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request) {
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        
+        // Clear cookie 
+        Cookie cookie = new Cookie("jwtToken", "");
+        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true); // Use this if you're on HTTPS
+        cookie.setMaxAge(0); // Immediately expire the cookie
+        response.addCookie(cookie);
+
+        // Get the authorization headerr
         String authHeader = request.getHeader("Authorization");
 
+        // Check if header contains bearer token
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             
+            // Blacklist the token so it can't be used again
             logoutService.blacklistToken(token);
+            
             return ResponseEntity.ok("Logged out successfully.");
         }
 

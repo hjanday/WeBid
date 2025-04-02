@@ -1,0 +1,85 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #383838;
+  font-family: Arial, sans-serif;
+  padding: 1rem;
+  color: #fff;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  background-color: #666565;
+  border: 2px solid #888;
+  border-radius: 10px;
+  padding: 1.5rem;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  position: relative;
+}
+
+/* Title */
+h1 {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  color: #6cddff;
+}
+
+/* Column */
+.col {
+  flex: 1 1 450px;
+  min-width: 300px;
+  font-size: 1.6rem;
+}
+
+.col h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  color: #ddd;
+}
+
+p {
+  margin: 0.5rem 0;
+  color: #fff;
+}
+
+.label {
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Main Menu Button */
+.main-menu-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 1rem;
+  cursor: pointer;
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+}
+
+.main-menu-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Divider */
+.divider {
+  border-top: 1px solid #888;
+  margin: 1rem 0;
+}

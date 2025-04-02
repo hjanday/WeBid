@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WeBid – Receipt</title>
+  <link rel="stylesheet" href="/receipt.css" />
+      <header>
+        <div class="logo"><a href="/auth/auctions">WeBid</a></div>      
+      </header>
+</head>
+<body>
+  <script src="/refreshToken.js"></script>
+  <div class="container">
+    <h1>Receipt</h1>
+   
+    <div class="col" id="leftCol">
+      <h2>Item &amp; User Info</h2>
+     
+      <div class="item-info">
+        <p><span class="label">Item Name:</span> <span id="itemName">Loading...</span></p>
+        <p><span class="label">Description:</span> <span id="itemDesc">Loading...</span></p>
+      </div>
+      <div class="divider"></div>
+      
+      <div class="user-info">
+        <p><span class="label">Username:</span> <span id="username">Loading...</span></p>
+        <p><span class="label">First Name:</span> <span id="firstName">Loading...</span></p>
+        <p><span class="label">Last Name:</span> <span id="lastName">Loading...</span></p>
+        <p><span class="label">Email:</span> <span id="email">Loading...</span></p>
+        <p><span class="label">Country:</span> <span id="country">Loading...</span></p>
+        <p><span class="label">City:</span> <span id="city">Loading...</span></p>
+        <p><span class="label">Postal Code:</span> <span id="postalCode">Loading...</span></p>
+      </div>
+      <div class="divider"></div>
+    
+      <div class="payment-summary">
+        <p class="label">Total Paid: $<span id="totalAmount">0</span></p>
+      </div>
+    </div>
+
+    <div class="col" id="rightCol">
+      <h2>Shipping Details</h2>
+      <p class="label">
+        The Item will be shipped in <span id="shipDaysSpan">N/A</span> day(s).
+      </p>
+      <a class="main-menu-btn" href="/auth/auctions">Main Menu</a>
+      <script src="/receipt.js"></script>
+    </div>
+  </div>
+</body>
+</html>

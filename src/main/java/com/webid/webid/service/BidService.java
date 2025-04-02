@@ -69,6 +69,10 @@ public class BidService {
             auction.setCurrentBidderID(user.getId());
             auctionRepository.save(auction);
 
+            // Notify the owner of the auction
+            notifService.notify(auction.getOwner(), String.format("A new bid of $%.2f has been placed on %s",
+                    auction.getCurrentBid(), auction.getItemName()));
+
             // Find previous bidders and notify all.
             List<Bid> prevBidders = bidRepository.findByAuctionId(auction.getId());
             Set<User> prevUsers = prevBidders.stream()
@@ -92,7 +96,13 @@ public class BidService {
 
             return bid;
         } else {
-            throw new IllegalArgumentException("The bid could not be created ... ");
+            if (amount <= auction.getCurrentBid()) {
+                throw new IllegalArgumentException("You must enter a higher bid.");
+            } else if (amount < auction.getCurrentBid() + auction.getBidIncrement()) {
+                throw new IllegalArgumentException("You must enter a bid higher than the increment.");
+            } else {
+                throw new IllegalArgumentException("The bid could not be created ... ");
+            }
         }
     }
 

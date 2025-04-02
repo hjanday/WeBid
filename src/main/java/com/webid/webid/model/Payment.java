@@ -1,11 +1,12 @@
 package com.webid.webid.model;
 
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,8 +21,9 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Long userID;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
     @Column(unique = true, nullable = false)
     private Long auctionID;
     @Column(nullable = false)
@@ -40,9 +42,9 @@ public class Payment {
     public Payment() {
     }
 
-    private Payment(Long userID, Long auctionID, String auctionType, double itemPrice, boolean expeditedShipping,
+    private Payment(User user, Long auctionID, String auctionType, double itemPrice, boolean expeditedShipping,
             double expeditedShippingCost, int shippingDays) {
-        this.userID = userID;
+        this.user = user;
         this.auctionID = auctionID;
         this.auctionType = auctionType;
         this.itemPrice = itemPrice;
@@ -54,10 +56,10 @@ public class Payment {
 
     }
 
-    public static Payment create(Long userID, Long auctionID, String auctionType, double itemPrice,
+    public static Payment create(User user, Long auctionID, String auctionType, double itemPrice,
             boolean expeditedShipping,
             double expeditedShippingCost, int shippingDays) {
-        return new Payment(userID, auctionID, auctionType, itemPrice, expeditedShipping, expeditedShippingCost,
+        return new Payment(user, auctionID, auctionType, itemPrice, expeditedShipping, expeditedShippingCost,
                 shippingDays);
     }
 

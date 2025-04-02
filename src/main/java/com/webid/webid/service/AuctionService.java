@@ -2,6 +2,7 @@ package com.webid.webid.service;
 
 import com.webid.webid.exceptions.ResourceAlreadyExistsException;
 import com.webid.webid.model.Auction;
+import com.webid.webid.model.RoleEnum;
 import com.webid.webid.model.User;
 import com.webid.webid.repository.AuctionRepository;
 
@@ -23,19 +24,19 @@ public class AuctionService {
 
     @Autowired
     private AuctionRepository auctionRepository;
-    // private NotificationService notifService;
+    private NotificationService notifService;
 
     // Get all auctions
-    public List<Auction> getAllAuctions() {
+    public List<Auction> getAllAuctions(User user) {
         return auctionRepository.findAll();
     }
 
     // Get auction by ID
-    public Optional<Auction> getAuctionById(Long id) {
+    public Optional<Auction> getAuctionById(User user, Long id) {
         return auctionRepository.findById(id);
     }
 
-    public List<Auction> findAuctionByItemName(String itemName) {
+    public List<Auction> findAuctionByItemName(User user, String itemName) {
         if (auctionRepository.findByItemName(itemName).isEmpty()) {
             throw new ResourceAlreadyExistsException("No auctions found");
         }
@@ -57,6 +58,8 @@ public class AuctionService {
         auction.setStartTime(Instant.now());
         auction.setEndTime(Instant.now().plus(24, ChronoUnit.HOURS));
 
+        // send notification to user that they have created a notification
+        notifService.notify(user, "You have successfully created the auction: " + auction.getItemName());
         return auctionRepository.save(auction);
 
     }
@@ -67,7 +70,7 @@ public class AuctionService {
         Auction auction = auctionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Auction not found"));
 
-        if (auction.getOwner().getId().equals(user.getId())) {
+        if (auction.getOwner().getId().equals(user.getId()) || user.getRoles().get(0) == RoleEnum.ROLE_ADMIN) {
 
             // User should not be able to delete an active auciton.
 
@@ -96,13 +99,13 @@ public class AuctionService {
         // get auction
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
         if (!existingAuction.isPresent()) {
-            return null;
+            throw new IllegalArgumentException("Auction does not exist.");
         }
         Auction auction = existingAuction.get();
 
         // verify dutch typing
         if (!auction.getAuctionType().name().equals("DUTCH")) {
-            return null;
+            throw new IllegalArgumentException("Auction is not of dutch type.");
         }
 
         // only owner may update the auction
@@ -120,9 +123,13 @@ public class AuctionService {
                 }
                 auctionRepository.save(auction);
                 return auction;
+            } else {
+                throw new IllegalArgumentException("Auction cannot go lower.");
             }
         }
-        return null;
+
+        // throw error message if auction couldn't be returned
+        throw new IllegalArgumentException("Only the owner can edit a dutch auction");
     }
 
     // Dutch Completes
@@ -131,22 +138,25 @@ public class AuctionService {
         // get auction and user for userID
         Optional<Auction> existingAuction = auctionRepository.findById(auctionID);
         if (!existingAuction.isPresent()) {
-            return null;
+            throw new IllegalArgumentException("Auction does not exist.");
         }
         Auction auction = existingAuction.get();
 
         // verify dutch typing
         if (!auction.getAuctionType().name().equals("DUTCH")) {
-            return null;
+            throw new IllegalArgumentException("Auction is not of dutch type.");
         }
         // only non owner may complete the auction
         if (!auction.getOwner().getId().equals(user.getId())) {
             auction.setCurrentBidderID(user.getId());
-            auction.completeAuction();
             auctionRepository.save(auction);
+            // send the notification to the user that immediately bought the auction
+            notifService.notify(user, String.format("You have successfully purchased %s for $%.2f",
+                    auction.getItemName(), auction.getCurrentBid()));
             return auction;
+        } else {
+            throw new IllegalArgumentException("You are the owner of the auction and cannot complete it.");
         }
-        return null;
     }
 
     public void setExpeditedShipping(long auctionID, boolean expShip, User user) {

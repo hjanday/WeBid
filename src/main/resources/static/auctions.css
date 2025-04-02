@@ -1,0 +1,208 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+body {
+    background-color: #383838;
+    font-family: Arial, sans-serif;
+    padding: 1rem;
+  }
+/* Header styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+header .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+header nav a {
+    text-decoration: none;
+    color: #fff;
+    background-color: #007bff;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    margin-left: 0.5rem;
+}
+header nav a:hover {
+    background-color: #0056b3;
+}
+h1 {
+    color:#6cddff;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+}
+h2 {
+    color: #ccc;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+h3{
+    color: #ccc;
+}
+/* Form styling */
+#auctionForm {
+    max-width: 400px;
+    margin: 0 auto 1rem auto;
+    background-color: #666565;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+#auctionForm label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #ccc;
+}
+#auctionForm input[type="text"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+#auctionForm button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#auctionForm button:hover {
+    background-color: #0056b3;
+}
+/* Error message */
+#errorMessage {
+    text-align: center;
+    color: red;
+    margin-bottom: 1rem;
+}
+/* Auction table */
+#auctionTable {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border-collapse: collapse;
+    display: none;
+    background-color: #ccc;
+}
+#auctionTable thead tr {
+    background-color: #ccc;
+}
+#auctionTable th,
+#auctionTable td {
+    border: 1px solid black;
+    padding: 0.75rem;
+    text-align: left;
+}
+#auctionTable tr:hover {
+    background-color: #fff;
+}
+/* Bid Now button */
+#bidNowButton {
+    display: none;
+    margin: 1.5rem auto 0 auto;
+    padding: 0.75rem 1.5rem;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+}
+#bidNowButton:hover {
+    background-color: #218838;
+}
+
+#buyNowButton {
+    padding: 0.75rem 1.5rem;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+#buyNowButton:hover {
+    background-color: #218838;
+}
+/* Forward Auction Detail Section */
+#auctionSection {
+    display: none;
+    max-width: 800px;
+    margin: 1.5rem auto 0 auto;
+    background-color: #666565;
+    padding: 1rem;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+.forward-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.forward-left,
+.forward-right {
+    flex: 1 1 300px;
+}
+.forward-left h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+.forward-right label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+.forward-right input[type="number"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.fwdButtons,
+.dthButtons {
+  display: flex;
+  justify-content: center; 
+  gap: 15px; 
+  margin-top: 10px; 
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#faPlaceBidButton {
+  background-color: #28a745;
+  color: #fff;
+}
+#faPlaceBidButton:hover {
+  background-color: #218838;
+}
+
+#editDutchBtn,
+#payNowButton {
+  background-color: #0844c5;
+  color: #fff;
+}
+#editDutchBtn:hover,
+#payNowButton:hover {
+  background-color: #06359c;
+}
+p{
+    margin-bottom: 10px;
+    color:#fff;
+}
+label{
+    color: #ccc;
+}

@@ -4,16 +4,22 @@ import com.webid.webid.dto.LoginUserDTO;
 import com.webid.webid.dto.RegisterUserDTO;
 import com.webid.webid.exceptions.ResourceAlreadyExistsException;
 import com.webid.webid.exceptions.ResourceNotFoundException;
+import com.webid.webid.model.RoleEnum;
 import com.webid.webid.model.User;
 import com.webid.webid.repository.UserRepository;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+
+import javax.naming.AuthenticationException;
 
 @Service
 public class AuthService {
@@ -29,10 +35,18 @@ public class AuthService {
 		this.authManager = authManager;
 	}
 
-	public User signIn(LoginUserDTO input) {
-		authManager.authenticate(new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword()));
+	public User signIn(LoginUserDTO input) throws AuthenticationException {
+		try {
+			// Authenticate the user
+			authManager.authenticate(new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword()));
 
-		return userRepository.findByEmail(input.getEmail()).orElseThrow();
+			// find the user by email and return it
+			return userRepository.findByEmail(input.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		}
+		catch (BadCredentialsException e) {
+			throw new AuthenticationException("Invalid email or password");
+		}
+		
 	}
 
 	public User signUp(RegisterUserDTO input) {
@@ -46,7 +60,10 @@ public class AuthService {
 		}
 
 		try {
+			// Create new user
 			User newUser = new User();
+			
+			// Set user attributes
 			newUser.setFirstName(input.getFirstName());
 			newUser.setLastName(input.getLastName());
 			newUser.setEmail(input.getEmail());
@@ -56,9 +73,10 @@ public class AuthService {
 			newUser.setPostalCode(input.getPostalCode());
 			newUser.setCountry(input.getCountry());
 			newUser.setCity(input.getCity());
+			newUser.setRoles(List.of(RoleEnum.ROLE_USER));
 
 			return userRepository.save(newUser);
-			// If anything else errors - catch it
+			
 		} catch (DataIntegrityViolationException ex) {
 			throw new ResourceAlreadyExistsException("Data Integrity Error: " + ex.getMessage());
 		}
@@ -66,10 +84,12 @@ public class AuthService {
 
 	public void updatePassword(String userEmail, String newPw) {
 		Optional<User> u = userRepository.findByEmail(userEmail);
+		
 		// Check if record does not exist and throw exception
 		if (u.equals(Optional.empty())) {
 			throw new ResourceNotFoundException("Record with email: " + userEmail + " not found.");
 		}
+		
 		try {
 			String encodedPassword = passwordEncoder.encode(newPw);
 			userRepository.updatePasswordByEmail(userEmail, encodedPassword);

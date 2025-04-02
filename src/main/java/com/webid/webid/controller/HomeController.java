@@ -2,7 +2,7 @@ package com.webid.webid.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class HomeController {
@@ -12,47 +12,53 @@ public class HomeController {
         return "landing";
     }
 
-    @GetMapping("/login")
+    @GetMapping("/authentication/login")
     public String login() {
-        return "sign_in"; 
+        return "sign_in";
     }
 
-    @GetMapping("/register")
+    @GetMapping("/authentication/register")
     public String register() {
-        return "sign_up"; 
+        return "sign_up";
     }
 
-    @GetMapping("/forgotpassword")
+    @GetMapping("/authentication/forgotpassword")
     public String forgotpassword() {
-        return "forgot_password"; 
+        return "forgot_password";
     }
 
-    @GetMapping("/auctions")
+    @GetMapping("/auth/auctions")
     public String auctions() {
-        return "auctions"; 
+        return "auctions";
     }
 
-    @GetMapping("/createauction")
+    @GetMapping("/auth/createauction")
     public String createauction() {
-        return "create_auction"; 
+        return "create_auction";
     }
-    @GetMapping("/paynow")
+
+    @GetMapping("/checkout/paynow")
     public String paynow() {
         return "paynow";
     }
-    @GetMapping("/payment")
+
+    @GetMapping("/checkout/payment")
     public String payment() {
         return "payment";
     }
-    @GetMapping("/reciept")
-    public String reciept(){
-        return "reciept";
+
+    @GetMapping("/checkout/receipt")
+    public String receipt() {
+        return "receipt";
     }
 
-    
-    
+    @GetMapping("/admin/dashboard")
+    public String admin() {
+        return "admin";
+    }
 
-
-
-
+    @GetMapping("/profile")
+    public String profile() {
+        return "profile";
+    }
 }

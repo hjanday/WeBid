@@ -14,6 +14,9 @@ import com.webid.webid.model.User;
 import com.webid.webid.model.Bid;
 import com.webid.webid.model.Notification;
 import com.webid.webid.repository.UserRepository;
+
+import jakarta.transaction.Transactional;
+
 import com.webid.webid.repository.BidRepository;
 import com.webid.webid.repository.NotificationRepository;
 
@@ -74,5 +77,10 @@ public class NotificationService implements Observer {
             notify(u, String.format("Auction %s has come to an end.",
                     bidRepository.findByAuctionId(auctionID).getFirst().getAuction().getItemName()));
         }
+    }
+    // deletes user notifications
+    @Transactional
+    public void deleteNotifications(User user){
+        notificationRepository.deleteByUserId(user.getId());
     }
 }

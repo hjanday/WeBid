@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <script src="/logout.js"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="/admin.css" />
+    <title>WeBid Dashboard</title>
+    <header>
+      <div class="logo">
+        <a href="/admin/dashboard">
+          <img src="/logo.png" alt="WeBid Logo" />
+        </a>
+        <p>Admin</p>
+      </div>
+      <nav>
+        <a href="#" onclick="logout()">Logout</a>
+      </nav>
+    </header>
+  </head>
+  <body>
+    <h1>WeBid Admin Management Page</h1>
+
+    <!-- Control Buttons -->
+    <div style="text-align: center">
+      <button class="action-btn" id="showUsersBtn">Show Users</button>
+      <button class="action-btn" id="showAuctionsBtn">Show Auctions</button>
+      <button class="action-btn" id="hideDataBtn">Hide Data</button>
+    </div>
+
+    <!-- Container to display users or auctions -->
+    <div id="dataContainer"></div>
+    <!-- Container to display messages -->
+    <div id="messageContainer"></div>
+    <script src="/admin.js"></script>
+  </body>
+</html>
