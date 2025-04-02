@@ -42,8 +42,8 @@ function showauctionSection(auction) {
         "Shipping Price: $" + auction.expeditedShippingCost; // Adjust if needed
 
     const currentBidText =
-        auction.lowestBid != null && auction.lowestBid !== ""
-        ? "$" + auction.lowestBid
+        auction.currentBid != null && auction.currentBid !== ""
+        ? "$" + auction.currentBid
         : "No Bid Yet";
     document.getElementById("faCurrentPrice").textContent =
         "Current Price: " + currentBidText;
