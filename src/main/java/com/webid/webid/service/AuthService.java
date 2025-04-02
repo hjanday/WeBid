@@ -10,12 +10,16 @@ import com.webid.webid.repository.UserRepository;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+import javax.naming.AuthenticationException;
 
 @Service
 public class AuthService {
@@ -31,10 +35,16 @@ public class AuthService {
 		this.authManager = authManager;
 	}
 
-	public User signIn(LoginUserDTO input) {
-		authManager.authenticate(new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword()));
+	public User signIn(LoginUserDTO input) throws AuthenticationException {
+		try {
+			authManager.authenticate(new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword()));
 
-		return userRepository.findByEmail(input.getEmail()).orElseThrow();
+			return userRepository.findByEmail(input.getEmail()).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+		}
+		catch (BadCredentialsException e) {
+			throw new AuthenticationException("Invalid email or password");
+		}
+		
 	}
 
 	public User signUp(RegisterUserDTO input) {
