@@ -5,7 +5,7 @@ const auctionTypeSelect = document.getElementById("auctionType");
     const lowestBidInput = document.getElementById("lowestBid");
     const currentBidInput = document.getElementById("currentBid");
 
-  
+// add listener for each form  
     auctionTypeSelect.addEventListener("change", function() {
       if (this.value === "DUTCH") {
       
@@ -62,7 +62,7 @@ const auctionTypeSelect = document.getElementById("auctionType");
         auction.lowestBid = parseFloat(lowestBidInput.value);
       }
 
-  
+// build auction object  
       fetch("http://localhost:8080/api/auctions/create", {
         method: "POST",
         headers: {

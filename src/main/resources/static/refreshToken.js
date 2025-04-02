@@ -1,9 +1,8 @@
-    // refreshToken.js
-
+   
     function refreshToken() {
         fetch('/auth/refresh-cookies', {
         method: 'POST',
-        credentials: 'include', // Ensures cookies are sent/received
+        credentials: 'include', 
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem("jwtToken"),
@@ -28,9 +27,9 @@
         });
     }
     
-    // Refresh the token every hour (3600000 milliseconds)
+    // hourly refresh (3600000 milliseconds)
     setInterval(refreshToken, 3600000);
     
-    // Optionally, refresh immediately on page load
+    // also refresh on page load
     refreshToken();
     

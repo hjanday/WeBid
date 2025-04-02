@@ -1,8 +1,9 @@
-const token = localStorage.getItem("jwtToken"); // Assuming token is stored in local storage
+const token = localStorage.getItem("jwtToken"); 
+// get tok from storage ^^
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Obtaining Profile information
+    // get user details
     const userUrl = "http://localhost:8080/api/users/currentuser";
 
     fetch(userUrl, {
@@ -17,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         return response.json();
     })
+    // show data
     .then(userData => {
         document.getElementById("userEmail").textContent = userData.email;
         document.getElementById("userid").textContent = userData.id;
@@ -33,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Failed to retrieve user information.");
     });
 
-    // Obtaining notification information
+    // get notifs
     const notifUrl = "http://localhost:8080/api/notification";
     const notifList = document.getElementById("notificationList");
     fetch(notifUrl, {
@@ -43,14 +45,15 @@ document.addEventListener("DOMContentLoaded", () => {
             "Content-Type": "application/json"
         }
     })
+    // check if notifs retrieved
     .then(response => {
         if (!response.ok) {
             throw new Error("Failed to fetch notifications: User may not have any notifications");
         }
-        return response.json(); // Expecting List<String>
+        return response.json(); 
     })
     .then(notifications => {
-        notifList.innerHTML = ""; // Clear existing notifications
+        notifList.innerHTML = ""; 
 
         if (notifications.length === 0) {
             notifList.innerHTML = "No notifications";
@@ -87,11 +90,11 @@ document.getElementById("clearNotificationsBtn").addEventListener("click", () =>
                 throw new Error(errorMessage || "Failed to delete notifications"); 
             });
         }
-        return response.text(); // Expecting plain text response
+        return response.text(); 
     })
     .then(message => {
-        alert(message); // Displays "Notifications successfully deleted"
-        document.getElementById("notificationList").innerHTML = "<li>User has no notifications ...</li>"; // Properly updates UI
+        alert(message);
+        document.getElementById("notificationList").innerHTML = "<li>User has no notifications ...</li>"; 
     })
     .catch(error => {
         console.error("Error deleting notifications:", error);

@@ -104,17 +104,17 @@ document
           throw new Error(text); // Extract error message for alert
         });
       }
-      return response.json(); // <-- Parse response JSON properly
+      return response.json(); 
     })
     .then(data => {
       alert("Dutch auction decremented successfully!");
       
-      // Ensure data is available before updating UI
+      // data check
       if (!data || !data.currentBid) {
         throw new Error("Invalid response data");
       }
 
-      // Update UI with new auction information
+      // update ui
       const newCurrentBid =
         data.currentBid !== null && data.currentBid !== ""
           ? "$" + data.currentBid.toFixed(2)
@@ -155,25 +155,25 @@ document
     })
     .then((response) => {
         if (!response.ok) {
-        // If response is not OK, handle the error
+        
         return response.text().then((text) => {
             console.log(text);
-            throw new Error(text); // The error message will be in the body
+            throw new Error(text); 
         });
         } else {
-        // If the response is OK, parse the JSON response (which will contain the bid details)
+        // parse body
         return response.json();
         }
     })
     .then((data) => {
-        // If the response was successful, handle the bid data
+        // get bid
         if (data && data.id) {
-        // Assuming 'data' is a Bid object returned by the backend
+        // place bid
         alert(
             `Bid placed successfully!`
         );
 
-        // Update UI with new bid information
+        // update page
         const auc = data.auction;
         const newCurrentBid =
             auc.currentBid != null && auc.currentBid !== ""
@@ -191,7 +191,7 @@ document
         }
     })
     .catch((error) => {
-        // In case of error (from response body or other issues)
+       // if bad bid
         alert(`Bid failed: ${error.message}`);
     });
 });
@@ -211,7 +211,7 @@ document
     const auctionUrl = `http://localhost:8080/api/auctions/${selectedAuction.id}`;
     const userUrl = `http://localhost:8080/api/users/currentuser`;
 
-    // Fetch auction data
+    // get auc
     Promise.all([
         fetch(auctionUrl, {
             method: "GET",
@@ -253,7 +253,7 @@ document
             return;
         }
     
-        // Redirect to the payment page with auction ID as a URL parameter
+        // send user to pay
         window.location.href = `/checkout/paynow?auctionId=${selectedAuction.id}`;
     })
     .catch(error => {
@@ -281,7 +281,7 @@ document
         console.log(response);
         if (!response.ok) {
             return response.text().then(text => {
-                throw new Error(text);  // Extract error message from backend
+                throw new Error(text);  
               });
         }
         alert("Dutch auction completed successfully!");

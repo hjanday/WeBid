@@ -2,7 +2,7 @@ const urlParams = new URLSearchParams(window.location.search);
     const auctionID = urlParams.get("auctionId");
     const auctionUrl = `http://localhost:8080/api/auctions/${auctionID}`;
     const token = localStorage.getItem("jwtToken");
-
+// load paynow
 window.onload = function () {
   fetch(auctionUrl, {
     method: "GET",
@@ -39,7 +39,7 @@ window.onload = function () {
 };
 
 
-    
+    // get shipping options data    
     const shippingOptions = document.querySelectorAll('input[name="shippingOption"]');
     shippingOptions.forEach((option) => {
       option.addEventListener("change", function () {
@@ -62,6 +62,7 @@ window.onload = function () {
       });
     });
 
+    // add pay now button
     document
       .getElementById("payNowButton")
       .addEventListener("click", function () {

@@ -3,7 +3,7 @@ document.getElementById("forgot_form").addEventListener("submit", function(event
 
     const email = document.getElementById("email").value;
     const newPassword = document.getElementById("newPassword").value;
-
+    // update pass
     fetch("/auth/forgotpassword", {
         method: "POST",
         headers: {

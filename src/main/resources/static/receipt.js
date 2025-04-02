@@ -45,7 +45,7 @@ fetch(`http://localhost:8080/api/payments/${auctionID}`, {
   .catch(err => {
     console.error("Error fetching payment info:", err);
   });
-
+// check login
 if (!token) {
   alert("User not logged in!");
   setUserPlaceholders();
@@ -84,7 +84,7 @@ if (!token) {
 console.error("Error fetching auction info:", err);
 });
 
-
+// set plaeceholders for user info
 function setUserPlaceholders() {
   document.getElementById("username").textContent = "Unknown";
   document.getElementById("firstName").textContent = "Unknown";

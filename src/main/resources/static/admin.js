@@ -1,4 +1,4 @@
-  // Get references to buttons and containers
+
   const showUsersBtn = document.getElementById('showUsersBtn');
   const showAuctionsBtn = document.getElementById('showAuctionsBtn');
   const hideDataBtn = document.getElementById('hideDataBtn');
@@ -6,7 +6,7 @@
   const messageContainer = document.getElementById('messageContainer');
   const token = localStorage.getItem("jwtToken");
 
-  // Utility function to show messages
+  // show delete msg
   function showMessage(text) {
     messageContainer.innerHTML = `<p class="message">${text}</p>`;
     setTimeout(() => {
@@ -14,7 +14,7 @@
     }, 3000);
   }
 
-  // Utility function to get the current username from the JWT token
+  // get user detail
   function getCurrentUsername() {
     if (!token) return null;
     try {
@@ -28,7 +28,7 @@
     }
   }
 
-  // Function to fetch and display users, ignoring the current user
+  // show all users function
   function showUsers() {
     fetch('http://localhost:8080/api/users', {
       method: 'GET',
@@ -44,9 +44,9 @@
       })
       .then(users => {
         const currentUser = getCurrentUsername();
-        // Filter out the current user from the list
+        // filter user
         const filteredUsers = users.filter(user => user.username.toLowerCase() !== currentUser.toLowerCase());
-
+ // make table for user data
         let tableHTML = `
           <table>
             <thead>
@@ -84,7 +84,7 @@
       });
   }
 
-  // Function to delete a user
+  // remove user
   function deleteUser(userId) {
     fetch(`http://localhost:8080/api/users/${userId}`, {
       method: 'DELETE', 
@@ -96,7 +96,7 @@
         if (!response.ok) {
           throw new Error('Failed to delete user.');
         }
-        // Remove the user row from the table on success
+        // Remove the user row 
         const row = document.getElementById(`user-${userId}`);
         if (row) {
           row.remove();
@@ -108,7 +108,7 @@
       });
   }
 
-  // Function to fetch and display all auctions
+  // fetch auc
   function showAuctions() {
     fetch('http://localhost:8080/api/auctions', {
       method: 'GET',
@@ -130,7 +130,7 @@
       });
   }
 
-  // Helper function to display auctions in a table
+  // show all auctions function
   function displayAuctions(auctions) {
     let tableHTML = `
       <table>
@@ -146,6 +146,7 @@
         </thead>
         <tbody>
     `;
+    // get time for auc
     auctions.forEach(auction => {
       let remainingTime = '';
       if (auction.auctionType && auction.auctionType.toLowerCase() === 'forward' && auction.endTime) {
@@ -185,7 +186,7 @@
     dataContainer.innerHTML = tableHTML;
   }
 
-  // Function to fetch and display auctions for a given user (based on email)
+  //show user auctions function
   function showUserAuctions(userEmail) {
     fetch('http://localhost:8080/api/auctions', {
       method: 'GET',
@@ -211,7 +212,7 @@
       });
   }
 
-  // Function to delete an auction
+  // remove auction function
   function deleteAuction(auctionId) {
     fetch(`http://localhost:8080/api/auctions/${auctionId}`, {
       method: 'DELETE',
@@ -235,12 +236,12 @@
       });
   }
 
-  // Function to hide any displayed data
+  // hide data function
   function hideData() {
     dataContainer.innerHTML = '';
   }
 
-  // Event listeners for buttons
+ 
   showUsersBtn.addEventListener('click', showUsers);
   showAuctionsBtn.addEventListener('click', showAuctions);
   hideDataBtn.addEventListener('click', hideData);

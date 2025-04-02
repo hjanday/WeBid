@@ -38,6 +38,7 @@ fetch(userUrl, {
   return response.json();
 })
 .then(userData => {
+  // show details
   console.log("User data:", userData);
   document.getElementById("firstName").textContent = userData.firstName || "N/A";
   document.getElementById("lastName").textContent = userData.lastName || "N/A";
@@ -94,7 +95,7 @@ document.getElementById("paymentForm").addEventListener("submit", function(e) {
     cvv,
     totalDue
   };
-
+// send payment
 fetch(paymentUrl, {
             method: "POST",
             headers: {
