@@ -63,8 +63,13 @@ public class AuctionController {
     @PutMapping("{auctionID}")
     public ResponseEntity<Object> setExpeditedShipping(@CurrentUser User currentUser, @PathVariable Long auctionID,
             @RequestParam boolean expShip) {
-        auctionService.setExpeditedShipping(auctionID, expShip, currentUser);
-        return ResponseEntity.ok().body("Expedited shipping has been set to: " + expShip);
+        try{
+            auctionService.setExpeditedShipping(auctionID, expShip, currentUser);
+            return ResponseEntity.ok().body("Expedited shipping has been set to: " + expShip);
+        } catch(IllegalArgumentException e){
+            return ResponseEntity.ok().body("Error: " + e.getMessage());
+        }
+        
     }
 
     // edits a Dutch auction
