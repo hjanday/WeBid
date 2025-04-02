@@ -16,4 +16,5 @@ public class LoginResponse {
     private String token;
     private long ttl;
     private List<RoleEnum> roles;
+    private String message;
 }

@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.naming.AuthenticationException;
+
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,26 +45,33 @@ public class AuthController {
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponse> login(@RequestBody LoginUserDTO user, HttpServletResponse response) {
-		User authenticatedUser = authService.signIn(user);
+		try {
+			// Sign in user
+			User authenticatedUser = authService.signIn(user);
 
-		Map<String, Object> claims = new HashMap<>();
-    	claims.put("roles", authenticatedUser.getRoles()); 
+			Map<String, Object> claims = new HashMap<>();
+			claims.put("roles", authenticatedUser.getRoles()); 
 
-		System.out.println("User roles before token generation: " + authenticatedUser.getRoles());
+			String jwtToken = jwtService.generateToken(claims, authenticatedUser);
 
-		String jwtToken = jwtService.generateToken(claims, authenticatedUser);
+			// Create a cookie with the token
+			Cookie cookie = new Cookie("jwtToken", jwtToken);
+			cookie.setPath("/"); // cookie is available to all paths in your domain
+			cookie.setHttpOnly(true); // prevents JavaScript access to the cookie
+			cookie.setSecure(true); // ensure this is true if you use HTTPS
+			cookie.setMaxAge(3600); // ttl in seconds
 
-		  // Create a cookie with the token
-		  Cookie cookie = new Cookie("jwtToken", jwtToken);
-		  cookie.setPath("/"); // cookie is available to all paths in your domain
-		  cookie.setHttpOnly(true); // prevents JavaScript access to the cookie
-		  cookie.setSecure(true); // ensure this is true if you use HTTPS
-		  cookie.setMaxAge(3600); // ttl in seconds
+			// add cookie to servlet response
+			response.addCookie(cookie);
 
-		LoginResponse login_response = new LoginResponse(jwtToken, jwtService.getJwtTTL(), authenticatedUser.getRoles());
-		// add cookie to servlet response
-		response.addCookie(cookie);
-		return ResponseEntity.ok(login_response);
+			LoginResponse login_response = new LoginResponse(jwtToken, jwtService.getJwtTTL(), authenticatedUser.getRoles(), "Login successful!");
+			
+			return ResponseEntity.ok(login_response);
+		}
+		catch (AuthenticationException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new LoginResponse(null, 0, null, "Login failed! Invalid email or password."));
+		}
+		
 	}
 
 	@PostMapping("/register")
