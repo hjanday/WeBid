@@ -20,7 +20,7 @@ document.getElementById("login_form").addEventListener("submit", function(event)
     .then(data => {
         console.log(data);
         var userRole = data.roles[0]
-        alert("Login successful! Token: " + data.token);
+        alert("Login successful!");
         localStorage.clear()
         localStorage.setItem("jwtToken", data.token);
 
@@ -32,6 +32,6 @@ document.getElementById("login_form").addEventListener("submit", function(event)
         window.location.replace("/auth/auctions");
     })
     .catch(error => {
-        alert("Login failed: " + error.message);
+        alert("Login failed: incorrect email or password");
     });
 });
