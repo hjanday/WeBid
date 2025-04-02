@@ -27,32 +27,37 @@ Go back to pgAdmin4, right click on the table and click on "Query tool". Copy an
 
 ```
 -- Insert sample users + plus admin into the users table
-INSERT INTO users (username, password, email, first_name, last_name) VALUES ('admin', '$2a$10$BL1ZjjzDB/x.0p40ccExSupSPkoaVCC7Jzj8UuscREN0z4HOzGU9i', 'admin@gmail.com', 'admin', 'admin');
-INSERT INTO user_roles (user_id, roles) VALUES ((SELECT id FROM users WHERE username='admin'), 'ROLE_ADMIN');
+  INSERT INTO users (username, password, email, first_name, last_name) VALUES ('admin', '$2a$10$BL1ZjjzDB/x.0p40ccExSupSPkoaVCC7Jzj8UuscREN0z4HOzGU9i', 'admin@gmail.com', 'admin', 'admin');
+  INSERT INTO user_roles (user_id, roles) VALUES ((SELECT id FROM users WHERE username='admin'), 'ROLE_ADMIN');
 
-INSERT INTO users (username, email, password, first_name, last_name, address, postal_code, country, city)
-VALUES ('johndoe', 'john.doe@example.com', '$2a$10$wEuiH0Do4Rk//wTXW8m7iuCnDPBzD0ACR5bludbF7i5H0I0PL6DYW', 'John', 'Doe', '456 Oak Ave', '67890', 'USA', 'Metropolis');
+  INSERT INTO users (username, email, password, first_name, last_name, address, postal_code, country, city)
+  VALUES ('johndoe', 'john.doe@example.com', '$2a$10$wEuiH0Do4Rk//wTXW8m7iuCnDPBzD0ACR5bludbF7i5H0I0PL6DYW', 'John', 'Doe', '456 Oak Ave', '67890', 'USA', 'Metropolis');
+  INSERT INTO user_roles (user_id, roles) VALUES ((SELECT id FROM users WHERE username='johndoe'), 'ROLE_USER');
 
-INSERT INTO users (username, email, password, first_name, last_name, address, postal_code, country, city)
-VALUES ('janedoe', 'jane.doe@example.com', '$2a$10$3T6Fjfd94wugk9K20JKgp.bCStffyb9rcT4D0HWEXgyE.sQ3MDSwy', 'Jane', 'Doe', '789 Pine St', '54321', 'USA', 'Gotham');
+  INSERT INTO users (username, email, password, first_name, last_name, address, postal_code, country, city)
+  VALUES ('janedoe', 'jane.doe@example.com', '$2a$10$3T6Fjfd94wugk9K20JKgp.bCStffyb9rcT4D0HWEXgyE.sQ3MDSwy', 'Jane', 'Doe', '789 Pine St', '54321', 'USA', 'Gotham');
+  INSERT INTO user_roles (user_id, roles) VALUES ((SELECT id FROM users WHERE username='janedoe'), 'ROLE_USER');
 
-INSERT INTO users (username, email, password, first_name, last_name, address, postal_code, country, city)
-VALUES ('bobsmith', 'bob.smith@example.com', '$2a$10$.iM97js19E6Ev/HksqTYl.BeXFIpVy7wQ6G3UrWo.7yh5YnmqdLim', 'Bob', 'Smith', '123 Maple Rd', '11111', 'USA', 'Star City');
+  INSERT INTO users (username, email, password, first_name, last_name, address, postal_code, country, city)
+  VALUES ('bobsmith', 'bob.smith@example.com', '$2a$10$.iM97js19E6Ev/HksqTYl.BeXFIpVy7wQ6G3UrWo.7yh5YnmqdLim', 'Bob', 'Smith', '123 Maple Rd', '11111', 'USA', 'Star City');
+  INSERT INTO user_roles (user_id, roles) VALUES ((SELECT id FROM users WHERE username='bobsmith'), 'ROLE_USER');
 
-INSERT INTO users (username, email, password, first_name, last_name, address, postal_code, country, city)
-VALUES ('bobsmith1', 'bob.smith1@example.com', '$2a$10$n93VrOut5nA3nP4kNYNsNeXoDv4F.ni9mNqo5DvatY25Jtm840oi.', 'Bob', 'Smith', '125 Maple Rd', '11221', 'USA', 'Star City');
+  INSERT INTO users (username, email, password, first_name, last_name, address, postal_code, country, city)
+  VALUES ('bobsmith1', 'bob.smith1@example.com', '$2a$10$n93VrOut5nA3nP4kNYNsNeXoDv4F.ni9mNqo5DvatY25Jtm840oi.', 'Bob', 'Smith', '125 Maple Rd', '11221', 'USA', 'Star City');
+  INSERT INTO user_roles (user_id, roles) VALUES ((SELECT id FROM users WHERE username='bobsmith1'), 'ROLE_USER');
 
--- Insert 2 FORWARD auctions
-INSERT INTO auctions (owner_id, item_name, description, lowest_bid, bid_increment, auction_type, expedited_shipping_cost, current_bid, expedited_shipping, over, start_time, end_time, current_bidderid)
-VALUES 
-  (1, 'Vintage Watch', 'A watch!', 100.0, 50, 'FORWARD', 15.0, 500, false, false, NOW(), NOW() + interval '1 day', 0),
-  (2, 'Antique Clock', 'An old clock.', 120.0, 40, 'FORWARD', 20.0, 450, false, false, NOW(), NOW() + interval '1 day', 0);
 
--- Insert 2 DUTCH auctions
-INSERT INTO auctions (owner_id, item_name, description, lowest_bid, bid_increment, auction_type, expedited_shipping_cost, current_bid, expedited_shipping, over, start_time, end_time, current_bidderid)
-VALUES 
-  (3, 'Modern Smartphone', 'Phone!', 200.0, 25, 'DUTCH', 10.0, 250, false, false, NOW(), NOW() + interval '1 day', 0),
-  (4, 'Luxury Car', 'Fast Car!', 5000.0, 500, 'DUTCH', 50.0, 5500, false, false, NOW(), NOW() + interval '1 day', 5);
+  -- Insert 2 FORWARD auctions
+  INSERT INTO auctions (owner_id, item_name, description, lowest_bid, bid_increment, auction_type, expedited_shipping_cost, current_bid, expedited_shipping, over, start_time, end_time, current_bidderid)
+  VALUES 
+    (1, 'Vintage Watch', 'A watch!', 100.0, 50, 'FORWARD', 15.0, 500, false, false, NOW(), NOW() + interval '1 day', 0),
+    (2, 'Antique Clock', 'An old clock.', 120.0, 40, 'FORWARD', 20.0, 450, false, false, NOW(), NOW() + interval '1 day', 0);
+
+  -- Insert 2 DUTCH auctions
+  INSERT INTO auctions (owner_id, item_name, description, lowest_bid, bid_increment, auction_type, expedited_shipping_cost, current_bid, expedited_shipping, over, start_time, end_time, current_bidderid)
+  VALUES 
+    (3, 'Modern Smartphone', 'Phone!', 200.0, 25, 'DUTCH', 10.0, 250, false, false, NOW(), NOW() + interval '1 day', 0),
+    (4, 'Luxury Car', 'Fast Car!', 5000.0, 500, 'DUTCH', 50.0, 5500, false, false, NOW(), NOW() + interval '1 day', 5);
 
 ```
 
