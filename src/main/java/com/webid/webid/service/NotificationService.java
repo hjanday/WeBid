@@ -20,6 +20,7 @@ import jakarta.transaction.Transactional;
 import com.webid.webid.repository.BidRepository;
 import com.webid.webid.repository.NotificationRepository;
 
+
 @Service
 public class NotificationService implements Observer {
 
@@ -32,18 +33,21 @@ public class NotificationService implements Observer {
     @Autowired
     private NotificationRepository notificationRepository;
 
+
     @Override
     public void notify(User user, String message) {
+        // Save notification in local DB
         Notification notification = new Notification();
         notification.setUser(user);
         notification.setMessage(message);
-
-        // Save notification in notification DB
         notificationRepository.save(notification);
 
         // set most recent notification to be the user's current notification
         user.setNotif(message);
         userRepository.save(user);
+
+        // Send notification to microservice
+        //notificationClient.notifyUser(user.getId(), message);
     }
 
     // returns the user's most recent notification
@@ -64,19 +68,21 @@ public class NotificationService implements Observer {
                 .collect(Collectors.toList());
     }
 
-    // sends a notification to users when auction is ended. note that this requres
-    // both auction and bids.
+    // sends a notification to users when auction is ended
     public void notifyEnded(long auctionID) {
-        // Find previous bidders and notify all.
+        // Find previous bidders and notify all
         List<Bid> prevBidders = bidRepository.findByAuctionId(auctionID);
         Set<User> prevUsers = prevBidders.stream()
-                .map(Bid::getUser) // Extracts the User from each Bid
-                .collect(Collectors.toSet()); // Collects into a Set to ensure uniqueness
+                .map(Bid::getUser)
+                .collect(Collectors.toSet());
 
         for (User u : prevUsers) {
             notify(u, String.format("Auction %s has come to an end.",
                     bidRepository.findByAuctionId(auctionID).getFirst().getAuction().getItemName()));
         }
+
+        // Notify microservice about auction end
+        //notificationClient.notifyAuctionEnded(auctionID);
     }
     // deletes user notifications
     @Transactional
